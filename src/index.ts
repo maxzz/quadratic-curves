@@ -1,8 +1,25 @@
 function main() {
 
-    var canvas, c, code, point, style, drag = null, dpoint;
+    interface IPoint {
+        x: number;
+        y: number;
+    }
 
-    function init(quad) {
+    interface ICPoint {
+        p1: IPoint;
+        p2: IPoint;
+        cp1?: IPoint;
+        cp2?: IPoint;
+    }
+
+    let canvas: HTMLCanvasElement,
+        c: CanvasRenderingContext2D,
+        code: HTMLPreElement,
+        point: ICPoint,
+        style,
+        dpoint: IPoint;
+
+    function init(quad: boolean) {
         point = {
             p1: { x: 20, y: 20 }, /* starting point */
             p2: { x: 370, y: 300 } /* end point */
@@ -88,7 +105,6 @@ function main() {
 
         if (point.cp2) {
             c.bezierCurveTo(point.cp1.x, point.cp1.y, point.cp2.x, point.cp2.y, point.p2.x, point.p2.y);
-
         } else {
             c.quadraticCurveTo(point.cp1.x, point.cp1.y, point.p2.x, point.p2.y);
         }
@@ -106,39 +122,40 @@ function main() {
             c.stroke();
         }
 
-        show();
+        showCode();
     }
 
-    function show() {
+    function showCode() {
 
         if (code) {
             code.firstChild.nodeValue =
                 "canvas = document.getElementById('canvas');\n" +
                 "c = canvas.getContext('2d');\n" +
-                "c.lineWidth = " + style.curve.width +
-                "\";\nc.beginPath();\n" +
-                "c.moveTo(" + point.p1.x + ", " + point.p1.y + ");\n" +
+                `c.lineWidth = ${style.curve.width};\n` +
+                "c.beginPath();\n" +
+                `c.moveTo(${point.p1.x}, ${point.p1.y});\n` +
                 (point.cp2 ?
-                    "c.bezierCurveTo( " + point.cp1.x + ", " + point.cp1.y + ", " + point.cp2.x + ", " + point.cp2.y + ", " + point.p2.x + ", " + point.p2.y + " );" :
-                    "c.quadraticCurveTo( " + point.cp1.x + ", " + point.cp1.y + ", " + point.p2.x + ", " + point.p2.y + " );"
+                    `c.bezierCurveTo(${point.cp1.x}, ${point.cp1.y}, ${point.cp2.x}, ${point.cp2.y}, ${point.p2.x}, ${point.p2.y});` :
+                    `c.quadraticCurveTo(${point.cp1.x}, ${point.cp1.y}, ${point.p2.x}, ${point.p2.y});`
                 ) +
-                "\nc.stroke();"
-                ;
+                "\nc.stroke();";
         }
-    }
+    } //showCode()
+
+    // dragging
+
+    let drag = null;
 
     function dragStart(event) {
         event = mousePos(event);
 
+        // find nearest point
         var dx, dy;
         for (var p in point) {
             dx = point[p].x - event.x;
             dy = point[p].y - event.y;
 
-            if ((dx * dx) + (dy * dy) <
-                style.point.radius *
-                style.point.radius) {
-
+            if ((dx * dx) + (dy * dy) < style.point.radius * style.point.radius) {
                 drag = p;
                 dpoint = event;
                 canvas.style.cursor = 'move';
@@ -166,8 +183,8 @@ function main() {
     }
 
 
-    function mousePos(event) {
-        event = (event ? event : window.event);
+    function mousePos(event): IPoint {
+        event = event ? event : window.event;
         return {
             x: event.pageX - canvas.offsetLeft,
             y: event.pageY - canvas.offsetTop
@@ -175,8 +192,8 @@ function main() {
     }
 
 
-    canvas = document.getElementById('canvas');
-    code = document.getElementById('code');
+    canvas = document.getElementById('canvas') as HTMLCanvasElement;
+    code = document.getElementById('code') as HTMLPreElement;
 
     if (canvas.getContext) {
         c = canvas.getContext('2d');
