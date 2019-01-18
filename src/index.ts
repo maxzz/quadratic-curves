@@ -15,7 +15,7 @@ function main() {
     let canvas: HTMLCanvasElement,
         c: CanvasRenderingContext2D,
         code: HTMLPreElement,
-        line: ILine,
+        line: ILine[] = [],
         style = {
             curve: {
                 width: 6,
@@ -57,7 +57,7 @@ function main() {
     }
 
     function init(quad: boolean) {
-        line = initLine(quad);
+        line.push(initLine(quad));
 
         // line style
         c.lineCap = 'round';
@@ -126,7 +126,7 @@ function main() {
         c.fillStyle = gradient;
         c.fillRect(0, 0, 400, 500);
 
-        drawLine(line);
+        drawLine(line[0]);
 
         showCode();
     }
@@ -148,7 +148,7 @@ function main() {
                 "c = canvas.getContext('2d');\n" +
                 `c.lineWidth = ${style.curve.width};\n`;
 
-            txt += genLine(line);
+            txt += genLine(line[0]);
 
             code.firstChild.nodeValue = txt;
         }
@@ -158,21 +158,27 @@ function main() {
 
     let drag = null;
     let dpoint: IPoint;
+    let dragLine: ILine;
 
     function dragStart(event) {
         event = mousePos(event);
 
-        // find nearest point
+        // find the nearest point
         var dx, dy;
-        for (var p in line) {
-            dx = line[p].x - event.x;
-            dy = line[p].y - event.y;
+        for (var i = 0; i < line.length; i++) {
+            var ln: ILine = line[i];
 
-            if ((dx * dx) + (dy * dy) < style.point.radius * style.point.radius) {
-                drag = p;
-                dpoint = event;
-                canvas.style.cursor = 'move';
-                return;
+            for (var p in ln) {
+                dx = ln[p].x - event.x;
+                dy = ln[p].y - event.y;
+
+                if ((dx * dx) + (dy * dy) < style.point.radius * style.point.radius) {
+                    dragLine = ln;
+                    drag = p;
+                    dpoint = event;
+                    canvas.style.cursor = 'move';
+                    return;
+                }
             }
         }
     }
@@ -180,8 +186,8 @@ function main() {
     function dragging(event) {
         if (drag) {
             event = mousePos(event);
-            line[drag].x += event.x - dpoint.x;
-            line[drag].y += event.y - dpoint.y;
+            dragLine[drag].x += event.x - dpoint.x;
+            dragLine[drag].y += event.y - dpoint.y;
             dpoint = event;
 
             draw();
@@ -189,6 +195,7 @@ function main() {
     }
 
     function dragStop(event) {
+        dragLine = null;
         drag = null;
         canvas.style.cursor = 'default';
 
