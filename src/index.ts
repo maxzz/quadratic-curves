@@ -1,3 +1,5 @@
+import './index.css';
+
 function main() {
 
     interface IPoint {
