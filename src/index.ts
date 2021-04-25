@@ -157,6 +157,7 @@ namespace GenCode {
 
     export function showCode(code: HTMLPreElement, lines: ILine[]) {
         if (code) {
+            // 1. Build components
             let txt =
                 "canvas = document.getElementById('canvas');\n" +
                 "ctx = canvas.getContext('2d');\n" +
@@ -164,12 +165,14 @@ namespace GenCode {
 
             lines.forEach(ln => txt += `\n${genLine(ln)}`);
 
+            // 2. Build points array
             let body = '\nconst points = [';
             lines.forEach(ln => body += `\n    ${genLineAsArray(ln)},`);
             txt += `${body}\n];`;
 
             txt += `\n// prev = '${genAll(lines)}';\n\n`;
 
+            // 3. set text to DOM
             code.firstChild.nodeValue = txt;
         }
     } //showCode()
@@ -178,7 +181,7 @@ namespace GenCode {
 function main() {
 
     let canvas: HTMLCanvasElement;
-    let c: CanvasRenderingContext2D;
+    let ctx: CanvasRenderingContext2D;
     let code: HTMLPreElement;
     let lines: ILine[] = [];
 
@@ -193,8 +196,8 @@ function main() {
         }
 
         // line style
-        c.lineCap = 'round';
-        c.lineJoin = 'round';
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
 
         // handlers
         canvas.onmousedown = dragStart;
@@ -205,16 +208,16 @@ function main() {
     }
 
     function draw() {
-        c.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         // bg gradient
-        let gradient = c.createLinearGradient(0, 0, 100, 200);
+        let gradient = ctx.createLinearGradient(0, 0, 100, 200);
         gradient.addColorStop(0, 'hsla(68, 46%, 50%, .2)');
         gradient.addColorStop(1, 'hsla(58, 100%, 50%, .1)');
-        c.fillStyle = gradient;
-        c.fillRect(0, 0, 400, 500);
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, 400, 500);
 
-        lines.forEach(line => Line.drawLine(c, line));
+        lines.forEach(line => Line.drawLine(ctx, line));
 
         GenCode.showCode(code, lines);
     }
@@ -225,11 +228,10 @@ function main() {
     let dpoint: IPoint;
     let dragLine: ILine;
 
-    function dragStart(event) {
-        event = mousePos(event);
+    function dragStart(event: DragEvent) {
+        let pos = mousePos(event);
 
         // find the nearest point
-        var dx, dy;
         for (var i = 0; i < lines.length; i++) {
             var line: ILine = lines[i];
 
@@ -238,54 +240,51 @@ function main() {
                     continue; // skip color
                 }
 
-                dx = line[p].x - event.x;
-                dy = line[p].y - event.y;
+                let dx = line[p].x - pos.x;
+                let dy = line[p].y - pos.y;
 
                 if ((dx * dx) + (dy * dy) < GRAPHSTYLE.point.radius * GRAPHSTYLE.point.radius) {
                     dragLine = line;
                     drag = p;
-                    dpoint = event;
-                    canvas.style.cursor = 'move';
+                    dpoint = pos;
+                    //canvas.style.cursor = 'move';
+                    canvas.classList.add('cursor-move');
                     return;
                 }
             }
         }
     }
 
-    function dragging(event) {
+    function dragging(event: DragEvent) {
         if (drag) {
-            event = mousePos(event);
-            dragLine[drag].x += event.x - dpoint.x;
-            dragLine[drag].y += event.y - dpoint.y;
-            dpoint = event;
-
+            let pos = mousePos(event);
+            dragLine[drag].x += pos.x - dpoint.x;
+            dragLine[drag].y += pos.y - dpoint.y;
+            dpoint = pos;
             draw();
         }
     }
 
-    function dragStop(event) {
+    function dragStop(event: DragEvent) {
         dragLine = null;
         drag = null;
         canvas.style.cursor = 'default';
-
         draw();
     }
 
 
-    function mousePos(event): IPoint {
-        event = event ? event : window.event;
+    function mousePos(event: DragEvent): IPoint {
         return {
             x: event.pageX - canvas.offsetLeft,
             y: event.pageY - canvas.offsetTop
         }
     }
 
-
     canvas = document.getElementById('canvas') as HTMLCanvasElement;
     code = document.getElementById('code') as HTMLPreElement;
 
     if (canvas.getContext) {
-        c = canvas.getContext('2d');
+        ctx = canvas.getContext('2d');
 
         var prev;
         //prev = /*7*/'[{"p1":{"x":126,"y":174},"p2":{"x":121,"y":429},"cp1":{"x":55,"y":246},"cp2":{"x":80,"y":324},"color":"hsla(0, 100%, 50%, 0.95)"},{"p1":{"x":177,"y":244},"p2":{"x":122,"y":429},"cp1":{"x":136,"y":287},"cp2":{"x":125,"y":329},"color":"hsla(40, 100%, 50%, 0.95)"},{"p1":{"x":127,"y":174},"p2":{"x":179,"y":243},"cp1":{"x":155,"y":183},"cp2":{"x":167,"y":209},"color":"hsla(80, 100%, 50%, 0.95)"},{"p1":{"x":164,"y":138},"p2":{"x":223,"y":229},"cp1":{"x":195,"y":145},"cp2":{"x":216,"y":177},"color":"hsla(120, 100%, 50%, 0.95)"},{"p1":{"x":166,"y":136},"p2":{"x":261,"y":82},"cp1":{"x":191,"y":98},"cp2":{"x":230,"y":91},"color":"hsla(160, 100%, 50%, 0.95)"},{"p1":{"x":318,"y":174},"p2":{"x":225,"y":230},"cp1":{"x":293,"y":196},"cp2":{"x":266,"y":215},"color":"hsla(200, 100%, 50%, 0.95)"},{"p1":{"x":262,"y":83},"p2":{"x":319,"y":175},"cp1":{"x":312,"y":98},"cp2":{"x":320,"y":143},"color":"hsla(240, 100%, 50%, 0.95)"}]';

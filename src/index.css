@@ -11,3 +11,7 @@ canvas {
     color: #00ff00;
     width: 380px;
 }
+
+.cursor-move {
+    cursor: move;
+}
