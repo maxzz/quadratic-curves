@@ -226,9 +226,24 @@ function main() {
 
     // dragging
 
-    let drag: string | null = null;
-    let dpoint: IPoint;
+    function lineHasPoint(line: ILine, pos: IPoint): {line: ILine, member: string} | undefined {
+        for (var member in line) {
+            if (typeof line[member] === 'string') {
+                continue; // skip color
+            }
+
+            let dx = line[member].x - pos.x;
+            let dy = line[member].y - pos.y;
+
+            if ((dx * dx) + (dy * dy) < GRAPHSTYLE.point.radius * GRAPHSTYLE.point.radius) {
+                return { line, member };
+            }
+        }
+    }
+
+    let dragPt: IPoint;
     let dragLine: ILine;
+    let dragMember: string | null = null;
 
     function dragStart(event: DragEvent) {
         let pos = mousePos(event);
@@ -237,39 +252,49 @@ function main() {
         for (var i = 0; i < lines.length; i++) {
             var line: ILine = lines[i];
 
-            for (var member in line) {
-                if (typeof line[member] === 'string') {
-                    continue; // skip color
-                }
-
-                let dx = line[member].x - pos.x;
-                let dy = line[member].y - pos.y;
-
-                if ((dx * dx) + (dy * dy) < GRAPHSTYLE.point.radius * GRAPHSTYLE.point.radius) {
-                    dragLine = line;
-                    drag = member;
-                    dpoint = pos;
-                    //canvas.style.cursor = 'move';
-                    canvas.classList.add('cursor-move');
-                    return;
-                }
+            let res = lineHasPoint(line, pos);
+            if (res) {
+                dragLine = res.line;
+                dragMember = res.member;
+                dragPt = pos;
+                //canvas.style.cursor = 'move';
+                canvas.classList.add('cursor-move');
+                return;
             }
+
+            // for (var member in line) {
+            //     if (typeof line[member] === 'string') {
+            //         continue; // skip color
+            //     }
+
+            //     let dx = line[member].x - pos.x;
+            //     let dy = line[member].y - pos.y;
+
+            //     if ((dx * dx) + (dy * dy) < GRAPHSTYLE.point.radius * GRAPHSTYLE.point.radius) {
+            //         dragLine = line;
+            //         dragMember = member;
+            //         dragPt = pos;
+            //         //canvas.style.cursor = 'move';
+            //         canvas.classList.add('cursor-move');
+            //         return;
+            //     }
+            // }
         }
     }
 
     function dragging(event: DragEvent) {
-        if (drag) {
+        if (dragMember) {
             let pos = mousePos(event);
-            dragLine[drag].x += pos.x - dpoint.x;
-            dragLine[drag].y += pos.y - dpoint.y;
-            dpoint = pos;
+            dragLine[dragMember].x += pos.x - dragPt.x;
+            dragLine[dragMember].y += pos.y - dragPt.y;
+            dragPt = pos;
             draw();
         }
     }
 
     function dragStop(event: DragEvent) {
         dragLine = null;
-        drag = null;
+        dragMember = null;
         canvas.style.cursor = 'default';
         draw();
     }
