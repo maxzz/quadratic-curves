@@ -36,27 +36,21 @@ function hue(h: number) {
     return `hsla(${h}, 100%, 50%, 0.95)`;
 }
 
-function main() {
+interface IPoint {
+    x: number;
+    y: number;
+}
 
-    interface IPoint {
-        x: number;
-        y: number;
-    }
+interface ILine {
+    p1: IPoint; // starting point
+    p2: IPoint; // end point
+    cp1?: IPoint;
+    cp2?: IPoint;
+    color?: string;
+}
 
-    interface ILine {
-        p1: IPoint; /* starting point */
-        p2: IPoint; /* end point */
-        cp1?: IPoint;
-        cp2?: IPoint;
-        color?: string;
-    }
-
-    let canvas: HTMLCanvasElement;
-    let c: CanvasRenderingContext2D;
-    let code: HTMLPreElement;
-    let lines: ILine[] = [];
-
-    function initLine(quad: boolean, n: number): ILine {
+namespace Line {
+    export function initLine(quad: boolean, n: number): ILine {
         let defLine: ILine = {
             p1: {x: 39, y: 18},
             p2: {x: 49, y: 282},
@@ -83,29 +77,7 @@ function main() {
         return line;
     }
 
-    function init(nLines: number, quad: boolean, prev?: string) {
-
-        if (prev) {
-            lines = JSON.parse(prev);
-        } else {
-            for (let i = 0; i < nLines; i++) {
-                lines.push(initLine(quad, i));
-            }
-        }
-
-        // line style
-        c.lineCap = 'round';
-        c.lineJoin = 'round';
-
-        // handlers
-        canvas.onmousedown = dragStart;
-        canvas.onmousemove = dragging;
-        canvas.onmouseup = canvas.onmouseout = dragStop;
-
-        draw();
-    }
-
-    function drawLine(ln: ILine) {
+    export function drawLine(c: CanvasRenderingContext2D, ln: ILine) {
         // curve
         c.lineWidth = GRAPHSTYLE.curve.width;
         c.strokeStyle = ln.color;
@@ -156,21 +128,9 @@ function main() {
         }
     } //drawLine()
 
-    function draw() {
-        c.clearRect(0, 0, canvas.width, canvas.height);
+} //namespace Line
 
-        // bg gradient
-        let gradient = c.createLinearGradient(0, 0, 100, 200);
-        gradient.addColorStop(0, 'hsla(68, 46%, 50%, .2)');
-        gradient.addColorStop(1, 'hsla(58, 100%, 50%, .1)');
-        c.fillStyle = gradient;
-        c.fillRect(0, 0, 400, 500);
-
-        lines.forEach(line => drawLine(line));
-
-        showCode();
-    }
-
+namespace GenCode {
     function genLine(l: ILine) {
         return "ctx.beginPath();\n" +
             `ctx.moveTo(${l.p1.x}, ${l.p1.y});\n` +
@@ -191,11 +151,11 @@ function main() {
             " }";
     } //genLine()
 
-    function genAll() {
+    function genAll(lines: ILine[]) {
         return JSON.stringify(lines);
     }
 
-    function showCode() {
+    export function showCode(code: HTMLPreElement, lines: ILine[]) {
         if (code) {
             let txt =
                 "canvas = document.getElementById('canvas');\n" +
@@ -208,11 +168,56 @@ function main() {
             lines.forEach(ln => body += `\n    ${genLineAsArray(ln)},`);
             txt += `${body}\n];`;
 
-            txt += `\n// prev = '${genAll()}';\n\n`;
+            txt += `\n// prev = '${genAll(lines)}';\n\n`;
 
             code.firstChild.nodeValue = txt;
         }
     } //showCode()
+} //namespace GenCode
+
+function main() {
+
+    let canvas: HTMLCanvasElement;
+    let c: CanvasRenderingContext2D;
+    let code: HTMLPreElement;
+    let lines: ILine[] = [];
+
+    function init(nLines: number, quad: boolean, prev?: string) {
+
+        if (prev) {
+            lines = JSON.parse(prev);
+        } else {
+            for (let i = 0; i < nLines; i++) {
+                lines.push(Line.initLine(quad, i));
+            }
+        }
+
+        // line style
+        c.lineCap = 'round';
+        c.lineJoin = 'round';
+
+        // handlers
+        canvas.onmousedown = dragStart;
+        canvas.onmousemove = dragging;
+        canvas.onmouseup = canvas.onmouseout = dragStop;
+
+        draw();
+    }
+
+    function draw() {
+        c.clearRect(0, 0, canvas.width, canvas.height);
+
+        // bg gradient
+        let gradient = c.createLinearGradient(0, 0, 100, 200);
+        gradient.addColorStop(0, 'hsla(68, 46%, 50%, .2)');
+        gradient.addColorStop(1, 'hsla(58, 100%, 50%, .1)');
+        c.fillStyle = gradient;
+        c.fillRect(0, 0, 400, 500);
+
+        lines.forEach(line => Line.drawLine(c, line));
+
+        GenCode.showCode(code, lines);
+    }
 
     // dragging
 
