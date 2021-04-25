@@ -1,5 +1,41 @@
 import './index.css';
 
+const GRAPHSTYLE = {
+    curve: {
+        width: 6,
+        color: 'hsla(216, 91%, 50%, 0.95)'
+    },
+    circles: {
+        width: 3,
+        color: '#000',
+        fill: 'hsla(100, 93%, 50%, 1)'
+    },
+    pline: {
+        width: 2,
+        color: ''
+    },
+    point: {
+        radius: 15,
+        width: 5,
+        color: 'hsla(205, 98%, 50%, 0.95)',
+        fill: 'rgba(200, 0, 200, .9)',
+        arc1: 0,
+        arc2: 2 * Math.PI
+    },
+    cpoint: { // control point
+        radius: 10,
+        width: 2,
+        color: 'hsla(205, 98%, 50%, 0.95)',
+        fill: 'rgba(200, 0, 200, .9)',
+        arc1: 0,
+        arc2: 2 * Math.PI
+    }
+} as const;
+
+function hue(h: number) {
+    return `hsla(${h}, 100%, 50%, 0.95)`;
+}
+
 function main() {
 
     interface IPoint {
@@ -15,55 +51,20 @@ function main() {
         color?: string;
     }
 
-    function hue(h: number) {
-        return `hsla(${h}, 100%, 50%, 0.95)`;
-    }
-
-    let defLine: ILine = {
-        p1: {x: 39, y: 18},
-        p2: {x: 49, y: 282},
-        cp1: {x: 9, y: 116},
-        cp2: {x: 15, y: 195},
-        color: hue(10)
-    };
-
-    let canvas: HTMLCanvasElement,
-        c: CanvasRenderingContext2D,
-        code: HTMLPreElement,
-        lines: ILine[] = [],
-        style = {
-            curve: {
-                width: 6,
-                color: 'hsla(216, 91%, 50%, 0.95)'
-            },
-            circles: {
-                width: 3,
-                color: '#000',
-                fill: 'hsla(100, 93%, 50%, 1)'
-            },
-            pline: {
-                width: 2,
-                color: ''
-            },
-            point: {
-                radius: 15,
-                width: 5,
-                color: 'hsla(205, 98%, 50%, 0.95)',
-                fill: 'rgba(200, 0, 200, .9)',
-                arc1: 0,
-                arc2: 2 * Math.PI
-            },
-            cpoint: { // control point
-                radius: 10,
-                width: 2,
-                color: 'hsla(205, 98%, 50%, 0.95)',
-                fill: 'rgba(200, 0, 200, .9)',
-                arc1: 0,
-                arc2: 2 * Math.PI
-            }
-        };
+    let canvas: HTMLCanvasElement;
+    let c: CanvasRenderingContext2D;
+    let code: HTMLPreElement;
+    let lines: ILine[] = [];
 
     function initLine(quad: boolean, n: number): ILine {
+        let defLine: ILine = {
+            p1: {x: 39, y: 18},
+            p2: {x: 49, y: 282},
+            cp1: {x: 9, y: 116},
+            cp2: {x: 15, y: 195},
+            color: hue(10)
+        };
+    
         let line: ILine = JSON.parse(JSON.stringify(defLine)); // deep copy
 
         if (quad) {
@@ -106,7 +107,7 @@ function main() {
 
     function drawLine(ln: ILine) {
         // curve
-        c.lineWidth = style.curve.width;
+        c.lineWidth = GRAPHSTYLE.curve.width;
         c.strokeStyle = ln.color;
 
         c.beginPath();
@@ -122,8 +123,8 @@ function main() {
         // c.fill();
 
         // lines
-        c.lineWidth = style.pline.width;
-        c.strokeStyle = style.pline.color;
+        c.lineWidth = GRAPHSTYLE.pline.width;
+        c.strokeStyle = GRAPHSTYLE.pline.color;
 
         c.beginPath();
         c.moveTo(ln.p1.x, ln.p1.y);
@@ -142,11 +143,11 @@ function main() {
         for (var p in ln) {
             let isControl = p === 'cp1' || p === 'cp2';
 
-            c.lineWidth = isControl ? style.cpoint.width : style.circles.width;
-            c.strokeStyle = style.circles.color;
-            c.fillStyle = isControl ? style.circles.fill : ln.color;
+            c.lineWidth = isControl ? GRAPHSTYLE.cpoint.width : GRAPHSTYLE.circles.width;
+            c.strokeStyle = GRAPHSTYLE.circles.color;
+            c.fillStyle = isControl ? GRAPHSTYLE.circles.fill : ln.color;
 
-            let stl = isControl ? style.cpoint : style.point;
+            let stl = isControl ? GRAPHSTYLE.cpoint : GRAPHSTYLE.point;
 
             c.beginPath();
             c.arc(ln[p].x, ln[p].y, stl.radius, stl.arc1, stl.arc2, true);
@@ -199,7 +200,7 @@ function main() {
             let txt =
                 "canvas = document.getElementById('canvas');\n" +
                 "ctx = canvas.getContext('2d');\n" +
-                `ctx.lineWidth = ${style.curve.width};\n`;
+                `ctx.lineWidth = ${GRAPHSTYLE.curve.width};\n`;
 
             lines.forEach(ln => txt += `\n${genLine(ln)}`);
 
@@ -235,7 +236,7 @@ function main() {
                 dx = line[p].x - event.x;
                 dy = line[p].y - event.y;
 
-                if ((dx * dx) + (dy * dy) < style.point.radius * style.point.radius) {
+                if ((dx * dx) + (dy * dy) < GRAPHSTYLE.point.radius * GRAPHSTYLE.point.radius) {
                     dragLine = line;
                     drag = p;
                     dpoint = event;
