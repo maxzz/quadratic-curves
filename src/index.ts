@@ -211,11 +211,13 @@ function main() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         // bg gradient
-        let gradient = ctx.createLinearGradient(0, 0, 100, 200);
-        gradient.addColorStop(0, 'hsla(68, 46%, 50%, .2)');
-        gradient.addColorStop(1, 'hsla(58, 100%, 50%, .1)');
+        let gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+        // gradient.addColorStop(0, 'hsla(68, 46%, 50%, .2)');
+        // gradient.addColorStop(1, 'hsla(58, 100%, 50%, .1)');
+        gradient.addColorStop(0, 'tomato');
+        gradient.addColorStop(1, 'purple');
         ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, 400, 500);
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         lines.forEach(line => Line.drawLine(ctx, line));
 
@@ -224,7 +226,7 @@ function main() {
 
     // dragging
 
-    let drag = null;
+    let drag: string | null = null;
     let dpoint: IPoint;
     let dragLine: ILine;
 
@@ -235,17 +237,17 @@ function main() {
         for (var i = 0; i < lines.length; i++) {
             var line: ILine = lines[i];
 
-            for (var p in line) {
-                if (typeof line[p] === 'string') {
+            for (var member in line) {
+                if (typeof line[member] === 'string') {
                     continue; // skip color
                 }
 
-                let dx = line[p].x - pos.x;
-                let dy = line[p].y - pos.y;
+                let dx = line[member].x - pos.x;
+                let dy = line[member].y - pos.y;
 
                 if ((dx * dx) + (dy * dy) < GRAPHSTYLE.point.radius * GRAPHSTYLE.point.radius) {
                     dragLine = line;
-                    drag = p;
+                    drag = member;
                     dpoint = pos;
                     //canvas.style.cursor = 'move';
                     canvas.classList.add('cursor-move');
