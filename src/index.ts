@@ -245,7 +245,7 @@ function main() {
         pt?: IPoint;
         line?: ILine;
         member: string | null;
-    } = { member: null };
+    }[] = [];
 
     function dragStart(event: DragEvent) {
         let pos = mousePos(event);
@@ -256,29 +256,33 @@ function main() {
 
             let res = Line.lineHasPoint(line, pos);
             if (res) {
-                drag.line = res.line;
-                drag.member = res.member;
-                drag.pt = pos;
+                drag.push({
+                    line: res.line,
+                    member: res.member,
+                    pt: pos,
+
+                });
                 //canvas.style.cursor = 'move';
                 canvas.classList.add('cursor-move');
-                return;
+                //return;
             }
         }
     }
 
     function dragging(event: DragEvent) {
-        if (drag.member) {
+        if (drag.length) {
             let pos = mousePos(event);
-            drag.line[drag.member].x += pos.x - drag.pt.x;
-            drag.line[drag.member].y += pos.y - drag.pt.y;
-            drag.pt = pos;
+            drag.forEach((item) => {
+                item.line[item.member].x += pos.x - item.pt.x;
+                item.line[item.member].y += pos.y - item.pt.y;
+                item.pt = pos;
+            });
             draw();
         }
     }
 
     function dragDone(event: DragEvent) {
-        drag.line = null;
-        drag.member = null;
+        drag = [];
         canvas.style.cursor = 'default';
         draw();
     }
