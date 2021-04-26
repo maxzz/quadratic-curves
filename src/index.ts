@@ -128,6 +128,21 @@ namespace Line {
         }
     } //drawLine()
 
+    export function lineHasPoint(line: ILine, pos: IPoint): {line: ILine, member: string} | undefined {
+        for (var member in line) {
+            if (typeof line[member] === 'string') {
+                continue; // skip color
+            }
+
+            let dx = line[member].x - pos.x;
+            let dy = line[member].y - pos.y;
+
+            if ((dx * dx) + (dy * dy) < GRAPHSTYLE.point.radius * GRAPHSTYLE.point.radius) {
+                return { line, member };
+            }
+        }
+    }
+
 } //namespace Line
 
 namespace GenCode {
@@ -202,7 +217,7 @@ function main() {
         // handlers
         canvas.onmousedown = dragStart;
         canvas.onmousemove = dragging;
-        canvas.onmouseup = canvas.onmouseout = dragStop;
+        canvas.onmouseup = canvas.onmouseout = dragDone;
 
         draw();
     }
@@ -224,26 +239,13 @@ function main() {
         GenCode.showCode(code, lines);
     }
 
-    // dragging
+    //#region dragging
 
-    function lineHasPoint(line: ILine, pos: IPoint): {line: ILine, member: string} | undefined {
-        for (var member in line) {
-            if (typeof line[member] === 'string') {
-                continue; // skip color
-            }
-
-            let dx = line[member].x - pos.x;
-            let dy = line[member].y - pos.y;
-
-            if ((dx * dx) + (dy * dy) < GRAPHSTYLE.point.radius * GRAPHSTYLE.point.radius) {
-                return { line, member };
-            }
-        }
-    }
-
-    let dragPt: IPoint;
-    let dragLine: ILine;
-    let dragMember: string | null = null;
+    let drag: {
+        pt?: IPoint;
+        line?: ILine;
+        member: string | null;
+    } = { member: null };
 
     function dragStart(event: DragEvent) {
         let pos = mousePos(event);
@@ -252,53 +254,34 @@ function main() {
         for (var i = 0; i < lines.length; i++) {
             var line: ILine = lines[i];
 
-            let res = lineHasPoint(line, pos);
+            let res = Line.lineHasPoint(line, pos);
             if (res) {
-                dragLine = res.line;
-                dragMember = res.member;
-                dragPt = pos;
+                drag.line = res.line;
+                drag.member = res.member;
+                drag.pt = pos;
                 //canvas.style.cursor = 'move';
                 canvas.classList.add('cursor-move');
                 return;
             }
-
-            // for (var member in line) {
-            //     if (typeof line[member] === 'string') {
-            //         continue; // skip color
-            //     }
-
-            //     let dx = line[member].x - pos.x;
-            //     let dy = line[member].y - pos.y;
-
-            //     if ((dx * dx) + (dy * dy) < GRAPHSTYLE.point.radius * GRAPHSTYLE.point.radius) {
-            //         dragLine = line;
-            //         dragMember = member;
-            //         dragPt = pos;
-            //         //canvas.style.cursor = 'move';
-            //         canvas.classList.add('cursor-move');
-            //         return;
-            //     }
-            // }
         }
     }
 
     function dragging(event: DragEvent) {
-        if (dragMember) {
+        if (drag.member) {
             let pos = mousePos(event);
-            dragLine[dragMember].x += pos.x - dragPt.x;
-            dragLine[dragMember].y += pos.y - dragPt.y;
-            dragPt = pos;
+            drag.line[drag.member].x += pos.x - drag.pt.x;
+            drag.line[drag.member].y += pos.y - drag.pt.y;
+            drag.pt = pos;
             draw();
         }
     }
 
-    function dragStop(event: DragEvent) {
-        dragLine = null;
-        dragMember = null;
+    function dragDone(event: DragEvent) {
+        drag.line = null;
+        drag.member = null;
         canvas.style.cursor = 'default';
         draw();
     }
-
 
     function mousePos(event: DragEvent): IPoint {
         return {
@@ -306,6 +289,8 @@ function main() {
             y: event.pageY - canvas.offsetTop
         }
     }
+
+    //#endregion dragging
 
     canvas = document.getElementById('canvas') as HTMLCanvasElement;
     code = document.getElementById('code') as HTMLPreElement;
