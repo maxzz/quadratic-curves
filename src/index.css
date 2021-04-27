@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 canvas {
     border: 1px dashed #ddd;
     background: #f7f7f7;

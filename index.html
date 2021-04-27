@@ -8,9 +8,18 @@
     <title>Quadratic curves</title>
 </head>
 <body>
-    <canvas id='canvas' width="600" height="600" class="quadratic"></canvas>
-    <label for="drag-group"><input type="checkbox" id="drag-group">Drag group</label>
-    <pre id="code">code</pre>
+    <div class="flex flex-col bg-red-700">
+        <div>
+            <canvas class="w-full" id='canvas'></canvas>
+            <!-- <canvas id='canvas' width="600" height="600" class="quadratic"></canvas> -->
+        </div>
+        <div>
+            <label for="drag-group"><input type="checkbox" id="drag-group">Drag group</label>
+        </div>
+        <div>
+            <pre id="code">code</pre>
+        </div>
+    </div>
 
     <script type="module" src="./src/index.ts"></script>
 
