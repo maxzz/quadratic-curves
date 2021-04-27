@@ -220,6 +220,8 @@ function main() {
         canvas.onmousemove = dragging;
         canvas.onmouseup = canvas.onmouseout = dragDone;
 
+        //canvas.style.cursor = 'move';
+
         draw();
     }
 
@@ -249,6 +251,7 @@ function main() {
     }[] = [];
 
     function dragStart(event: DragEvent) {
+        drag = [];
         let pos = mousePos(event);
 
         // find the nearest point
@@ -263,12 +266,16 @@ function main() {
                     pt: pos,
 
                 });
-                //canvas.style.cursor = 'move';
-                canvas.classList.add('cursor-move');
                 if (!checkDragGroup.checked) {
-                    return;
+                    break;
                 }
             }
+        }
+
+        if (drag.length) {
+            //canvas.style.cursor = 'move';
+            // canvas.classList.add('cursor-move');
+            setTimeout(() => canvas.classList.add('cursor-move'), 0);
         }
     }
 
@@ -286,7 +293,8 @@ function main() {
 
     function dragDone(event: DragEvent) {
         drag = [];
-        canvas.style.cursor = 'default';
+        //canvas.style.cursor = 'default';
+        canvas.classList.remove('cursor-move');
         draw();
     }
 
