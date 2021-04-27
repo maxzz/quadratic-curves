@@ -199,6 +199,7 @@ function main() {
     let ctx: CanvasRenderingContext2D;
     let code: HTMLPreElement;
     let lines: ILine[] = [];
+    let checkDragGroup: HTMLInputElement;
 
     function init(nLines: number, quad: boolean, prev?: string) {
 
@@ -264,7 +265,9 @@ function main() {
                 });
                 //canvas.style.cursor = 'move';
                 canvas.classList.add('cursor-move');
-                //return;
+                if (!checkDragGroup.checked) {
+                    return;
+                }
             }
         }
     }
@@ -298,6 +301,8 @@ function main() {
 
     canvas = document.getElementById('canvas') as HTMLCanvasElement;
     code = document.getElementById('code') as HTMLPreElement;
+    checkDragGroup = document.getElementById('drag-group') as HTMLInputElement;
+    checkDragGroup.checked = true;
 
     if (canvas.getContext) {
         ctx = canvas.getContext('2d');
