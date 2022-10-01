@@ -1,7 +1,7 @@
-import { GenCode } from './components/code-text-generator';
 import { initDrag } from './components/dragging';
-import { Line } from './components/Line';
-import { ILine, IPoint } from './components/types';
+import { ILine } from './components/types';
+import { Line } from './components/shape-line';
+import { GenCode } from './components/code-text-generator';
 import './index.css';
 
 export type AppContext = {
@@ -51,7 +51,6 @@ function main() {
             dragDone,
         } = initDrag(appContext, draw);
 
-
         // handlers
         appContext.canvas.onmousedown = dragStart;
         appContext.canvas.onmousemove = dragging;
@@ -77,7 +76,7 @@ function main() {
         appContext.lines.forEach(line => Line.drawLine(appContext.ctx, line));
 
         // update generated code
-        appContext.code.innerText = GenCode.showCode(appContext.lines);
+        //appContext.code.innerText = GenCode.showCode(appContext.lines);
     }
 
     appContext.checkDragGroup.checked = true;

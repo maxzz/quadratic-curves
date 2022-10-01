@@ -1,28 +1,25 @@
 import { GRAPHSTYLE, hue } from "./initials";
-import { ILine, ILinePosKeys, IPoint } from "./types";
+import { ILine, ILinePosKeys, IPoint, LinePoints } from "./types";
 
 export namespace Line {
     export function initLine(quad: boolean, n: number): ILine {
         let defLine: ILine = {
-            p1: { x: 39, y: 18 },
-            p2: { x: 49, y: 282 },
-            cp1: { x: 9, y: 116 },
-            cp2: { x: 15, y: 195 },
+            points: {
+                p1: { x: 39, y: 18 },
+                p2: { x: 49, y: 282 },
+                cp1: { x: 9, y: 116 },
+                cp2: { x: 15, y: 195 },
+            },
             color: hue(10),
         };
 
         let line: ILine = JSON.parse(JSON.stringify(defLine)); // deep copy
 
         if (quad) {
-            delete line.cp2;
+            delete line.points.cp2;
         }
 
-        for (var p in line) {
-            if (typeof line[p] === 'string') {
-                continue; // skip color
-            }
-            line[p].x = line[p].x + n * 80;
-        }
+        Object.values(line.points).forEach((val) => val.x = val.x + n * 80);
 
         line.color = hue(n * 40);
 
@@ -32,15 +29,17 @@ export namespace Line {
     export function drawLine(c: CanvasRenderingContext2D, ln: ILine) {
         // curve
         c.lineWidth = GRAPHSTYLE.curve.width;
-        c.strokeStyle = ln.color;
+        c.strokeStyle = ln.color || '';
+
+        const thisPoints = ln.points;
 
         c.beginPath();
-        c.moveTo(ln.p1.x, ln.p1.y);
+        c.moveTo(thisPoints.p1.x, thisPoints.p1.y);
 
-        if (ln.cp2) {
-            c.bezierCurveTo(ln.cp1.x, ln.cp1.y, ln.cp2.x, ln.cp2.y, ln.p2.x, ln.p2.y);
+        if (thisPoints.cp2) {
+            c.bezierCurveTo(thisPoints.cp1.x, thisPoints.cp1.y, thisPoints.cp2.x, thisPoints.cp2.y, thisPoints.p2.x, thisPoints.p2.y);
         } else {
-            c.quadraticCurveTo(ln.cp1.x, ln.cp1.y, ln.p2.x, ln.p2.y);
+            c.quadraticCurveTo(thisPoints.cp1.x, thisPoints.cp1.y, thisPoints.p2.x, thisPoints.p2.y);
         }
         c.stroke();
         // c.fillStyle = 'black';
@@ -51,30 +50,30 @@ export namespace Line {
         c.strokeStyle = GRAPHSTYLE.pline.color;
 
         c.beginPath();
-        c.moveTo(ln.p1.x, ln.p1.y);
-        c.lineTo(ln.cp1.x, ln.cp1.y);
+        c.moveTo(thisPoints.p1.x, thisPoints.p1.y);
+        c.lineTo(thisPoints.cp1.x, thisPoints.cp1.y);
 
-        if (ln.cp2) {
-            c.moveTo(ln.p2.x, ln.p2.y);
-            c.lineTo(ln.cp2.x, ln.cp2.y);
+        if (thisPoints.cp2) {
+            c.moveTo(thisPoints.p2.x, thisPoints.p2.y);
+            c.lineTo(thisPoints.cp2.x, thisPoints.cp2.y);
         } else {
-            c.lineTo(ln.p2.x, ln.p2.y);
+            c.lineTo(thisPoints.p2.x, thisPoints.p2.y);
         }
 
         c.stroke();
 
         // control points
-        for (var p in ln) {
-            let isControl = p === 'cp1' || p === 'cp2';
+        for (const [key, val] of Object.entries(ln.points)) {
+            let isControl = key === 'cp1' || key === 'cp2';
 
             c.lineWidth = isControl ? GRAPHSTYLE.cpoint.width : GRAPHSTYLE.circles.width;
             c.strokeStyle = GRAPHSTYLE.circles.color;
-            c.fillStyle = isControl ? GRAPHSTYLE.circles.fill : ln.color;
+            c.fillStyle = isControl ? GRAPHSTYLE.circles.fill : ln.color || '';
 
             let stl = isControl ? GRAPHSTYLE.cpoint : GRAPHSTYLE.point;
 
             c.beginPath();
-            c.arc(ln[p].x, ln[p].y, stl.radius, stl.arc1, stl.arc2, true);
+            c.arc(val.x, val.y, stl.radius, stl.arc1, stl.arc2, true);
             c.fill();
             c.stroke();
         }
@@ -85,11 +84,11 @@ export namespace Line {
 export function lineHasPoint(line: ILine, pos: IPoint): { line: ILine, member: ILinePosKeys; } | undefined {
     let member: ILinePosKeys | undefined = undefined;
 
-    const point = (Object.entries(line) as EntriesTuple<ILine>)
+    const point = (Object.entries(line.points) as EntriesTuple<LinePoints>)
         .find((point) => {
             const key = point?.[0] as ILinePosKeys;
             const val = point?.[1];
-            if (!key || !val || typeof val === 'string') { // skip color
+            if (!key || !val) {
                 return;
             }
 

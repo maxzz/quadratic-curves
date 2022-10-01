@@ -3,12 +3,16 @@ export interface IPoint {
     y: number;
 }
 
-export interface ILine {
+export type LinePoints = {
     p1: IPoint; // starting point
     p2: IPoint; // end point
-    cp1?: IPoint;
-    cp2?: IPoint;
+    cp1: IPoint;
+    cp2?: IPoint;   // will be missing in case of quad
+}
+
+export interface ILine {
+    points: LinePoints;
     color?: string;
 }
 
-export type ILinePosKeys = keyof Omit<ILine, 'color'>;
+export type ILinePosKeys = keyof LinePoints;

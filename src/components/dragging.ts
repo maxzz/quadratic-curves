@@ -1,5 +1,5 @@
 import { AppContext } from "..";
-import { lineHasPoint } from "./Line";
+import { lineHasPoint } from "./shape-line";
 import { ILine, ILinePosKeys, IPoint } from "./types";
 
 type DraggingLine = {
@@ -21,6 +21,7 @@ export function initDrag(appContext: AppContext, draw: () => void) {
 
             let res = lineHasPoint(line, pt);
             if (res) {
+                console.log('res', res);
                 drag.push({
                     line: res.line,
                     member: res.member,
@@ -43,12 +44,12 @@ export function initDrag(appContext: AppContext, draw: () => void) {
     function dragging(event: MouseEvent) {
         if (drag.length) {
             let pos = mousePos(event);
-            drag.forEach((item: DraggingLine) => {
-                const line = item.member && item.line?.[item.member];
-                if (line && item.pt) {
-                    line.x += pos.x - item.pt.x;
-                    line.y += pos.y - item.pt.y;
-                    item.pt = pos;
+            drag.forEach((draggingLine: DraggingLine) => {
+                const line = draggingLine.member && draggingLine.line?.points[draggingLine.member];
+                if (line && draggingLine.pt) {
+                    line.x += pos.x - draggingLine.pt.x;
+                    line.y += pos.y - draggingLine.pt.y;
+                    draggingLine.pt = pos;
                 }
             });
             draw();
