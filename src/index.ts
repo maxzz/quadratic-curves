@@ -3,7 +3,23 @@ import { Line } from './components/Line';
 import { ILine, IPoint } from './components/types';
 import './index.css';
 
+type AppContext = {
+    canvas: HTMLCanvasElement;
+    ctx: CanvasRenderingContext2D;
+    code: HTMLPreElement;
+    lines: ILine[];
+    checkDragGroup: HTMLInputElement;
+}
+
 function main() {
+
+    const AppContext = {
+        canvas: document.getElementById('canvas')! as HTMLCanvasElement,
+        ctx: undefined,
+        code: document.getElementById('code')! as HTMLPreElement,
+        lines: [],
+        checkDragGroup: document.getElementById('drag-group')! as HTMLInputElement,
+    }
 
     let canvas: HTMLCanvasElement;
     let ctx: CanvasRenderingContext2D;
@@ -49,7 +65,7 @@ function main() {
 
         lines.forEach(line => Line.drawLine(ctx, line));
 
-        GenCode.showCode(code, lines);
+        code.firstChild && (code.firstChild.nodeValue = GenCode.showCode(lines));
     }
 
     //#region dragging

@@ -26,25 +26,23 @@ export namespace GenCode {
         return JSON.stringify(lines);
     }
 
-    export function showCode(code: HTMLPreElement, lines: ILine[]) {
-        if (code) {
-            // 1. Build components
-            let txt =
-                "canvas = document.getElementById('canvas');\n" +
-                "ctx = canvas.getContext('2d');\n" +
-                `ctx.lineWidth = ${GRAPHSTYLE.curve.width};\n`;
+    export function showCode(lines: ILine[]): string {
+        // 1. Build components
+        let txt =
+            "canvas = document.getElementById('canvas');\n" +
+            "ctx = canvas.getContext('2d');\n" +
+            `ctx.lineWidth = ${GRAPHSTYLE.curve.width};\n`;
 
-            lines.forEach(ln => txt += `\n${genLine(ln)}`);
+        lines.forEach(ln => txt += `\n${genLine(ln)}`);
 
-            // 2. Build points array
-            let body = '\nconst points = [';
-            lines.forEach(ln => body += `\n    ${genLineAsArray(ln)},`);
-            txt += `${body}\n];`;
+        // 2. Build points array
+        let body = '\nconst points = [';
+        lines.forEach(ln => body += `\n    ${genLineAsArray(ln)},`);
+        txt += `${body}\n];`;
 
-            txt += `\n// prev = '${genAll(lines)}';\n\n`;
+        txt += `\n// prev = '${genAll(lines)}';\n\n`;
 
-            // 3. set text to DOM
-            code.firstChild.nodeValue = txt;
-        }
+        // 3. set text to DOM
+        return txt;
     }
 } //namespace GenCode
