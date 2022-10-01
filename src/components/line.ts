@@ -1,5 +1,5 @@
 import { GRAPHSTYLE, hue } from "./initials";
-import { ILine, IPoint } from "./types";
+import { ILine, ILinePosKeys, IPoint } from "./types";
 
 export namespace Line {
     export function initLine(quad: boolean, n: number): ILine {
@@ -80,65 +80,29 @@ export namespace Line {
         }
     } //drawLine()
 
-    //G: 'typescript entries type'
-    //https://stackoverflow.com/questions/60141960/typescript-key-value-relation-preserving-object-entries-type 'Typescript Key-Value relation preserving Object.entries type'
+} //namespace Line
 
-    type EntriesTuple<T> = {
-        [K in keyof T]: [K, T[K]];
-    }[keyof T][];
+export function lineHasPoint(line: ILine, pos: IPoint): { line: ILine, member: ILinePosKeys; } | undefined {
+    let member: ILinePosKeys | undefined = undefined;
 
-    type PickByValue<T, V> = Pick<T, { [K in keyof T]: T[K] extends V ? K : never }[keyof T]>
-
-    type EntriesUnion<T> = {
-        [K in keyof T]: [keyof PickByValue<T, T[K]>, T[K]]
-    }[keyof T][];
-
-    export function lineHasPoint(line: ILine, pos: IPoint): { line: ILine, member: string; } | undefined {
-        
-        const entries = Object.entries(line) as EntriesTuple<ILine>;
-
-        entries.find((item) => {
-            const k = item?.[0];
-            const v = item?.[1];
-            if (!k || !v || typeof v === 'string') { // skip color
+    const point = (Object.entries(line) as EntriesTuple<ILine>)
+        .find((point) => {
+            const key = point?.[0] as ILinePosKeys;
+            const val = point?.[1];
+            if (!key || !val || typeof val === 'string') { // skip color
                 return;
             }
-            v
 
-            if (!item) {
-                return
+            let dx = val.x - pos.x;
+            let dy = val.y - pos.y;
+
+            if ((dx * dx) + (dy * dy) < GRAPHSTYLE.point.radius * GRAPHSTYLE.point.radius) {
+                member = key;
+                return true;
             }
-            const [key, val] = item;
-            if (!val && key === 'color') {
-                return; // skip color: ;
-            }
+        });
 
-            val
-
-
-
-            // let dx = line[member].x - pos.x;
-            // let dy = line[member].y - pos.y;
-
-            // if ((dx * dx) + (dy * dy) < GRAPHSTYLE.point.radius * GRAPHSTYLE.point.radius) {
-            //     return { line, member };
-            // }
-        })
-
-        return
-
-        // for (const member in line) {
-        //     if (typeof line[member] === 'string') {
-        //         continue; // skip color
-        //     }
-
-        //     let dx = line[member].x - pos.x;
-        //     let dy = line[member].y - pos.y;
-
-        //     if ((dx * dx) + (dy * dy) < GRAPHSTYLE.point.radius * GRAPHSTYLE.point.radius) {
-        //         return { line, member };
-        //     }
-        // }
+    if (member) {
+        return { line, member };
     }
-
-} //namespace Line
+}

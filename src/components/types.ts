@@ -10,3 +10,5 @@ export interface ILine {
     cp2?: IPoint;
     color?: string;
 }
+
+export type ILinePosKeys = keyof Omit<ILine, 'color'>;
