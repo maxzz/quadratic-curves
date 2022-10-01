@@ -8,16 +8,18 @@
     <title>Quadratic curves</title>
 </head>
 <body>
-    <div class="flex flex-col bg-red-700">
-        <div>
-            <canvas class="w-full" id='canvas'></canvas>
+    <div class="p-4 flex flex-col bg-gray-300 min-h-screen">
+        <div class="w-1/2 self-center">
+            <canvas class="w-full h-full" id='canvas'></canvas>
             <!-- <canvas id='canvas' width="600" height="600" class="quadratic"></canvas> -->
         </div>
-        <div>
-            <label for="drag-group"><input type="checkbox" id="drag-group">Drag group</label>
+        <div class="py-4">
+            <label class="flex items-center">
+                <input class="-mb-1 mr-1" type="checkbox" id="drag-group"
+            >Drag group</label>
         </div>
-        <div>
-            <pre id="code">code</pre>
+        <div class="text-[.65rem] overflow-hidden">
+            <pre class="px-2 overflow-x-scroll" id="code">code</pre>
         </div>
     </div>
 

@@ -2,18 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-canvas {
-    border: 1px dashed #ddd;
-    background: #f7f7f7;
-    margin: 10px 0;
-}
-
 #code {
-    padding: 10px;
-    background: #000033;
-    border: 1px dashed #ffff00;
     color: #00ff00;
-    width: 380px;
+    background: #000033;
 }
 
 .cursor-move {
