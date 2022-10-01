@@ -33,13 +33,13 @@ function main() {
 
     function init(nLines: number, quad: boolean, prev?: string) {
 
-        if (prev) {
-            appContext.lines = JSON.parse(prev);
-        } else {
+        // if (prev) { // later conver old format wo/ points member
+        //     appContext.lines = JSON.parse(prev);
+        // } else {
             for (let i = 0; i < nLines; i++) {
                 appContext.lines.push(Line.initLine(quad, i));
             }
-        }
+        // }
 
         // line style
         appContext.ctx.lineCap = 'round';
@@ -76,7 +76,7 @@ function main() {
         appContext.lines.forEach(line => Line.drawLine(appContext.ctx, line));
 
         // update generated code
-        //appContext.code.innerText = GenCode.showCode(appContext.lines);
+        appContext.code.innerText = GenCode.showCode(appContext.lines);
     }
 
     appContext.checkDragGroup.checked = true;

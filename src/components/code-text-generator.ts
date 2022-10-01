@@ -3,21 +3,23 @@ import { ILine } from "./types";
 
 export namespace GenCode {
     function genLine(l: ILine) {
+        const pts = l.points;
         return "ctx.beginPath();\n" +
-            `ctx.moveTo(${l.p1.x}, ${l.p1.y});\n` +
-            (l.cp2 ?
-                `ctx.bezierCurveTo(${l.cp1.x}, ${l.cp1.y}, ${l.cp2.x}, ${l.cp2.y}, ${l.p2.x}, ${l.p2.y});\n` :
-                `ctx.quadraticCurveTo(${l.cp1.x}, ${l.cp1.y}, ${l.p2.x}, ${l.p2.y});\n`
+            `ctx.moveTo(${pts.p1.x}, ${pts.p1.y});\n` +
+            (pts.cp2 ?
+                `ctx.bezierCurveTo(${pts.cp1.x}, ${pts.cp1.y}, ${pts.cp2.x}, ${pts.cp2.y}, ${pts.p2.x}, ${pts.p2.y});\n` :
+                `ctx.quadraticCurveTo(${pts.cp1.x}, ${pts.cp1.y}, ${pts.p2.x}, ${pts.p2.y});\n`
             ) +
             "ctx.stroke();\n";
     }
 
     function genLineAsArray(l: ILine) {
+        const pts = l.points;
         return "{ " +
-            `p1: {x: ${l.p1.x}, y: ${l.p1.y}}, p2: {x: ${l.p2.x}, y: ${l.p2.y}}, ` +
-            (l.cp2 ?
-                `cp1: {x: ${l.cp1.x}, y: ${l.cp1.y}}, cp2: {x: ${l.cp2.x}, y: ${l.cp2.y}}` :
-                `cp1: {x: ${l.cp1.x}, y: ${l.cp1.y}}`
+            `p1: {x: ${pts.p1.x}, y: ${pts.p1.y}}, p2: {x: ${pts.p2.x}, y: ${pts.p2.y}}, ` +
+            (pts.cp2 ?
+                `cp1: {x: ${pts.cp1.x}, y: ${pts.cp1.y}}, cp2: {x: ${pts.cp2.x}, y: ${pts.cp2.y}}` :
+                `cp1: {x: ${pts.cp1.x}, y: ${pts.cp1.y}}`
             ) +
             " }";
     }
