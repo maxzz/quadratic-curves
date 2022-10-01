@@ -1,9 +1,10 @@
 import { GenCode } from './components/code-text-generator';
+import { initDrag } from './components/dragging';
 import { Line } from './components/Line';
 import { ILine, IPoint } from './components/types';
 import './index.css';
 
-type AppContext = {
+export type AppContext = {
     canvas: HTMLCanvasElement;
     ctx: CanvasRenderingContext2D;
     code: HTMLPreElement;
@@ -44,6 +45,13 @@ function main() {
         appContext.ctx.lineCap = 'round';
         appContext.ctx.lineJoin = 'round';
 
+        const {
+            dragStart,
+            dragging,
+            dragDone,
+        } = initDrag(appContext, draw);
+
+
         // handlers
         appContext.canvas.onmousedown = dragStart;
         appContext.canvas.onmousemove = dragging;
@@ -72,14 +80,7 @@ function main() {
         appContext.code.innerText = GenCode.showCode(appContext.lines);
     }
 
-    //#region dragging
-
-
-    //#endregion dragging
-
-
     appContext.checkDragGroup.checked = true;
-
 
     var prev;
     //prev = /*7*/'[{"p1":{"x":126,"y":174},"p2":{"x":121,"y":429},"cp1":{"x":55,"y":246},"cp2":{"x":80,"y":324},"color":"hsla(0, 100%, 50%, 0.95)"},{"p1":{"x":177,"y":244},"p2":{"x":122,"y":429},"cp1":{"x":136,"y":287},"cp2":{"x":125,"y":329},"color":"hsla(40, 100%, 50%, 0.95)"},{"p1":{"x":127,"y":174},"p2":{"x":179,"y":243},"cp1":{"x":155,"y":183},"cp2":{"x":167,"y":209},"color":"hsla(80, 100%, 50%, 0.95)"},{"p1":{"x":164,"y":138},"p2":{"x":223,"y":229},"cp1":{"x":195,"y":145},"cp2":{"x":216,"y":177},"color":"hsla(120, 100%, 50%, 0.95)"},{"p1":{"x":166,"y":136},"p2":{"x":261,"y":82},"cp1":{"x":191,"y":98},"cp2":{"x":230,"y":91},"color":"hsla(160, 100%, 50%, 0.95)"},{"p1":{"x":318,"y":174},"p2":{"x":225,"y":230},"cp1":{"x":293,"y":196},"cp2":{"x":266,"y":215},"color":"hsla(200, 100%, 50%, 0.95)"},{"p1":{"x":262,"y":83},"p2":{"x":319,"y":175},"cp1":{"x":312,"y":98},"cp2":{"x":320,"y":143},"color":"hsla(240, 100%, 50%, 0.95)"}]';
