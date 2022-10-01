@@ -80,19 +80,65 @@ export namespace Line {
         }
     } //drawLine()
 
+    //G: 'typescript entries type'
+    //https://stackoverflow.com/questions/60141960/typescript-key-value-relation-preserving-object-entries-type 'Typescript Key-Value relation preserving Object.entries type'
+
+    type EntriesTuple<T> = {
+        [K in keyof T]: [K, T[K]];
+    }[keyof T][];
+
+    type PickByValue<T, V> = Pick<T, { [K in keyof T]: T[K] extends V ? K : never }[keyof T]>
+
+    type EntriesUnion<T> = {
+        [K in keyof T]: [keyof PickByValue<T, T[K]>, T[K]]
+    }[keyof T][];
+
     export function lineHasPoint(line: ILine, pos: IPoint): { line: ILine, member: string; } | undefined {
-        for (var member in line) {
-            if (typeof line[member] === 'string') {
-                continue; // skip color
+        
+        const entries = Object.entries(line) as EntriesTuple<ILine>;
+
+        entries.find((item) => {
+            const k = item?.[0];
+            const v = item?.[1];
+            if (!k || !v || typeof v === 'string') { // skip color
+                return;
+            }
+            v
+
+            if (!item) {
+                return
+            }
+            const [key, val] = item;
+            if (!val && key === 'color') {
+                return; // skip color: ;
             }
 
-            let dx = line[member].x - pos.x;
-            let dy = line[member].y - pos.y;
+            val
 
-            if ((dx * dx) + (dy * dy) < GRAPHSTYLE.point.radius * GRAPHSTYLE.point.radius) {
-                return { line, member };
-            }
-        }
+
+
+            // let dx = line[member].x - pos.x;
+            // let dy = line[member].y - pos.y;
+
+            // if ((dx * dx) + (dy * dy) < GRAPHSTYLE.point.radius * GRAPHSTYLE.point.radius) {
+            //     return { line, member };
+            // }
+        })
+
+        return
+
+        // for (const member in line) {
+        //     if (typeof line[member] === 'string') {
+        //         continue; // skip color
+        //     }
+
+        //     let dx = line[member].x - pos.x;
+        //     let dy = line[member].y - pos.y;
+
+        //     if ((dx * dx) + (dy * dy) < GRAPHSTYLE.point.radius * GRAPHSTYLE.point.radius) {
+        //         return { line, member };
+        //     }
+        // }
     }
 
 } //namespace Line
