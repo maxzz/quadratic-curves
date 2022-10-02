@@ -19,6 +19,9 @@ export function initDrag(appContext: AppContext, draw: (appContext: AppContext) 
         for (var i = 0; i < appContext.lines.length; i++) {
             var line: ILine = appContext.lines[i];
 
+            line.color === 'hsla(240, 100%, 50%, 0.95)' &&
+                console.log('----------', line);
+
             let res = lineHasPoint(line, pt);
             if (res) {
                 drag.push({
@@ -62,10 +65,16 @@ export function initDrag(appContext: AppContext, draw: (appContext: AppContext) 
         draw(appContext);
     }
 
+    function round(v: number) {
+        return Math.round(v);
+    }
+
     function mousePos(event: MouseEvent): IPoint {
         return {
             x: event.pageX - appContext.canvas.offsetLeft,
-            y: event.pageY - appContext.canvas.offsetTop
+            y: event.pageY - appContext.canvas.offsetTop,
+            // x: round(event.pageX - appContext.canvas.offsetLeft),
+            // y: round(event.pageY - appContext.canvas.offsetTop),
         };
     }
 

@@ -12,16 +12,20 @@
 <body>
     <div class="min-h-screen p-4 text-xs bg-slate-900 text-slate-400 flex flex-col items-center">
         <div class="w-full max-w-4xl flex flex-col">
+            <div class="">Quadratic curves</div>
+
             <div class="w-full aspect-square self-center">
                 <canvas class="w-full h-full" id='canvas'></canvas>
                 <!-- <canvas id='canvas' width="600" height="600" class="quadratic"></canvas> -->
             </div>
+
             <div class="py-4">
                 <label class="flex items-center space-x-1">
                     <input class="form-checkbox text-slate-700 rounded" type="checkbox" id="drag-group">
                     <div>Drag overlapping points as a group</div>
                 </label>
             </div>
+
             <div class="text-[.65rem] overflow-hidden">
                 <pre class="px-2 overflow-x-scroll" id="code">code</pre>
             </div>
