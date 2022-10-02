@@ -8,7 +8,7 @@ type DraggingLine = {
     member: ILinePosKeys | null;
 };
 
-export function initDrag(appContext: AppContext, draw: () => void) {
+export function initDrag(appContext: AppContext, draw: (appContext: AppContext) => void) {
     let drag: DraggingLine[] = [];
 
     function dragStart(event: MouseEvent) {
@@ -52,7 +52,7 @@ export function initDrag(appContext: AppContext, draw: () => void) {
                     draggingLine.pt = pos;
                 }
             });
-            draw();
+            draw(appContext);
         }
     }
 
@@ -60,7 +60,7 @@ export function initDrag(appContext: AppContext, draw: () => void) {
         drag = [];
         //canvas.style.cursor = 'default';
         appContext.canvas.classList.remove('cursor-move');
-        draw();
+        draw(appContext);
     }
 
     function mousePos(event: MouseEvent): IPoint {
