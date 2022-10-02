@@ -23,7 +23,7 @@ export function initAppContext(): AppContext | undefined {
     return { canvas, ctx, code, lines: [], checkDragGroup, };
 }
 
-export function init(appContext: AppContext, nLines: number, quad: boolean, prev?: string) {
+export function initData(appContext: AppContext, nLines: number, quad: boolean, prev?: string) {
 
     // if (prev) { // later conver old format wo/ points member
     //     appContext.lines = JSON.parse(prev);
@@ -45,7 +45,17 @@ export function init(appContext: AppContext, nLines: number, quad: boolean, prev
 
     //appContext.canvas.style.cursor = 'move';
 
-    draw(appContext);
+    //draw(appContext);
+    resizeWindow();
+
+    function resizeWindow() {
+        const bounds = appContext.canvas.getBoundingClientRect();
+        appContext.canvas.width = bounds.width;
+        appContext.canvas.height = bounds.height;
+        draw(appContext);
+    }
+
+    window.addEventListener('resize', resizeWindow);
 }
 
 export function draw(appContext: AppContext) {
