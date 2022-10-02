@@ -21,7 +21,6 @@ export function initDrag(appContext: AppContext, draw: (appContext: AppContext) 
 
             let res = lineHasPoint(line, pt);
             if (res) {
-                console.log('res', res);
                 drag.push({
                     line: res.line,
                     member: res.member,
