@@ -27,15 +27,14 @@ export namespace Line {
     }
 
     export function drawLine(c: CanvasRenderingContext2D, ln: ILine) {
-        // curve
+        const thisPoints = ln.points;
+        
+        // 1. Draw curves
         c.lineWidth = GRAPHSTYLE.curve.width;
         c.strokeStyle = ln.color || '';
 
-        const thisPoints = ln.points;
-
         c.beginPath();
         c.moveTo(thisPoints.p1.x, thisPoints.p1.y);
-
         if (thisPoints.cp2) {
             c.bezierCurveTo(thisPoints.cp1.x, thisPoints.cp1.y, thisPoints.cp2.x, thisPoints.cp2.y, thisPoints.p2.x, thisPoints.p2.y);
         } else {
@@ -45,24 +44,24 @@ export namespace Line {
         // c.fillStyle = 'black';
         // c.fill();
 
-        // lines
-        c.lineWidth = GRAPHSTYLE.pline.width;
-        c.strokeStyle = GRAPHSTYLE.pline.color;
+        // 2.1. Draw line cp1
+        c.lineWidth = GRAPHSTYLE.ctrlLine.width;
+        c.strokeStyle = GRAPHSTYLE.ctrlLine.color;
 
         c.beginPath();
         c.moveTo(thisPoints.p1.x, thisPoints.p1.y);
         c.lineTo(thisPoints.cp1.x, thisPoints.cp1.y);
 
+        // 2.1. Draw line cp2
         if (thisPoints.cp2) {
             c.moveTo(thisPoints.p2.x, thisPoints.p2.y);
             c.lineTo(thisPoints.cp2.x, thisPoints.cp2.y);
         } else {
             c.lineTo(thisPoints.p2.x, thisPoints.p2.y);
         }
-
         c.stroke();
 
-        // control points
+        // 3. Draw circles
         for (const [key, val] of Object.entries(ln.points)) {
             let isControl = key === 'cp1' || key === 'cp2';
 
@@ -70,10 +69,10 @@ export namespace Line {
             c.strokeStyle = GRAPHSTYLE.circles.color;
             c.fillStyle = isControl ? GRAPHSTYLE.circles.fill : ln.color || '';
 
-            let stl = isControl ? GRAPHSTYLE.cpoint : GRAPHSTYLE.point;
+            let style = isControl ? GRAPHSTYLE.cpoint : GRAPHSTYLE.point;
 
             c.beginPath();
-            c.arc(val.x, val.y, stl.radius, stl.arc1, stl.arc2, true);
+            c.arc(val.x, val.y, style.radius, style.arc1, style.arc2, true);
             c.fill();
             c.stroke();
         }
@@ -84,24 +83,33 @@ export namespace Line {
 export function lineHasPoint(line: ILine, pos: IPoint): { line: ILine, member: ILinePosKeys; } | undefined {
     let member: ILinePosKeys | undefined = undefined;
 
-    const point = (Object.entries(line.points) as EntriesTuple<LinePoints>)
-        .find((point) => {
-            const key = point?.[0] as ILinePosKeys;
-            const val = point?.[1];
-            if (!key || !val) {
-                return;
-            }
+    for (const [key, pt] of Object.entries(line.points)) {
+        let dx = pt.x - pos.x;
+        let dy = pt.y - pos.y;
 
-            let dx = val.x - pos.x;
-            let dy = val.y - pos.y;
-
-            if ((dx * dx) + (dy * dy) < GRAPHSTYLE.point.radius * GRAPHSTYLE.point.radius) {
-                member = key;
-                return true;
-            }
-        });
-
-    if (member) {
-        return { line, member };
+        if ((dx * dx) + (dy * dy) < GRAPHSTYLE.point.radius * GRAPHSTYLE.point.radius) {
+            return { line, member: key as ILinePosKeys };
+        }
     }
+
+    // const point = (Object.entries(line.points) as EntriesTuple<LinePoints>)
+    //     .find((point) => {
+    //         const key = point?.[0] as ILinePosKeys;
+    //         const val = point?.[1];
+    //         if (!key || !val) {
+    //             return;
+    //         }
+
+    //         let dx = val.x - pos.x;
+    //         let dy = val.y - pos.y;
+
+    //         if ((dx * dx) + (dy * dy) < GRAPHSTYLE.point.radius * GRAPHSTYLE.point.radius) {
+    //             member = key;
+    //             return true;
+    //         }
+    //     });
+
+    // if (member) {
+    //     return { line, member };
+    // }
 }
