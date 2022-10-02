@@ -45,6 +45,8 @@ export namespace Line {
         // c.fill();
 
         // 2.1. Draw line cp1
+        c.setLineDash([2, 2]);
+
         c.lineWidth = GRAPHSTYLE.ctrlLine.width;
         c.strokeStyle = GRAPHSTYLE.ctrlLine.color;
 
@@ -61,12 +63,14 @@ export namespace Line {
         }
         c.stroke();
 
+        c.setLineDash([]);
+
         // 3. Draw circles
         for (const [key, val] of Object.entries(ln.points)) {
             let isControl = key === 'cp1' || key === 'cp2';
 
-            c.lineWidth = isControl ? GRAPHSTYLE.cpoint.width : GRAPHSTYLE.circles.width;
-            c.strokeStyle = GRAPHSTYLE.circles.color;
+            c.lineWidth = isControl ? 5 : GRAPHSTYLE.circles.width;
+            c.strokeStyle =  isControl ? '#00000040' :'#00000040'; // GRAPHSTYLE.circles.color
             c.fillStyle = isControl ? GRAPHSTYLE.circles.fill : ln.color || '';
 
             let style = isControl ? GRAPHSTYLE.cpoint : GRAPHSTYLE.point;
@@ -74,7 +78,7 @@ export namespace Line {
             c.beginPath();
             //c.arc(0, 0, style.radius, style.startAngle, style.endAngle, true);
             c.arc(val.x, val.y, style.radius, style.startAngle, style.endAngle, true);
-            //c.fill();
+            c.fill();
             c.stroke();
         }
     } //drawLine()
@@ -84,9 +88,15 @@ export namespace Line {
 export function lineHasPoint(line: ILine, pos: IPoint): { line: ILine, member: ILinePosKeys; } | undefined {
     let member: ILinePosKeys | undefined = undefined;
 
+    const hitZone = Math.pow(GRAPHSTYLE.point.radius, 2);
+
     for (const [key, pt] of Object.entries(line.points)) {
-        let dx = pt.x - GRAPHSTYLE.point.radius - pos.x;
-        let dy = pt.y - GRAPHSTYLE.point.radius - pos.y;
+        let dx = pt.x - pos.x;
+        let dy = pt.y - pos.y;
+        // let dx = pt.x - GRAPHSTYLE.point.radius - pos.x;
+        // let dy = pt.y - GRAPHSTYLE.point.radius - pos.y;
+        // let dx = pt.x - GRAPHSTYLE.point.radius + GRAPHSTYLE.circles.width - pos.x;
+        // let dy = pt.y - GRAPHSTYLE.point.radius + GRAPHSTYLE.circles.width - pos.y;
 
         line.color === 'hsla(240, 100%, 50%, 0.95)' && key === 'p2' &&
             console.log(
@@ -103,10 +113,12 @@ export function lineHasPoint(line: ILine, pos: IPoint): { line: ILine, member: I
                 `${(dy * dy)}`.padStart(5, ' '),
                 `(dx2 + dy2) =`,
                 `${(dx * dx) + (dy * dy)}`.padStart(5, ' '),
-                (dx * dx) + (dy * dy) < GRAPHSTYLE.point.radius * GRAPHSTYLE.point.radius,
+                (dx * dx) + (dy * dy) < hitZone,
+                `distance`,
+                `${Math.sqrt((dx * dx) + (dy * dy))}`
             );
 
-        if ((dx * dx) + (dy * dy) < GRAPHSTYLE.point.radius * GRAPHSTYLE.point.radius) {
+        if ((dx * dx) + (dy * dy) < hitZone) {
             return { line, member: key as ILinePosKeys };
         }
     }

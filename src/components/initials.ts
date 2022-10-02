@@ -4,12 +4,12 @@ export const GRAPHSTYLE = {
         color: 'hsla(216, 91%, 50%, 0.95)',
     },
     circles: {
-        width: 3,
+        width: 1,
         color: '#000',
-        fill: 'hsla(100, 93%, 50%, 1)',
+        fill: 'hsla(60, 93%, 50%, .35)',
     },
     ctrlLine: {
-        width: 2,
+        width: 1,
         color: '',
     },
     point: {
