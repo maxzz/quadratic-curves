@@ -46,12 +46,14 @@ export function initData(appContext: AppContext, nLines: number, quad: boolean, 
     //appContext.canvas.style.cursor = 'move';
 
     //draw(appContext);
-    resizeWindow();
+    setTimeout(resizeWindow, 100);
 
     function resizeWindow() {
-        const bounds = appContext.canvas.getBoundingClientRect();
-        appContext.canvas.width = bounds.width;
-        appContext.canvas.height = bounds.height;
+        appContext.canvas.width = appContext.canvas.clientWidth;
+        appContext.canvas.height = appContext.canvas.clientHeight;
+        // const bounds = appContext.canvas.getBoundingClientRect();
+        // appContext.canvas.width = bounds.width;
+        // appContext.canvas.height = bounds.height;
         draw(appContext);
     }
 
