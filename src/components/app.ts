@@ -45,25 +45,9 @@ export function initData(appContext: AppContext, nLines: number, quad: boolean, 
 
     //appContext.canvas.style.cursor = 'move';
 
-    //draw(appContext);
-    //setTimeout(resizeWindow, 100);
-
-    function resizeWindow() {
-        const css = getComputedStyle(appContext.canvas);
-        console.log('css', css.width, css.height, 'client', appContext.canvas.clientWidth, appContext.canvas.clientHeight);
-
-        appContext.canvas.width = appContext.canvas.clientWidth;
-        appContext.canvas.height = appContext.canvas.clientHeight;
-        // const bounds = appContext.canvas.getBoundingClientRect();
-        // appContext.canvas.width = bounds.width;
-        // appContext.canvas.height = bounds.height;
-        draw(appContext);
-    }
-
     function onCanvasSizeChanged(entries: ResizeObserverEntry[]) {
         for (const entry of entries) {
             if (entry.contentBoxSize) {
-                console.log('entry.contentBoxSize', entry.contentBoxSize);
                 appContext.canvas.width = entry.contentBoxSize[0].inlineSize;
                 appContext.canvas.height = entry.contentBoxSize[0].blockSize;
                 draw(appContext);
@@ -73,8 +57,6 @@ export function initData(appContext: AppContext, nLines: number, quad: boolean, 
 
     const resizeObserver = new ResizeObserver(onCanvasSizeChanged);
     resizeObserver.observe(appContext.canvas, { box: 'content-box' });
-
-    //window.addEventListener('resize', resizeWindow);
 }
 
 export function draw(appContext: AppContext) {
