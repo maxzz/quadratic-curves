@@ -49,6 +49,9 @@ export function initData(appContext: AppContext, nLines: number, quad: boolean, 
     setTimeout(resizeWindow, 100);
 
     function resizeWindow() {
+        const css = getComputedStyle(appContext.canvas);
+        console.log('css', css.width, css.height, 'client', appContext.canvas.clientWidth, appContext.canvas.clientHeight);
+
         appContext.canvas.width = appContext.canvas.clientWidth;
         appContext.canvas.height = appContext.canvas.clientHeight;
         // const bounds = appContext.canvas.getBoundingClientRect();
@@ -77,3 +80,7 @@ export function draw(appContext: AppContext) {
     // update generated code
     appContext.code.innerText = GenCode.showCode(appContext.lines);
 }
+
+//TODO: points persistence
+//TODO: select one from overlapping points under cursor
+//TODO: copy state points
