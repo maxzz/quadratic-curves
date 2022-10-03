@@ -39,46 +39,31 @@ export function initData(appContext: AppContext, nLines: number, quad: boolean, 
 
     // drag handlers
     const { dragStart, dragging, dragDone, } = initDrag(appContext, draw);
-    const events: {name: keyof Pick<HTMLElementEventMap, 'mousedown' | 'mousemove' | 'mouseup' | 'mouseout'>, fn: (event: MouseEvent) => void}[] = [
-        {
-            name: 'mousedown',
-            fn: dragStart,
-        },
-        {
-            name: 'mousemove',
-            fn: dragging,
-        },
-        {
-            name: 'mouseup',
-            fn: dragDone,
-        },
-        {
-            name: 'mouseout',
-            fn: dragDone,
-        },
+    const events: { name: keyof Pick<HTMLElementEventMap, 'mousedown' | 'mousemove' | 'mouseup' | 'mouseout'>, fn: (event: MouseEvent) => void; }[] = [
+        { name: 'mousedown', fn: dragStart, },
+        { name: 'mousemove', fn: dragging, },
+        { name: 'mouseup', fn: dragDone, },
+        // { name: 'mouseout', fn: dragDone, },
     ];
     events.forEach(({ name, fn }) => {
         appContext.canvas.addEventListener(name, fn);
     });
-    
-    appContext.canvas.onmousedown = dragStart;
-    appContext.canvas.onmousemove = dragging;
-    appContext.canvas.onmouseup = appContext.canvas.onmouseout = dragDone;
 
     //appContext.canvas.style.cursor = 'move';
 
     function onCanvasSizeChanged(entries: ResizeObserverEntry[]) {
         for (const entry of entries) {
             if (entry.contentBoxSize) {
-                appContext.canvas.width = entry.contentBoxSize[0].inlineSize;
-                appContext.canvas.height = entry.contentBoxSize[0].blockSize;
+                console.log('entry.contentBoxSize', entry);
+                appContext.canvas.width = entry.contentRect.width;
+                appContext.canvas.height = entry.contentRect.height;
                 draw(appContext);
             }
         }
     }
 
     const resizeObserver = new ResizeObserver(onCanvasSizeChanged);
-    resizeObserver.observe(appContext.canvas, { box: 'content-box' });
+    resizeObserver.observe(appContext.canvas);
 }
 
 export function draw(appContext: AppContext) {
