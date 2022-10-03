@@ -39,7 +39,7 @@ export function initData(appContext: AppContext, nLines: number, quad: boolean, 
 
     // drag handlers
     const { dragStart, dragging, dragDone, } = initDrag(appContext, draw);
-    const events = [
+    const events: {name: keyof Pick<HTMLElementEventMap, 'mousedown' | 'mousemove' | 'mouseup' | 'mouseout'>, fn: (event: MouseEvent) => void}[] = [
         {
             name: 'mousedown',
             fn: dragStart,
@@ -57,7 +57,7 @@ export function initData(appContext: AppContext, nLines: number, quad: boolean, 
             fn: dragDone,
         },
     ];
-    events.forEach(({ name, fn }: {name: keyof Pick<HTMLElementEventMap, 'mousedown' | 'mousemove' | 'mouseup' | 'mouseout'>, fn: (event: MouseEvent) => void}) => {
+    events.forEach(({ name, fn }) => {
         appContext.canvas.addEventListener(name, fn);
     });
     
