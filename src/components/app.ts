@@ -46,7 +46,7 @@ export function initData(appContext: AppContext, nLines: number, quad: boolean, 
     //appContext.canvas.style.cursor = 'move';
 
     //draw(appContext);
-    setTimeout(resizeWindow, 100);
+    //setTimeout(resizeWindow, 100);
 
     function resizeWindow() {
         const css = getComputedStyle(appContext.canvas);
@@ -60,7 +60,21 @@ export function initData(appContext: AppContext, nLines: number, quad: boolean, 
         draw(appContext);
     }
 
-    window.addEventListener('resize', resizeWindow);
+    function onCanvasSizeChanged(entries: ResizeObserverEntry[]) {
+        for (const entry of entries) {
+            if (entry.contentBoxSize) {
+                console.log('entry.contentBoxSize', entry.contentBoxSize);
+                appContext.canvas.width = entry.contentBoxSize[0].inlineSize;
+                appContext.canvas.height = entry.contentBoxSize[0].blockSize;
+                draw(appContext);
+            }
+        }
+    }
+
+    const resizeObserver = new ResizeObserver(onCanvasSizeChanged);
+    resizeObserver.observe(appContext.canvas, { box: 'content-box' });
+
+    //window.addEventListener('resize', resizeWindow);
 }
 
 export function draw(appContext: AppContext) {
@@ -84,3 +98,5 @@ export function draw(appContext: AppContext) {
 //TODO: points persistence
 //TODO: select one from overlapping points under cursor
 //TODO: copy state points
+//TODO: show/hide control points
+//TODO: when points overlapping set the same pos for them
