@@ -3,18 +3,7 @@ import { initDrag } from "./dragging";
 import { Line } from "./shape-line";
 import { ILine } from "./types";
 import { Accordion } from "./ui-accordion";
-
-import te from "../templates.html?raw";
-
-function test() {
-    const fragment = document.createDocumentFragment();
-    const template = document.createElement('div');
-    document.body.appendChild(template);
-    template.outerHTML = te;
-    
-    //console.log('te', te);
-}
-test()
+import templates from "../templates.html?raw";
 
 export type AppContext = {
     canvas: HTMLCanvasElement;
@@ -25,6 +14,11 @@ export type AppContext = {
 };
 
 export function initAppContext(): AppContext | undefined {
+    // 1. Create HTML content to avoid FOUC
+    const template = document.createElement('div');
+    document.body.appendChild(template);
+    template.outerHTML = templates;
+    // 2. Init app elements
     const canvas = document.getElementById('canvas') as HTMLCanvasElement;
     const ctx = canvas?.getContext('2d');
     const code = document.getElementById('code') as HTMLPreElement;
