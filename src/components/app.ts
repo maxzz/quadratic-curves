@@ -2,6 +2,7 @@ import { generateCodeText } from "./code-text-generator";
 import { initDrag } from "./dragging";
 import { Line } from "./shape-line";
 import { ILine } from "./types";
+import { Accordion } from "./ui-accordion";
 
 export type AppContext = {
     canvas: HTMLCanvasElement;
@@ -45,6 +46,10 @@ function initEventHandlers(appContext: AppContext) {
 
     const resizeObserver = new ResizeObserver(onCanvasSizeChanged);
     resizeObserver.observe(appContext.canvas);
+
+    document.querySelectorAll('details').forEach((el) => {
+        new Accordion(el);
+    });
 }
 
 function initData(appContext: AppContext, nLines: number, quad: boolean, prev?: string) {
@@ -62,7 +67,7 @@ export function initApp(appContext: AppContext) {
     initEventHandlers(appContext);
 
     appContext.checkDragGroup.checked = true;
-    
+
     // line style
     appContext.ctx.lineCap = 'round';
     appContext.ctx.lineJoin = 'round';
