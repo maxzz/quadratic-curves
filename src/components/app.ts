@@ -4,6 +4,18 @@ import { Line } from "./shape-line";
 import { ILine } from "./types";
 import { Accordion } from "./ui-accordion";
 
+import te from "../templates.html?raw";
+
+function test() {
+    const fragment = document.createDocumentFragment();
+    const template = document.createElement('div');
+    document.body.appendChild(template);
+    template.outerHTML = te;
+    
+    //console.log('te', te);
+}
+test()
+
 export type AppContext = {
     canvas: HTMLCanvasElement;
     ctx: CanvasRenderingContext2D;
