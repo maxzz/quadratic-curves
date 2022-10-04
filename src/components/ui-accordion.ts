@@ -29,12 +29,7 @@ export class Accordion {            //https://codepen.io/chriscoyier/pen/XWNqxyY
         }
     }
 
-    shrink() {
-        this.isClosing = true;
-
-        const startHeight = `${this.el.offsetHeight}px`; // Store the current height of the element
-        const endHeight = `${this.summary.offsetHeight}px`; // Calculate the height of the summary
-
+    private startAmimation(startHeight: string, endHeight: string) {
         this.animation && this.animation.cancel();
 
         this.animation = this.el.animate({
@@ -43,9 +38,27 @@ export class Accordion {            //https://codepen.io/chriscoyier/pen/XWNqxyY
             duration: 200,
             easing: 'ease-out'
         });
+    }
 
-        this.animation.onfinish = () => this.onAnimationFinish(false);
-        this.animation.oncancel = () => this.isClosing = false;
+    shrink() {
+        this.isClosing = true;
+
+        const startHeight = `${this.el.offsetHeight}px`; // Store the current height of the element
+        const endHeight = `${this.summary.offsetHeight}px`; // Calculate the height of the summary
+
+        this.startAmimation(startHeight, endHeight);
+
+        // this.animation && this.animation.cancel();
+
+        // this.animation = this.el.animate({
+        //     height: [startHeight, endHeight] // Set the keyframes from the startHeight to endHeight
+        // }, {
+        //     duration: 200,
+        //     easing: 'ease-out'
+        // });
+
+        this.animation!.onfinish = () => this.onAnimationFinish(false);
+        this.animation!.oncancel = () => this.isClosing = false;
     }
 
     open() {
@@ -59,17 +72,19 @@ export class Accordion {            //https://codepen.io/chriscoyier/pen/XWNqxyY
         const startHeight = `${this.el.offsetHeight}px`; // Get the current fixed height of the element
         const endHeight = `${this.summary.offsetHeight + this.content.offsetHeight}px`; // Calculate the open height of the element (summary height + content height)
 
-        this.animation && this.animation.cancel();
+        this.startAmimation(startHeight, endHeight);
 
-        this.animation = this.el.animate({
-            height: [startHeight, endHeight] // Set the keyframes from the startHeight to endHeight
-        }, {
-            duration: 200,
-            easing: 'ease-out'
-        });
+        // this.animation && this.animation.cancel();
 
-        this.animation.onfinish = () => this.onAnimationFinish(true);
-        this.animation.oncancel = () => this.isExpanding = false;
+        // this.animation = this.el.animate({
+        //     height: [startHeight, endHeight] // Set the keyframes from the startHeight to endHeight
+        // }, {
+        //     duration: 200,
+        //     easing: 'ease-out'
+        // });
+
+        this.animation!.onfinish = () => this.onAnimationFinish(true);
+        this.animation!.oncancel = () => this.isExpanding = false;
     }
 
     onAnimationFinish(open: boolean) {
