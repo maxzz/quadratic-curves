@@ -47,9 +47,7 @@ function initEventHandlers(appContext: AppContext) {
     const resizeObserver = new ResizeObserver(onCanvasSizeChanged);
     resizeObserver.observe(appContext.canvas);
 
-    document.querySelectorAll('details').forEach((el) => {
-        new Accordion(el);
-    });
+    document.querySelectorAll('details').forEach((el) => new Accordion(el));
 }
 
 function initData(appContext: AppContext, nLines: number, quad: boolean, prev?: string) {

@@ -6,8 +6,8 @@ export class Accordion {            //https://codepen.io/chriscoyier/pen/XWNqxyY
     isClosing: boolean;             // Store if the element is closing
     isExpanding: boolean;           // Store if the element is expanding
 
-    constructor(el: HTMLElement) {
-        this.el = el as any;
+    constructor(el: HTMLDetailsElement) {
+        this.el = el;
         this.summary = el.querySelector('summary')!;
         this.content = el.querySelector('.content')!;
 
