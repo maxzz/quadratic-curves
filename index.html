@@ -1,24 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <!-- https://jsfiddle.net/jaredwilli/pHzBV/ -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Quadratic curves</title>
-  <script type="module" crossorigin src="./assets/index.0070139b.js"></script>
-  <link rel="stylesheet" href="./assets/index.d285853a.css">
+  <script type="module" crossorigin src="./assets/index.ac005540.js"></script>
+  <link rel="stylesheet" href="./assets/index.c945d92a.css">
 </head>
-
 <body>
     <div class="min-h-screen p-4 text-xs bg-slate-900 text-slate-400 flex flex-col items-center">
-        <div class="w-full max-w-4xl flex flex-col">
+        <div class="flex-1 w-full max-w-4xl flex flex-col">
             <div class="">Quadratic curves</div>
 
-            <div class="w-full  self-center">
+            <div class="w-full self-center">
                 <canvas class="w-full h-full aspect-square" id='canvas'></canvas>
-                <!-- <canvas id='canvas' width="600" height="600" class="quadratic"></canvas> -->
             </div>
 
             <div class="py-4">
@@ -28,52 +24,18 @@
                 </label>
             </div>
 
-            <div class="text-[.65rem] overflow-hidden">
-                <pre class="px-2 overflow-x-scroll" id="code">code</pre>
-            </div>
+            <details>
+                <summary class="cursor-pointer">Code</summary>
+                <div class="content text-[.65rem] overflow-hidden">
+                    <pre class="px-2 overflow-x-scroll" id="code">code</pre>
+                </div>
+            </details>
         </div>
+        <footer>
+            <a class="text-xs text-slate-500 hover:underline" href="https://github.com/maxzz/quadratic-curves" target="_blank">Created by Max Zakharzhevskiy. Source code on Github.</a>
+        </footer>
     </div>
 
     
-
-    <!-- <canvas id="myCanvas"></canvas>
-    <script>
-        var canvas = document.getElementById('myCanvas');
-        canvas.width = "378";
-        canvas.height = "400";
-        canvas.style.backgroundColor = 'white';
-
-        var ctx = canvas.getContext('2d');
-
-        var centerX = canvas.width / 2;
-        var centerY = canvas.height / 2;
-        var radius = 70;
-
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-        ctx.fillStyle = 'green';
-        ctx.fill();
-
-        ctx.lineWidth = 5;
-        ctx.strokeStyle = '#003300';
-        ctx.stroke();
-
-        //curve
-        ctx.fillStyle = 'pink';
-        ctx.beginPath();
-
-        ctx.moveTo(146, 92);
-        ctx.quadraticCurveTo(46, 92, 49, 282);
-
-        //ctx.moveTo(49, 282);
-        ctx.quadraticCurveTo(90, 143, 197, 139);
-
-        //ctx.moveTo(197, 139);
-        ctx.quadraticCurveTo(177, 102, 146, 92);
-
-        ctx.stroke();
-        ctx.fill();
-    </script> -->
-
 </body>
 </html>
