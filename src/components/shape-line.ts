@@ -76,7 +76,6 @@ export namespace Line {
             let style = isControl ? GRAPHSTYLE.cpoint : GRAPHSTYLE.point;
 
             c.beginPath();
-            //c.arc(0, 0, style.radius, style.startAngle, style.endAngle, true);
             c.arc(val.x, val.y, style.radius, style.startAngle, style.endAngle, true);
             c.fill();
             c.stroke();
@@ -93,30 +92,26 @@ export function lineHasPoint(line: ILine, pos: IPoint): { line: ILine, member: I
     for (const [key, pt] of Object.entries(line.points)) {
         let dx = pt.x - pos.x;
         let dy = pt.y - pos.y;
-        // let dx = pt.x - GRAPHSTYLE.point.radius - pos.x;
-        // let dy = pt.y - GRAPHSTYLE.point.radius - pos.y;
-        // let dx = pt.x - GRAPHSTYLE.point.radius + GRAPHSTYLE.circles.width - pos.x;
-        // let dy = pt.y - GRAPHSTYLE.point.radius + GRAPHSTYLE.circles.width - pos.y;
 
-        line.color === 'hsla(240, 100%, 50%, 0.95)' && key === 'p2' &&
-            console.log(
-                'pt',
-                pt,
-                'mouse',
-                pos,
-                'dx,dy',
-                `${dx}`.padStart(5, ' '),
-                `${dy}`.padStart(5, ' '),
-                `    (dx * dx) =`,
-                `${(dx * dx)}`.padStart(5, ' '),
-                `    (dy * dy) =`,
-                `${(dy * dy)}`.padStart(5, ' '),
-                `(dx2 + dy2) =`,
-                `${(dx * dx) + (dy * dy)}`.padStart(5, ' '),
-                (dx * dx) + (dy * dy) < hitZone,
-                `distance`,
-                `${Math.sqrt((dx * dx) + (dy * dy))}`
-            );
+        // line.color === 'hsla(240, 100%, 50%, 0.95)' && key === 'p2' &&
+        //     console.log(
+        //         'pt',
+        //         pt,
+        //         'mouse',
+        //         pos,
+        //         'dx,dy',
+        //         `${dx}`.padStart(5, ' '),
+        //         `${dy}`.padStart(5, ' '),
+        //         `    (dx * dx) =`,
+        //         `${(dx * dx)}`.padStart(5, ' '),
+        //         `    (dy * dy) =`,
+        //         `${(dy * dy)}`.padStart(5, ' '),
+        //         `(dx2 + dy2) =`,
+        //         `${(dx * dx) + (dy * dy)}`.padStart(5, ' '),
+        //         (dx * dx) + (dy * dy) < hitZone,
+        //         `distance`,
+        //         `${Math.sqrt((dx * dx) + (dy * dy))}`
+        //     );
 
         if ((dx * dx) + (dy * dy) < hitZone) {
             return { line, member: key as ILinePosKeys };

@@ -1,4 +1,4 @@
-import { GenCode } from "./code-text-generator";
+import { generateCodeText } from "./code-text-generator";
 import { initDrag } from "./dragging";
 import { Line } from "./shape-line";
 import { ILine } from "./types";
@@ -94,7 +94,7 @@ export function draw(appContext: AppContext) {
     appContext.lines.forEach(line => Line.drawLine(appContext.ctx, line));
 
     // update generated code
-    appContext.code.innerText = GenCode.showCode(appContext.lines);
+    appContext.code.innerText = generateCodeText(appContext.lines);
 }
 
 //TODO: points persistence

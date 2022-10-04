@@ -19,8 +19,7 @@ export function initDrag(appContext: AppContext, draw: (appContext: AppContext) 
         for (var i = 0; i < appContext.lines.length; i++) {
             var line: ILine = appContext.lines[i];
 
-            line.color === 'hsla(240, 100%, 50%, 0.95)' &&
-                console.log('----------', line);
+            //line.color === 'hsla(240, 100%, 50%, 0.95)' && console.log('----------', line);
 
             let res = lineHasPoint(line, pt);
             if (res) {
