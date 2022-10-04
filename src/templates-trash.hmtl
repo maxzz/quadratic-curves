@@ -1,4 +1,5 @@
-<div class="min-h-screen overflow-hidden p-4 text-xs bg-slate-900 text-slate-400 flex flex-col items-center">
+<!-- 
+<div class="min-h-screen p-4 text-xs bg-slate-900 text-slate-400 flex flex-col items-center">
     <div class="flex-1 w-full max-w-4xl flex flex-col">
         <div class="">Quadratic curves</div>
 
@@ -13,18 +14,15 @@
             </label>
         </div>
 
-        <div class="overflow-hidden h-60">
-            <details open class="h-full overflow-auto smallscroll">
-                <summary class="cursor-pointer">Code</summary>
-                <div class="">
-                    <div class="content text-[.65rem] ">
-                        <div class="px-2 " id="code">code</div>
-                    </div>
-                </div>
-            </details>
-        </div>
+        <details open class="min-w-0 flex-none overflow-hidden">
+            <summary class="cursor-pointer">Code</summary>
+            <div class="content text-[.65rem] overflow-hidden">
+                <pre class="px-2 overflow-auto" id="code">code</pre>
+            </div>
+        </details>
     </div>
     <footer>
         <a class="text-xs text-slate-500 hover:underline" href="https://github.com/maxzz/quadratic-curves" target="_blank">Created by Max Zakharzhevskiy. Source code on Github.</a>
     </footer>
 </div>
+-->

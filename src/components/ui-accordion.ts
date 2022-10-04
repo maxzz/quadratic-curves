@@ -45,7 +45,7 @@ export class Accordion {            //https://codepen.io/chriscoyier/pen/XWNqxyY
         this.animation = this.el.animate({
             height: [`${startHeight}px`, `${endHeight}px`] // Set the keyframes from the startHeight to endHeight
         }, {
-            duration: 200,
+            duration: 150,
             easing: 'ease-out'
         });
     }
