@@ -10,3 +10,31 @@
 .cursor-move {
     cursor: move;
 }
+
+/* scrollbars */
+
+.overflow-y-overlay {
+    overflow-y: auto
+}
+
+@supports (overflow-y: overlay) {
+    .overflow-y-overlay {
+        overflow-y:overlay
+    }
+}
+
+.smallscroll {
+    --sb-width: 8px;
+    scrollbar-color: #666b7a transparent;
+    scrollbar-width: thin
+}
+
+.smallscroll::-webkit-scrollbar {
+    width: var(--sb-width);
+    height: var(--sb-width);
+    background-color: transparent
+}
+
+.smallscroll::-webkit-scrollbar-thumb {
+    background-color: #666b7a
+}
