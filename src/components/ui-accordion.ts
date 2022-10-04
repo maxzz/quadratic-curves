@@ -31,19 +31,19 @@ export class Accordion {            //https://codepen.io/chriscoyier/pen/XWNqxyY
     
     private expand() {
         this.isExpanding = true; // Set the element as "being expanding"
-        const startHeight = `${this.el.offsetHeight}px`; // Get the current fixed height of the element
-        const endHeight = `${this.summary.offsetHeight + this.content.offsetHeight}px`; // Calculate the open height of the element (summary height + content height)
+        const startHeight = this.el.offsetHeight; // Get the current fixed height of the element
+        const endHeight = this.summary.offsetHeight + this.content.offsetHeight; // Calculate the open height of the element (summary height + content height)
 
         this.startAmimation(startHeight, endHeight);
         this.animation!.onfinish = () => this.onAnimationFinish(true);
         this.animation!.oncancel = () => this.isExpanding = false;
     }
 
-    private startAmimation(startHeight: string, endHeight: string) {
+    private startAmimation(startHeight: number, endHeight: number) {
         this.animation && this.animation.cancel();
 
         this.animation = this.el.animate({
-            height: [startHeight, endHeight] // Set the keyframes from the startHeight to endHeight
+            height: [`${startHeight}px`, `${endHeight}px`] // Set the keyframes from the startHeight to endHeight
         }, {
             duration: 200,
             easing: 'ease-out'
@@ -60,9 +60,8 @@ export class Accordion {            //https://codepen.io/chriscoyier/pen/XWNqxyY
 
     public shrink() {
         this.isClosing = true;
-
-        const startHeight = `${this.el.offsetHeight}px`; // Store the current height of the element
-        const endHeight = `${this.summary.offsetHeight}px`; // Calculate the height of the summary
+        const startHeight = this.el.offsetHeight; // Store the current height of the element
+        const endHeight = this.summary.offsetHeight; // Calculate the height of the summary
 
         this.startAmimation(startHeight, endHeight);
         this.animation!.onfinish = () => this.onAnimationFinish(false);
