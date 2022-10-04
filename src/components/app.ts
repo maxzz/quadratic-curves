@@ -105,4 +105,7 @@ export function draw(appContext: AppContext) {
 //TODO: copy state points
 //TODO: show/hide control points
 //TODO: when points overlapping set the same pos for them
-//TODO: link to GitHub
+//TODO: link to GitHub - Done
+//TODO: code: js, ts, array, persist JSON
+//TODO: update link and preview on maxzz.github.io
+//TODO: rectangular marque
