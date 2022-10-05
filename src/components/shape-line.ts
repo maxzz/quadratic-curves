@@ -70,32 +70,34 @@ export namespace Line {
         for (const [key, val] of Object.entries(ln.points)) {
             let isControl = key === 'cp1' || key === 'cp2';
 
+            const { x, y } = val;
+
             let style = isControl ? GRAPHSTYLE.cpoint : GRAPHSTYLE.point;
 
             //console.log('color', ln.color, Color(ln.color).hexa(), Color(ln.color).alpha(.2).darken(0.5).hexa());
 
             c.fillStyle = c.fillStyle = isControl ? GRAPHSTYLE.circles.fill : ln.color ? Color(ln.color).alpha(.5).darken(0.5).hexa() : '';
             c.beginPath();
-            c.arc(val.x+1, val.y+1, style.radius+1, style.startAngle, style.endAngle, true);
+            c.arc(x + 1, y + 1, style.radius + 1, style.startAngle, style.endAngle, true);
             c.fill();
 
             c.lineWidth = isControl ? 5 : GRAPHSTYLE.circles.width;
-            c.strokeStyle =  isControl ? '#00000040' :'#00000040'; // GRAPHSTYLE.circles.color
+            c.strokeStyle = isControl ? '#00000040' : '#00000040'; // GRAPHSTYLE.circles.color
             c.fillStyle = isControl ? GRAPHSTYLE.circles.fill : ln.color || '';
 
 
             c.beginPath();
-            c.arc(val.x, val.y, style.radius, style.startAngle, style.endAngle, true);
+            c.arc(x, y, style.radius, style.startAngle, style.endAngle, true);
             c.fill();
             c.stroke();
 
-            // c.fillStyle = 'green'
+            // c.fillStyle = 'green';
             // c.beginPath();
-            // c.arc(val.x+1, val.y+1, style.radius-1, style.startAngle, style.endAngle, true);
+            // c.arc(x + 1, y + 1, style.radius - 1, style.startAngle, style.endAngle, true);
             // c.fill();
 
             // c.beginPath();
-            // c.arc(val.x, val.y, style.radius, style.startAngle, style.endAngle, true);
+            // c.arc(x, y, style.radius, style.startAngle, style.endAngle, true);
             // c.fill();
             // c.stroke();
         }
