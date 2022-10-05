@@ -72,7 +72,7 @@ export namespace Line {
 
             let style = isControl ? GRAPHSTYLE.cpoint : GRAPHSTYLE.point;
 
-            console.log('color', ln.color, Color(ln.color).hexa(), Color(ln.color).alpha(.2).darken(0.5).hexa());
+            //console.log('color', ln.color, Color(ln.color).hexa(), Color(ln.color).alpha(.2).darken(0.5).hexa());
 
             c.fillStyle = c.fillStyle = isControl ? GRAPHSTYLE.circles.fill : ln.color ? Color(ln.color).alpha(.5).darken(0.5).hexa() : '';
             c.beginPath();
