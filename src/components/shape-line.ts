@@ -28,6 +28,41 @@ export namespace Line {
         return line;
     }
 
+    function drawPoint(c: CanvasRenderingContext2D, x: number, y: number, isControl: boolean, color: string) {
+        let style = isControl ? GRAPHSTYLE.cpoint : GRAPHSTYLE.point;
+
+        c.fillStyle = c.fillStyle = isControl ? GRAPHSTYLE.circles.fill : color ? Color(color).alpha(.5).darken(0.5).hexa() : '';
+        c.beginPath();
+        c.arc(x + 1, y + 1, style.radius + 1, style.startAngle, style.endAngle, true);
+        c.fill();
+
+        c.lineWidth = isControl ? 5 : GRAPHSTYLE.circles.width;
+        c.strokeStyle = isControl ? '#00000040' : '#00000040'; // GRAPHSTYLE.circles.color
+        c.fillStyle = isControl ? GRAPHSTYLE.circles.fill : color || '';
+
+        c.beginPath();
+        c.arc(x, y, style.radius, style.startAngle, style.endAngle, true);
+        c.fill();
+        c.stroke();
+
+        const highlightA1 = degToRad(180);
+        const highlightA2 = degToRad(205);
+
+        const highlightB1 = degToRad(220);
+        const highlightB2 = degToRad(280);
+
+        c.lineWidth = 1;
+        c.strokeStyle = '#ffffffc0';
+
+        c.beginPath();
+        c.arc(x, y, style.radius - 4, highlightA1, highlightA2, false);
+        c.stroke();
+
+        c.beginPath();
+        c.arc(x, y, style.radius - 4, highlightB1, highlightB2, false);
+        c.stroke();
+    }
+
     export function drawLine(c: CanvasRenderingContext2D, ln: ILine) {
         const thisPoints = ln.points;
 
@@ -43,10 +78,8 @@ export namespace Line {
             c.quadraticCurveTo(thisPoints.cp1.x, thisPoints.cp1.y, thisPoints.p2.x, thisPoints.p2.y);
         }
         c.stroke();
-        // c.fillStyle = 'black';
-        // c.fill();
 
-        // 2.1. Draw line cp1
+        // 2.1. Draw line to control point 1
         c.setLineDash([2, 2]);
 
         c.lineWidth = GRAPHSTYLE.ctrlLine.width;
@@ -56,7 +89,7 @@ export namespace Line {
         c.moveTo(thisPoints.p1.x, thisPoints.p1.y);
         c.lineTo(thisPoints.cp1.x, thisPoints.cp1.y);
 
-        // 2.1. Draw line cp2
+        // 2.2. Draw line to control point 2
         if (thisPoints.cp2) {
             c.moveTo(thisPoints.p2.x, thisPoints.p2.y);
             c.lineTo(thisPoints.cp2.x, thisPoints.cp2.y);
@@ -72,50 +105,7 @@ export namespace Line {
             let isControl = key === 'cp1' || key === 'cp2';
 
             const { x, y } = val;
-
-            let style = isControl ? GRAPHSTYLE.cpoint : GRAPHSTYLE.point;
-
-            //console.log('color', ln.color, Color(ln.color).hexa(), Color(ln.color).alpha(.2).darken(0.5).hexa());
-
-            c.fillStyle = c.fillStyle = isControl ? GRAPHSTYLE.circles.fill : ln.color ? Color(ln.color).alpha(.5).darken(0.5).hexa() : '';
-            c.beginPath();
-            c.arc(x + 1, y + 1, style.radius + 1, style.startAngle, style.endAngle, true);
-            c.fill();
-
-            c.lineWidth = isControl ? 5 : GRAPHSTYLE.circles.width;
-            c.strokeStyle = isControl ? '#00000040' : '#00000040'; // GRAPHSTYLE.circles.color
-            c.fillStyle = isControl ? GRAPHSTYLE.circles.fill : ln.color || '';
-
-
-            c.beginPath();
-            c.arc(x, y, style.radius, style.startAngle, style.endAngle, true);
-            c.fill();
-            c.stroke();
-
-            // c.fillStyle = 'green';
-            // c.beginPath();
-            // c.arc(x + 1, y + 1, style.radius - 1, style.startAngle, style.endAngle, true);
-            // c.fill();
-
-            // c.beginPath();
-            // c.arc(x, y, style.radius, style.startAngle, style.endAngle, true);
-            // c.fill();
-            // c.stroke();
-
-            const a1 = degToRad(220);
-            const a2 = degToRad(285);
-
-            const b1 = degToRad(180);
-            const b2 = degToRad(200);
-
-            c.lineWidth = 1;
-            c.strokeStyle = '#ffffffc0';
-            c.beginPath();
-            c.arc(x, y, style.radius - 4, a1, a2, false);
-            c.stroke();
-            c.beginPath();
-            c.arc(x, y, style.radius - 4, b1, b2, false);
-            c.stroke();
+            drawPoint(c, x, y, isControl, ln.color || '');
         }
     } //drawLine()
 
