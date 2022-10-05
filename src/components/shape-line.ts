@@ -1,5 +1,6 @@
 import { GRAPHSTYLE, hue } from "./initials";
 import { ILine, ILinePosKeys, IPoint, LinePoints } from "./types";
+import Color from "color";
 
 export namespace Line {
     export function initLine(quad: boolean, n: number): ILine {
@@ -69,16 +70,34 @@ export namespace Line {
         for (const [key, val] of Object.entries(ln.points)) {
             let isControl = key === 'cp1' || key === 'cp2';
 
+            let style = isControl ? GRAPHSTYLE.cpoint : GRAPHSTYLE.point;
+
+            console.log('color', ln.color, Color(ln.color).hexa(), Color(ln.color).alpha(.2).darken(0.5).hexa());
+
+            c.fillStyle = c.fillStyle = isControl ? GRAPHSTYLE.circles.fill : ln.color ? Color(ln.color).alpha(.5).darken(0.5).hexa() : '';
+            c.beginPath();
+            c.arc(val.x+1, val.y+1, style.radius+1, style.startAngle, style.endAngle, true);
+            c.fill();
+
             c.lineWidth = isControl ? 5 : GRAPHSTYLE.circles.width;
             c.strokeStyle =  isControl ? '#00000040' :'#00000040'; // GRAPHSTYLE.circles.color
             c.fillStyle = isControl ? GRAPHSTYLE.circles.fill : ln.color || '';
 
-            let style = isControl ? GRAPHSTYLE.cpoint : GRAPHSTYLE.point;
 
             c.beginPath();
             c.arc(val.x, val.y, style.radius, style.startAngle, style.endAngle, true);
             c.fill();
             c.stroke();
+
+            // c.fillStyle = 'green'
+            // c.beginPath();
+            // c.arc(val.x+1, val.y+1, style.radius-1, style.startAngle, style.endAngle, true);
+            // c.fill();
+
+            // c.beginPath();
+            // c.arc(val.x, val.y, style.radius, style.startAngle, style.endAngle, true);
+            // c.fill();
+            // c.stroke();
         }
     } //drawLine()
 
