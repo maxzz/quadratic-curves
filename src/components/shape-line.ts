@@ -1,6 +1,7 @@
 import { GRAPHSTYLE, hue } from "./initials";
 import { ILine, ILinePosKeys, IPoint, LinePoints } from "./types";
 import Color from "color";
+import { degToRad } from "../utils/utils-math";
 
 export namespace Line {
     export function initLine(quad: boolean, n: number): ILine {
@@ -100,6 +101,21 @@ export namespace Line {
             // c.arc(x, y, style.radius, style.startAngle, style.endAngle, true);
             // c.fill();
             // c.stroke();
+
+            const a1 = degToRad(220);
+            const a2 = degToRad(285);
+
+            const b1 = degToRad(180);
+            const b2 = degToRad(200);
+
+            c.lineWidth = 1;
+            c.strokeStyle = '#ffffffc0';
+            c.beginPath();
+            c.arc(x, y, style.radius - 4, a1, a2, false);
+            c.stroke();
+            c.beginPath();
+            c.arc(x, y, style.radius - 4, b1, b2, false);
+            c.stroke();
         }
     } //drawLine()
 
