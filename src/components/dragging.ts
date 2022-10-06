@@ -16,8 +16,8 @@ export function initDrag(appContext: AppContext, draw: (appContext: AppContext) 
         let pt = mousePos(event);
 
         // find the nearest point
-        for (var i = 0; i < appContext.lines.length; i++) {
-            var line: ILine = appContext.lines[i];
+        for (var i = 0; i < appContext.line.length; i++) {
+            var line: ILine = appContext.line[i];
 
             //line.color === 'hsla(240, 100%, 50%, 0.95)' && console.log('----------', line);
 
