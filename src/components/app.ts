@@ -24,10 +24,11 @@ export function initAppContext(): AppContext | undefined {
         return;
     }
 
-    const appContent: AppContext = { canvas, ctx, code, line: [], lines: [], checkDragGroup, } as any as AppContext;
-    appContent.previews = new Previews(appContent);
+    // 3. Init app previews and context
+    const appContent: Omit<AppContext, 'previews'> = { canvas, ctx, code, line: [], lines: [], checkDragGroup, };
+    (appContent as AppContext).previews = new Previews(appContent as AppContext);
 
-    return appContent;
+    return (appContent as AppContext);
 }
 
 function initEventHandlers(appContext: AppContext) {
