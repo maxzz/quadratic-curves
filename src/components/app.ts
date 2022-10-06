@@ -1,4 +1,4 @@
-import { AppContext } from "./types";
+import { AppContext, ILine } from "./types";
 import { initPersistData } from "./store";
 import { createCurve, drawCurve } from "./shape-line";
 import { initDrag } from "./dragging";
@@ -59,17 +59,22 @@ function initEventHandlers(appContext: AppContext) {
 function initData(appContext: AppContext) {
 
     appContext.lines = initPersistData();
-    appContext.line = appContext.lines[4];
 
-    // init new lines if there is no persist data
-    if (!appContext.line.length) {
+    function generateDefaultLine(): ILine[] {
         const nLines: number = 7; // init(appContext, 7, canvas.className == 'quadratic', oldStrings ? oldStrings[0] : undefined);
         const doQuad: boolean = false;
+        const rv: ILine[] = [];
         for (let i = 0; i < nLines; i++) {
-            appContext.line.push(createCurve(doQuad, i));
+            rv.push(createCurve(doQuad, i));
         }
-        appContext.lines = [appContext.line];
+        return rv;
     }
+
+    // init new lines if there is no persist data
+    const dafaultLine = generateDefaultLine();
+    appContext.lines.unshift(dafaultLine); // alway prepend default curves
+
+    appContext.line = appContext.lines[0];
 }
 
 export function initApp(appContext: AppContext) {
@@ -115,3 +120,6 @@ export function draw(appContext: AppContext) {
 //TODO: code: js, ts, array, persist JSON
 //TODO: update link and preview on maxzz.github.io
 //TODO: rectangular marque
+
+//TODO: add line preview as render wo/ circles
+//TODO: add button to copy state
