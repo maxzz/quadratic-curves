@@ -1,5 +1,5 @@
 import { AppContext } from "./app";
-import { lineHasPoint } from "./shape-line";
+import { curveHasPoint } from "./shape-line";
 import { ILine, ILinePosKeys, IPoint } from "./types";
 
 type DraggingLine = {
@@ -21,7 +21,7 @@ export function initDrag(appContext: AppContext, draw: (appContext: AppContext) 
 
             //line.color === 'hsla(240, 100%, 50%, 0.95)' && console.log('----------', line);
 
-            let res = lineHasPoint(line, pt);
+            let res = curveHasPoint(line, pt);
             if (res) {
                 drag.push({
                     line: res.line,
