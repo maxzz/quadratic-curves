@@ -104,6 +104,7 @@ export namespace Line {
         for (const [key, val] of Object.entries(ln.points)) {
             let isControl = key === 'cp1' || key === 'cp2';
 
+            if (!val) { continue; }
             const { x, y } = val;
             drawPoint(c, x, y, isControl, ln.color || '');
         }
