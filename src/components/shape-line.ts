@@ -64,7 +64,7 @@ function drawPoint(c: CanvasRenderingContext2D, x: number, y: number, isControl:
 
 type XY = [x: number, y: number];
 
-type CurvePoints = [p1: XY, p2: XY, p3: XY, p4?: XY];
+type CurvePoints = [p1: XY, p2: XY, p3: XY] | [p1: XY, p2: XY, p3: XY, p4: XY];
 
 function drawCurveLine(c: CanvasRenderingContext2D, curvePoints: CurvePoints) {
     const [p1, p2, cp1, cp2] = curvePoints;
@@ -79,11 +79,50 @@ function drawCurveLine(c: CanvasRenderingContext2D, curvePoints: CurvePoints) {
 }
 
 function linePtsToCurvePts(pts: LinePoints): CurvePoints {
-    const curvePoints: CurvePoints = [[pts.p1.x, pts.p1.y], [pts.p2.x, pts.p2.y], [pts.cp1.x, pts.cp1.y], ];
+    const curvePoints: CurvePoints = [[pts.p1.x, pts.p1.y], [pts.p2.x, pts.p2.y], [pts.cp1.x, pts.cp1.y],];
     if (pts.cp2) {
         curvePoints.push([pts.cp2.x, pts.cp2.y]);
     }
     return curvePoints;
+}
+
+function scaleCurvePts(pts: CurvePoints, factor: number): CurvePoints {
+    return pts.map((pt) => {
+        const [x, y] = pt;
+        return [x * factor, y * factor];
+    }) as CurvePoints;
+}
+
+// function scaleCurvePts<T extends CurvePoints>(pts: T, factor: number): T {
+//     return pts.map((pt) => {
+//         const [x, y] = pt;
+//         return [x * factor, y * factor];
+//     });
+// }
+
+// function scaleCurvePts(pts: XY[], factor: number): XY[] {
+//     return pts.map((pt) => {
+//         const [x, y] = pt;
+//         return [x * factor, y * factor];
+//     });
+// }
+
+// function scaleCurvePts<T extends CurvePoints>(pts: T, factor: number): T {
+//     return pts.map<CurvePoints>((pt) => {
+//         return pt;
+//     });
+// }
+
+export function drawCurvePreview(c: CanvasRenderingContext2D, ln: ILine, bigCanvasSize: XY) {
+    const w = c.canvas.width;
+    const h = c.canvas.height;
+    const factor = w / bigCanvasSize[0];
+
+    const curvePoints: CurvePoints = linePtsToCurvePts(ln.points);
+
+    const points = scaleCurvePts(curvePoints, factor);
+
+    drawCurveLine(c, points);
 }
 
 export function drawCurve(c: CanvasRenderingContext2D, ln: ILine) {
@@ -93,16 +132,17 @@ export function drawCurve(c: CanvasRenderingContext2D, ln: ILine) {
     c.lineWidth = GRAPHSTYLE.curve.width;
     c.strokeStyle = ln.color || '';
 
-    //const curvePoints: CurvePoints = linePtsToCurvePts(thisPoints);
+    const curvePoints: CurvePoints = linePtsToCurvePts(thisPoints);
+    drawCurveLine(c, curvePoints);
 
-    c.beginPath();
-    c.moveTo(thisPoints.p1.x, thisPoints.p1.y);
-    if (thisPoints.cp2) {
-        c.bezierCurveTo(thisPoints.cp1.x, thisPoints.cp1.y, thisPoints.cp2.x, thisPoints.cp2.y, thisPoints.p2.x, thisPoints.p2.y);
-    } else {
-        c.quadraticCurveTo(thisPoints.cp1.x, thisPoints.cp1.y, thisPoints.p2.x, thisPoints.p2.y);
-    }
-    c.stroke();
+    // c.beginPath();
+    // c.moveTo(thisPoints.p1.x, thisPoints.p1.y);
+    // if (thisPoints.cp2) {
+    //     c.bezierCurveTo(thisPoints.cp1.x, thisPoints.cp1.y, thisPoints.cp2.x, thisPoints.cp2.y, thisPoints.p2.x, thisPoints.p2.y);
+    // } else {
+    //     c.quadraticCurveTo(thisPoints.cp1.x, thisPoints.cp1.y, thisPoints.p2.x, thisPoints.p2.y);
+    // }
+    // c.stroke();
 
     // 2.1. Draw line to control point 1
     c.setLineDash([2, 2]);
