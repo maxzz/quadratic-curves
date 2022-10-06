@@ -62,12 +62,38 @@ function drawPoint(c: CanvasRenderingContext2D, x: number, y: number, isControl:
     c.stroke();
 }
 
+type XY = [x: number, y: number];
+
+type CurvePoints = [p1: XY, p2: XY, p3: XY, p4?: XY];
+
+function drawCurveLine(c: CanvasRenderingContext2D, curvePoints: CurvePoints) {
+    const [p1, p2, cp1, cp2] = curvePoints;
+    c.beginPath();
+    c.moveTo(p1[0], p1[1]);
+    if (cp2) {
+        c.bezierCurveTo(cp1[0], cp1[1], cp2[0], cp2[1], p2[0], p2[1]);
+    } else {
+        c.quadraticCurveTo(cp1[0], cp1[1], p2[0], p2[1]);
+    }
+    c.stroke();
+}
+
+function linePtsToCurvePts(pts: LinePoints): CurvePoints {
+    const curvePoints: CurvePoints = [[pts.p1.x, pts.p1.y], [pts.p2.x, pts.p2.y], [pts.cp1.x, pts.cp1.y], ];
+    if (pts.cp2) {
+        curvePoints.push([pts.cp2.x, pts.cp2.y]);
+    }
+    return curvePoints;
+}
+
 export function drawCurve(c: CanvasRenderingContext2D, ln: ILine) {
     const thisPoints = ln.points;
 
     // 1. Draw curves
     c.lineWidth = GRAPHSTYLE.curve.width;
     c.strokeStyle = ln.color || '';
+
+    //const curvePoints: CurvePoints = linePtsToCurvePts(thisPoints);
 
     c.beginPath();
     c.moveTo(thisPoints.p1.x, thisPoints.p1.y);
