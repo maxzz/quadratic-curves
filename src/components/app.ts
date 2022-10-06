@@ -36,8 +36,7 @@ function initEventHandlers(appContext: AppContext) {
     const events: { name: keyof Pick<HTMLElementEventMap, 'mousedown' | 'mousemove' | 'mouseup' | 'mouseout'>, fn: (event: MouseEvent) => void; }[] = [
         { name: 'mousedown', fn: dragStart, },
         { name: 'mousemove', fn: dragging, },
-        { name: 'mouseup', fn: dragDone, },
-        // { name: 'mouseout', fn: dragDone, },
+        { name: 'mouseup', fn: dragDone, }, // { name: 'mouseout', fn: dragDone, },
     ];
     events.forEach(({ name, fn }) => appContext.canvas.addEventListener(name, fn));
 
@@ -84,6 +83,8 @@ export function initApp(appContext: AppContext) {
     //appContext.canvas.style.cursor = 'move';
 
     initData(appContext);
+
+    appContext.previews.update();
 }
 
 export function draw(appContext: AppContext) {
