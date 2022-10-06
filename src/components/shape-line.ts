@@ -4,7 +4,7 @@ import Color from "color";
 import { degToRad } from "../utils/utils-math";
 
 export namespace Line {
-    export function initLine(quad: boolean, n: number): ILine {
+    export function initLine(doQuad: boolean, n: number): ILine {
         let defLine: ILine = {
             points: {
                 p1: { x: 39, y: 18 },
@@ -17,7 +17,7 @@ export namespace Line {
 
         let line: ILine = JSON.parse(JSON.stringify(defLine)); // deep copy
 
-        if (quad) {
+        if (doQuad) {
             delete line.points.cp2;
         }
 
