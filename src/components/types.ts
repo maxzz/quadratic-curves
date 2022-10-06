@@ -1,3 +1,5 @@
+import { Previews } from "./shape-preview";
+
 export interface IPoint {
     x: number;
     y: number;
@@ -16,3 +18,13 @@ export interface ILine {
 }
 
 export type ILinePosKeys = keyof LinePoints;
+
+export type AppContext = {
+    canvas: HTMLCanvasElement;
+    ctx: CanvasRenderingContext2D;
+    code: HTMLPreElement;
+    line: ILine[];
+    lines: ILine[][];
+    previews: Previews;
+    checkDragGroup: HTMLInputElement;
+};

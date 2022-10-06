@@ -1,4 +1,4 @@
-import { AppContext } from "./app";
+import { AppContext } from "./types";
 import { curveHasPoint } from "./shape-line";
 import { ILine, ILinePosKeys, IPoint } from "./types";
 

@@ -1,35 +1,33 @@
-import { generateCodeText } from "./code-text-generator";
-import { initDrag } from "./dragging";
-import { createCurve, drawCurve } from "./shape-line";
-import { ILine } from "./types";
-import { Accordion } from "./ui-accordion";
-import templates from "../templates.html?raw";
+import { AppContext } from "./types";
 import { initPersistData } from "./store";
+import { createCurve, drawCurve } from "./shape-line";
+import { initDrag } from "./dragging";
+import { generateCodeText } from "./code-text-generator";
+import { Accordion } from "./ui-accordion";
 
-export type AppContext = {
-    canvas: HTMLCanvasElement;
-    ctx: CanvasRenderingContext2D;
-    code: HTMLPreElement;
-    line: ILine[];
-    lines: ILine[][];
-    checkDragGroup: HTMLInputElement;
-};
+import { Previews } from "./shape-preview";
+import templates from "../templates.html?raw";
 
 export function initAppContext(): AppContext | undefined {
     // 1. Create HTML content to avoid FOUC
     const template = document.createElement('div');
     document.body.appendChild(template);
     template.outerHTML = templates;
+
     // 2. Init app elements
     const canvas = document.getElementById('canvas') as HTMLCanvasElement;
     const ctx = canvas?.getContext('2d');
     const code = document.getElementById('code') as HTMLPreElement;
     const checkDragGroup = document.getElementById('drag-group') as HTMLInputElement;
     if (!ctx || !code || !checkDragGroup) {
-        console.log('failed init');
+        console.log('failed to init');
         return;
     }
-    return { canvas, ctx, code, line: [], lines: [], checkDragGroup, };
+
+    const appContent: AppContext = { canvas, ctx, code, line: [], lines: [], checkDragGroup, } as any as AppContext;
+    appContent.previews = new Previews(appContent);
+
+    return appContent;
 }
 
 function initEventHandlers(appContext: AppContext) {
