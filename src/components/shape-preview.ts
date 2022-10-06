@@ -12,7 +12,12 @@ export class Previews {
 
     private singleBox(line: ILine[], idx: number) {
         return `
-            <div class="p-4 w-12 h-12 border-slate-400 border rounded cursor-pointer grid items-center justify-center preview-box" data-idx="${idx}">
+            <div class="p-4 w-12 h-12 
+                hover:bg-slate-800 active:scale-[.97]
+                border-slate-400 border rounded shadow shadow-slate-700 cursor-pointer grid items-center justify-center preview-box"
+                data-idx="${idx}"
+                title="Select this curve for editing"
+            >
                 ${line.length}
             </div>`;
     }
@@ -27,9 +32,8 @@ export class Previews {
         boxeEls.forEach((box) => {
             box.addEventListener('click', (event) => {
                 const el = event.target as HTMLElement;
-                if (el) {
-                    //console.log('el.dataset.idx', el.dataset.idx, this);
-                    this.appContext.line = this.appContext.lines[+(el.dataset.idx || 0)];
+                if (el && el.dataset.idx !== undefined) {
+                    this.appContext.line = this.appContext.lines[+el.dataset.idx];
                     draw(this.appContext);
                 }
             })
