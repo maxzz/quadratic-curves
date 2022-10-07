@@ -18,8 +18,7 @@ export class Previews {
             if (c2) {
                 return `<path d="M${p1[0]}, ${p1[1]} C ${c1[0]}, ${c1[1]}, ${c2[0]}, ${c2[1]}, ${p2[0]}, ${p2[1]}" stroke="red" stroke-width="20" fill="none" />`;
             } else {
-                return '';
-                //return `<path d="M${p1[0]}, ${p1[1]} C ${c1[0]}, ${c1[0]}, ${c2[0]}, ${c2[0]}, ${p2[0]}, ${p2[0]}" stroke="red" stroke-width="20" fill="none" />`
+                return `<path d="M${p1[0]}, ${p1[1]} S ${c1[0]}, ${c1[1]}, ${p2[0]}, ${p2[1]}" stroke="red" stroke-width="20" fill="none" />`
             }
         }
 
