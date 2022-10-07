@@ -11,16 +11,31 @@ export class Previews {
     }
 
     private singleBox(line: ILine[], idx: number) {
+        const { width, height } = this.appContext.ctx.canvas;
         return `
-            <div class="p-4 w-12 h-12 
+            <div class=" 
                 hover:bg-slate-800 active:scale-[.97]
                 border-slate-400 border rounded shadow shadow-slate-700 cursor-pointer grid items-center justify-center preview-box"
                 data-idx="${idx}"
                 title="Select this curve for editing"
             >
-                ${line.length}
+                <svg class="w-12 h-12" viewBox="0 0 ${width} ${height}">
+                    <path d="M39, 18 C 9, 116, 15, 195, 49, 282" stroke="red" stroke-width="20" fill="none" />
+                </svg>
             </div>`;
     }
+
+    // private singleBox(line: ILine[], idx: number) {
+    //     return `
+    //         <div class="p-4 w-12 h-12 
+    //             hover:bg-slate-800 active:scale-[.97]
+    //             border-slate-400 border rounded shadow shadow-slate-700 cursor-pointer grid items-center justify-center preview-box"
+    //             data-idx="${idx}"
+    //             title="Select this curve for editing"
+    //         >
+    //             ${line.length}
+    //         </div>`;
+    // }
 
     public update() {
         const boxes = this.appContext.lines.map((line, idx) => {
