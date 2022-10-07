@@ -16,9 +16,9 @@ export class Previews {
         function lineToPath(ln: ILine) {
             const [p1, p2, c1, c2] = linePtsToCurvePts(ln.points);
             if (c2) {
-                return `<path d="M${p1[0]}, ${p1[1]} C ${c1[0]}, ${c1[1]}, ${c2[0]}, ${c2[1]}, ${p2[0]}, ${p2[1]}" stroke="red" stroke-width="20" fill="none" />`;
+                return `<path d="M${p1[0]}, ${p1[1]} C ${c1[0]}, ${c1[1]}, ${c2[0]}, ${c2[1]}, ${p2[0]}, ${p2[1]}" stroke="${ln.color}" />`;
             } else {
-                return `<path d="M${p1[0]}, ${p1[1]} S ${c1[0]}, ${c1[1]}, ${p2[0]}, ${p2[1]}" stroke="red" stroke-width="20" fill="none" />`
+                return `<path d="M${p1[0]}, ${p1[1]} S ${c1[0]}, ${c1[1]}, ${p2[0]}, ${p2[1]}" stroke="${ln.color}" />`
             }
         }
 
@@ -29,7 +29,7 @@ export class Previews {
                 data-idx="${idx}"
                 title="Select this curve for editing"
             >
-                <svg class="w-12 h-12" viewBox="0 0 ${width} ${height}">
+                <svg class="w-12 h-12" viewBox="0 0 ${width} ${height}" stroke-width="15" fill="none">
                     ${lines.map((line) => lineToPath(line)).join('\n')}
                 </svg>
             </div>`;
