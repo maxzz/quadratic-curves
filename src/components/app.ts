@@ -46,8 +46,6 @@ function initEventHandlers(appContext: AppContext) {
                 appContext.canvas.width = entry.contentRect.width;
                 appContext.canvas.height = entry.contentRect.height;
                 draw(appContext);
-                
-                appContext.previews.update();
             }
         }
     }
@@ -111,6 +109,9 @@ export function draw(appContext: AppContext) {
 
     // 3. Update generated code
     appContext.code.innerText = generateCodeText(appContext.line);
+
+    // 4. update previews
+    appContext.previews.update();
 }
 
 //TODO: points persistence
