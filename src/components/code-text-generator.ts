@@ -32,11 +32,9 @@ export function generateCodeText(lines: ILine[]): string {
 
     // 2. Build points array
     txt += `\nconst points = [\n${lines.map((line) => `    ${genLineAsArray(line)},`).join('\n')}\n];`;
-    
-    // lines.forEach(ln => body += `\n    ${genLineAsArray(ln)},`);
-
-    txt += `\n/*\nprev = [\n'${genAll(lines)}',\n];\n*/\n`;
 
     // 3. set text to DOM
+    txt += `\n\nconst persistent = [\n    '${genAll(lines)}',\n];\n\n`;
+
     return txt;
 }
