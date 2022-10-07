@@ -20,8 +20,14 @@
         <div class="overflow-hidden">
             <details class="h-full" open>
                 <summary class="cursor-pointer">Code</summary>
-                <div class="h-60 content text-[.65rem] overflow-auto smallscroll">
-                    <div class="px-2 whitespace-pre overflow-x-hidden" id="code">code</div>
+                <div class="relative">
+                    <div class="absolute right-6 top-2">
+                        <!-- TODO: generated code style selector -->
+                        <button class="px-2 pb-0.5 h-8 border-slate-600 shadow-slate-600 border rounded shadow active:scale-[.97]">Copy</button>
+                    </div>
+                    <div class="h-60 content text-[.65rem] overflow-auto smallscroll">
+                        <div class="px-2 whitespace-pre overflow-x-hidden" id="code">code</div>
+                    </div>
                 </div>
             </details>
         </div>
