@@ -1,6 +1,15 @@
 import { AppContext, ILine, linePtsToCurvePts } from "./types";
 import { draw } from "./app";
 
+function lineToPath(ln: ILine) {
+    const [p1, p2, c1, c2] = linePtsToCurvePts(ln.points);
+    if (c2) {
+        return `<path d="M${p1[0]}, ${p1[1]} C ${c1[0]}, ${c1[1]}, ${c2[0]}, ${c2[1]}, ${p2[0]}, ${p2[1]}" stroke="${ln.color}" />`;
+    } else {
+        return `<path d="M${p1[0]}, ${p1[1]} S ${c1[0]}, ${c1[1]}, ${p2[0]}, ${p2[1]}" stroke="${ln.color}" />`;
+    }
+}
+
 export class Previews {
     private appContext: AppContext;
     private container: HTMLElement;
@@ -12,16 +21,6 @@ export class Previews {
 
     private singleBox(lines: ILine[], idx: number, isCurrent: boolean) {
         const { width, height } = this.appContext.ctx.canvas;
-
-        function lineToPath(ln: ILine) {
-            const [p1, p2, c1, c2] = linePtsToCurvePts(ln.points);
-            if (c2) {
-                return `<path d="M${p1[0]}, ${p1[1]} C ${c1[0]}, ${c1[1]}, ${c2[0]}, ${c2[1]}, ${p2[0]}, ${p2[1]}" stroke="${ln.color}" />`;
-            } else {
-                return `<path d="M${p1[0]}, ${p1[1]} S ${c1[0]}, ${c1[1]}, ${p2[0]}, ${p2[1]}" stroke="${ln.color}" />`;
-            }
-        }
-
         return `
             <div class="hover:bg-slate-800 border-slate-400 border rounded shadow shadow-slate-700 cursor-pointer active:scale-[.97] grid items-center justify-center preview-box ${isCurrent?'ring-1 ring-offset-2 ring-offset-slate-800 ring-sky-500':''}"
                 data-idx="${idx}"
