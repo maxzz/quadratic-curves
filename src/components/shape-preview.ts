@@ -10,7 +10,7 @@ export class Previews {
         this.container = document.getElementById('previews')!;
     }
 
-    private singleBox(lines: ILine[], idx: number) {
+    private singleBox(lines: ILine[], idx: number, isCurrent: boolean) {
         const { width, height } = this.appContext.ctx.canvas;
 
         function lineToPath(ln: ILine) {
@@ -23,7 +23,7 @@ export class Previews {
         }
 
         return `
-            <div class="hover:bg-slate-800 border-slate-400 border rounded shadow shadow-slate-700 cursor-pointer active:scale-[.97] grid items-center justify-center preview-box"
+            <div class="hover:bg-slate-800 border-slate-400 border rounded shadow shadow-slate-700 cursor-pointer active:scale-[.97] grid items-center justify-center preview-box ${isCurrent?'ring-1 ring-offset-2 ring-offset-slate-800 ring-sky-500':''}"
                 data-idx="${idx}"
                 title="Select this curve for editing"
             >
@@ -36,8 +36,8 @@ export class Previews {
     private onClick = (event: MouseEvent) => {
         const el = event.currentTarget as HTMLElement;
         if (el && el.dataset.idx !== undefined) {
-            console.log('clcil');
-            this.appContext.line = this.appContext.lines[+el.dataset.idx];
+            this.appContext.current = +el.dataset.idx;
+            this.appContext.line = this.appContext.lines[this.appContext.current];
             draw(this.appContext);
         }
     }
@@ -48,7 +48,7 @@ export class Previews {
         boxeEls.forEach((box) => box.removeEventListener('click', this.onClick));
 
         // generate
-        const boxes = this.appContext.lines.map((line, idx) => this.singleBox(line, idx));
+        const boxes = this.appContext.lines.map((line, idx) => this.singleBox(line, idx, idx === this.appContext.current));
         this.container.innerHTML = boxes.join('\n');
 
         // add new listeners

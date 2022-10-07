@@ -25,7 +25,7 @@ export function initAppContext(): AppContext | undefined {
     }
 
     // 3. Init app previews and context
-    const appContent: Omit<AppContext, 'previews'> = { canvas, ctx, code, line: [], lines: [], checkDragGroup, };
+    const appContent: Omit<AppContext, 'previews'> = { canvas, ctx, code, line: [], lines: [], current: 0, checkDragGroup, };
     (appContent as AppContext).previews = new Previews(appContent as AppContext);
 
     return (appContent as AppContext);
@@ -73,8 +73,9 @@ function initData(appContext: AppContext) {
     // init new lines if there is no persist data
     const dafaultLine = generateDefaultLine();
     appContext.lines.unshift(dafaultLine); // alway prepend default curves
+    appContext.current = 0;
 
-    appContext.line = appContext.lines[0];
+    appContext.line = appContext.lines[appContext.current];
 }
 
 export function initApp(appContext: AppContext) {

@@ -25,6 +25,7 @@ export type AppContext = {
     code: HTMLPreElement;
     line: ILine[];
     lines: ILine[][];
+    current: number;    // current line
     previews: Previews;
     checkDragGroup: HTMLInputElement;
 };
