@@ -1,4 +1,5 @@
-import { AppContext, initAppContext, initApp } from './components/app';
+import { AppContext } from './components/types';
+import { initAppContext, initApp } from './components/app';
 import './index.css';
 
 function main() {

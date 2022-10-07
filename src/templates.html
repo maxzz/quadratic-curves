@@ -1,31 +1,32 @@
 <div class="min-h-screen p-4 text-xs bg-slate-900 text-slate-400 flex flex-col items-center overflow-hidden">
-    <div class="flex-1 w-full max-w-4xl flex flex-col">
+    <div class="flex-1 w-full max-w-3xl flex flex-col">
         <div class="">Quadratic curves</div>
 
         <div class="w-full self-center">
             <canvas class="w-full h-full aspect-square" id='canvas'></canvas>
         </div>
 
-        <div class="py-4">
+        <div class="py-4 select-none">
             <label class="flex items-center space-x-1">
-                <input class="form-checkbox text-slate-700 rounded" type="checkbox" id="drag-group">
+                <input class="form-checkbox text-slate-800 bg-slate-800 focus:ring-1 focus:ring-slate-500 focus:ring-offset-slate-800 rounded" type="checkbox" id="drag-group">
                 <div>Drag overlapping points as a group</div>
             </label>
         </div>
 
-        <div class="py-4 flex space-x-2" id="previews">
+        <div class="py-4 flex flex-wrap gap-2" id="previews">
             Previews
         </div>
 
-        <div class="h-60 overflow-hidden">
+        <div class="overflow-hidden">
             <details class="h-full">
                 <summary class="cursor-pointer">Code</summary>
-                <div class="h-full content text-[.65rem] overflow-auto smallscroll">
+                <div class="h-60 content text-[.65rem] overflow-auto smallscroll">
                     <div class="px-2 " id="code">code</div>
                 </div>
             </details>
         </div>
     </div>
+
     <footer>
         <a class="text-xs text-slate-500 hover:underline" href="https://github.com/maxzz/quadratic-curves" target="_blank">Created by Max Zakharzhevskiy. Source code on Github.</a>
     </footer>
