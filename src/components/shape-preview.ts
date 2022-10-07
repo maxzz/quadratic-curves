@@ -59,10 +59,12 @@ export class Previews {
         }
     }
 
+    onClickBing = this.onClick.bind(this)
+
     public update() {
         // remove prev listeners
         let boxeEls = [...this.container.querySelectorAll('.preview-box')] as HTMLElement[];
-        boxeEls.forEach((box) => box.removeEventListener('click', this.onClick));
+        boxeEls.forEach((box) => box.removeEventListener('click', this.onClickBing));
 
         // generate
         const boxes = this.appContext.lines.map((line, idx) => this.singleBox(line, idx));
@@ -70,7 +72,7 @@ export class Previews {
 
         // add new listeners
         boxeEls = [...this.container.querySelectorAll('.preview-box')] as HTMLElement[];
-        boxeEls.forEach((box) => box.addEventListener('click', this.onClick));
+        boxeEls.forEach((box) => box.addEventListener('click', this.onClickBing));
     }
 
 }
