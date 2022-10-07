@@ -32,7 +32,7 @@ const highligts = {
     a2: degToRad(205),
     b1: degToRad(220),
     b2: degToRad(280),
-}
+};
 
 function drawPoint(c: CanvasRenderingContext2D, x: number, y: number, isControl: boolean, color: string) {
     let style = isControl ? GRAPHSTYLE.cpoint : GRAPHSTYLE.point;
@@ -151,9 +151,16 @@ export function drawCurve(c: CanvasRenderingContext2D, ln: ILine) {
     c.setLineDash([]);
     */
 
+    curvePoints.forEach((point, idx) => {
+        if (point) {
+            const isControl = idx > 2;
+            drawPoint(c, point[0], point[1], isControl, ln.color || '');
+        }
+    });
 
 
     // 3. Draw circles
+    /*
     for (const [key, val] of Object.entries(ln.points)) {
         let isControl = key === 'cp1' || key === 'cp2';
 
@@ -161,6 +168,7 @@ export function drawCurve(c: CanvasRenderingContext2D, ln: ILine) {
         const { x, y } = val;
         drawPoint(c, x, y, isControl, ln.color || '');
     }
+    */
 } //drawLine()
 
 export function curveHasPoint(line: ILine, pos: IPoint): { line: ILine, member: ILinePosKeys; } | undefined {
