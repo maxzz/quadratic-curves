@@ -2,8 +2,9 @@ import { AppContext, ILine, linePtsToCurvePts } from "./types";
 import { draw } from "./app";
 
 export class Previews {
-    appContext: AppContext;
-    container: HTMLElement;
+    private appContext: AppContext;
+    private container: HTMLElement;
+    private onClickBing = this.onClick.bind(this);
 
     constructor(appContext: AppContext) {
         this.appContext = appContext;
@@ -18,14 +19,12 @@ export class Previews {
             if (c2) {
                 return `<path d="M${p1[0]}, ${p1[1]} C ${c1[0]}, ${c1[1]}, ${c2[0]}, ${c2[1]}, ${p2[0]}, ${p2[1]}" stroke="${ln.color}" />`;
             } else {
-                return `<path d="M${p1[0]}, ${p1[1]} S ${c1[0]}, ${c1[1]}, ${p2[0]}, ${p2[1]}" stroke="${ln.color}" />`
+                return `<path d="M${p1[0]}, ${p1[1]} S ${c1[0]}, ${c1[1]}, ${p2[0]}, ${p2[1]}" stroke="${ln.color}" />`;
             }
         }
 
         return `
-            <div class=" 
-                hover:bg-slate-800 active:scale-[.97]
-                border-slate-400 border rounded shadow shadow-slate-700 cursor-pointer grid items-center justify-center preview-box"
+            <div class="hover:bg-slate-800 border-slate-400 border rounded shadow shadow-slate-700 cursor-pointer active:scale-[.97] grid items-center justify-center preview-box"
                 data-idx="${idx}"
                 title="Select this curve for editing"
             >
@@ -34,31 +33,15 @@ export class Previews {
                 </svg>
             </div>`;
     }
-    //<path d="M39, 18 C 9, 116, 15, 195, 49, 282" stroke="red" stroke-width="20" fill="none" />
-
-    // private singleBox(lines: ILine[], idx: number) {
-    //     return `
-    //         <div class="p-4 w-12 h-12 
-    //             hover:bg-slate-800 active:scale-[.97]
-    //             border-slate-400 border rounded shadow shadow-slate-700 cursor-pointer grid items-center justify-center preview-box"
-    //             data-idx="${idx}"
-    //             title="Select this curve for editing"
-    //         >
-    //             ${lines.length}
-    //         </div>`;
-    // }
 
     private onClick(event: MouseEvent) {
         const el = event.currentTarget as HTMLElement;
-        console.log('clcil', el);
         if (el && el.dataset.idx !== undefined) {
             console.log('clcil');
             this.appContext.line = this.appContext.lines[+el.dataset.idx];
             draw(this.appContext);
         }
     }
-
-    onClickBing = this.onClick.bind(this)
 
     public update() {
         // remove prev listeners
@@ -73,5 +56,4 @@ export class Previews {
         boxeEls = [...this.container.querySelectorAll('.preview-box')] as HTMLElement[];
         boxeEls.forEach((box) => box.addEventListener('click', this.onClickBing));
     }
-
 }
