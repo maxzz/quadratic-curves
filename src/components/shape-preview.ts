@@ -49,22 +49,28 @@ export class Previews {
     //         </div>`;
     // }
 
+    private onClick(event: MouseEvent) {
+        const el = event.currentTarget as HTMLElement;
+        console.log('clcil', el);
+        if (el && el.dataset.idx !== undefined) {
+            console.log('clcil');
+            this.appContext.line = this.appContext.lines[+el.dataset.idx];
+            draw(this.appContext);
+        }
+    }
+
     public update() {
-        const boxes = this.appContext.lines.map((line, idx) => {
-            return this.singleBox(line, idx);
-        });
+        // remove prev listeners
+        let boxeEls = [...this.container.querySelectorAll('.preview-box')] as HTMLElement[];
+        boxeEls.forEach((box) => box.removeEventListener('click', this.onClick));
+
+        // generate
+        const boxes = this.appContext.lines.map((line, idx) => this.singleBox(line, idx));
         this.container.innerHTML = boxes.join('\n');
 
-        const boxeEls = [...this.container.querySelectorAll('.preview-box')] as HTMLElement[];
-        boxeEls.forEach((box) => {
-            box.addEventListener('click', (event) => {
-                const el = event.target as HTMLElement;
-                if (el && el.dataset.idx !== undefined) {
-                    this.appContext.line = this.appContext.lines[+el.dataset.idx];
-                    draw(this.appContext);
-                }
-            });
-        });
+        // add new listeners
+        boxeEls = [...this.container.querySelectorAll('.preview-box')] as HTMLElement[];
+        boxeEls.forEach((box) => box.addEventListener('click', this.onClick));
     }
 
 }
