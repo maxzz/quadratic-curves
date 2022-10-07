@@ -1,16 +1,16 @@
 import { GRAPHSTYLE } from "./initials";
 import { ILine, linePtsToCurvePts } from "./types";
 
-function genLine(l: ILine) {
-    const [p1, p2, c1, c2] = linePtsToCurvePts(l.points);
+function genLine(line: ILine) {
+    const [p1, p2, c1, c2] = linePtsToCurvePts(line.points);
     const path = c2
         ? `ctx.bezierCurveTo(${c1[0]}, ${c1[1]}, ${c2[0]}, ${c2[1]}, ${p2[0]}, ${p2[1]});`
         : `ctx.quadraticCurveTo(${c1[0]}, ${c1[1]}, ${p2[0]}, ${p2[1]});`;
     return `ctx.beginPath();\nctx.moveTo(${p1[0]}, ${p1[1]});\n${path}\nctx.stroke();\n`;
 }
 
-function genLineAsArray(l: ILine) {
-    const [p1, p2, c1, c2] = linePtsToCurvePts(l.points);
+function genLineAsArray(line: ILine) {
+    const [p1, p2, c1, c2] = linePtsToCurvePts(line.points);
     const path = c2
         ? `cp1: {x: ${c1[0]}, y: ${c1[1]}}, cp2: {x: ${c2[0]}, y: ${c2[1]}}`
         : `cp1: {x: ${c1[0]}, y: ${c1[1]}}`;
@@ -26,16 +26,16 @@ export function generateCodeText(lines: ILine[]): string {
     let txt =
         "canvas = document.getElementById('canvas');\n" +
         "ctx = canvas.getContext('2d');\n" +
-        `ctx.lineWidth = ${GRAPHSTYLE.curve.width};\n`;
+        `ctx.lineWidth = ${GRAPHSTYLE.curve.width};\n\n`;
 
-    lines.forEach(ln => txt += `\n${genLine(ln)}`);
+    txt += lines.map((line) => `${genLine(line)}`).join('\n');
 
     // 2. Build points array
-    let body = '\nconst points = [';
-    lines.forEach(ln => body += `\n    ${genLineAsArray(ln)},`);
-    txt += `${body}\n];`;
+    txt += `\nconst points = [\n${lines.map((line) => `    ${genLineAsArray(line)},`).join('\n')}\n];`;
+    
+    // lines.forEach(ln => body += `\n    ${genLineAsArray(ln)},`);
 
-    txt += `\n// prev = '${genAll(lines)}';\n\n`;
+    txt += `\n/*\nprev = [\n'${genAll(lines)}',\n];\n*/\n`;
 
     // 3. set text to DOM
     return txt;
