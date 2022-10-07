@@ -28,3 +28,22 @@ export type AppContext = {
     previews: Previews;
     checkDragGroup: HTMLInputElement;
 };
+
+export type XY = [x: number, y: number];
+
+export type CurvePoints = [p1: XY, p2: XY, p3: XY] | [p1: XY, p2: XY, p3: XY, p4: XY];
+
+export function linePtsToCurvePts(pts: LinePoints): CurvePoints {
+    const curvePoints: CurvePoints = [[pts.p1.x, pts.p1.y], [pts.p2.x, pts.p2.y], [pts.cp1.x, pts.cp1.y],];
+    if (pts.cp2) {
+        curvePoints.push([pts.cp2.x, pts.cp2.y]);
+    }
+    return curvePoints;
+}
+
+export function scaleCurvePts(pts: CurvePoints, factor: number): CurvePoints {
+    return pts.map((pt) => {
+        const [x, y] = pt;
+        return [x * factor, y * factor];
+    }) as CurvePoints;
+}
