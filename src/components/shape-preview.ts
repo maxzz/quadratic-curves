@@ -4,7 +4,6 @@ import { draw } from "./app";
 export class Previews {
     private appContext: AppContext;
     private container: HTMLElement;
-    private onClickBing = this.onClick.bind(this);
 
     constructor(appContext: AppContext) {
         this.appContext = appContext;
@@ -34,16 +33,7 @@ export class Previews {
             </div>`;
     }
 
-    private onClick(event: MouseEvent) {
-        const el = event.currentTarget as HTMLElement;
-        if (el && el.dataset.idx !== undefined) {
-            console.log('clcil');
-            this.appContext.line = this.appContext.lines[+el.dataset.idx];
-            draw(this.appContext);
-        }
-    }
-
-    private onClick2 = (event: MouseEvent) => {
+    private onClick = (event: MouseEvent) => {
         const el = event.currentTarget as HTMLElement;
         if (el && el.dataset.idx !== undefined) {
             console.log('clcil');
@@ -55,8 +45,7 @@ export class Previews {
     public update() {
         // remove prev listeners
         let boxeEls = [...this.container.querySelectorAll('.preview-box')] as HTMLElement[];
-        boxeEls.forEach((box) => box.removeEventListener('click', this.onClick2));
-        // boxeEls.forEach((box) => box.removeEventListener('click', this.onClickBing));
+        boxeEls.forEach((box) => box.removeEventListener('click', this.onClick));
 
         // generate
         const boxes = this.appContext.lines.map((line, idx) => this.singleBox(line, idx));
@@ -64,7 +53,6 @@ export class Previews {
 
         // add new listeners
         boxeEls = [...this.container.querySelectorAll('.preview-box')] as HTMLElement[];
-        boxeEls.forEach((box) => box.addEventListener('click', this.onClick2));
-        // boxeEls.forEach((box) => box.addEventListener('click', this.onClickBing));
+        boxeEls.forEach((box) => box.addEventListener('click', this.onClick));
     }
 }
