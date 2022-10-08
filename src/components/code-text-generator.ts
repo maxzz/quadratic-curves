@@ -13,13 +13,12 @@ function gen1_JSCode(curves: SingleCurve[], lineWidth: number) {
         return `ctx.beginPath();\nctx.moveTo(${p1[0]}, ${p1[1]});\n${path}\nctx.stroke();\n`;
     }
 
-    let txt =
+    return (
         "canvas = document.getElementById('canvas');\n" +
         "ctx = canvas.getContext('2d');\n" +
-        `ctx.lineWidth = ${lineWidth};\n\n`;
-
-    txt += curves.map((line) => `${genLine(line)}`).join('\n');
-    return txt;
+        `ctx.lineWidth = ${lineWidth};\n\n` +
+        curves.map((line) => `${genLine(line)}`).join('\n')
+    );
 }
 
 function gen2_PointsArray(curves: SingleCurve[]) {
@@ -28,25 +27,25 @@ function gen2_PointsArray(curves: SingleCurve[]) {
         const more = c2 ? ` [${formatPt(c2)}]` : '';
         return `{points: [ [${formatPt(p1)}], [${formatPt(p2)}], [${formatPt(c1)}],${more} ]}`;
     }
-    
-    return `\nconst points = [\n${curves.map((line) => `    ${genLineAsArray(line)},`).join('\n')}\n];`;
+
+    return `const points = [\n${curves.map((line) => `    ${genLineAsArray(line)},`).join('\n')}\n];`;
 }
 
 function gen3_Current(curves: SingleCurve[]) {
-    return `\n\nconst current = [\n    '${allToString(curves)}',\n];\n`;
+    return `const current = [\n    '${allToString(curves)}',\n];`;
 }
 
 function gen4_Persistent(appCurves: SingleCurve[][]) {
     const allCurves = appCurves.map((sceneCurves) => `    '${allToString(sceneCurves)}',`).join('\n');
-    return `\nconst persistent = [\n${allCurves}\n];\n`;
+    return `const persistent = [\n${allCurves}\n];`;
 }
 
 export function generateCodeText(curves: SingleCurve[], appCurves: SingleCurve[][]): string {
 
-    let txt = gen1_JSCode(curves, GRAPHSTYLE.curve.width);
-    txt += gen2_PointsArray(curves);
-    txt += gen3_Current(curves);
-    txt += gen4_Persistent(appCurves);
+    const txt1 = gen1_JSCode(curves, GRAPHSTYLE.curve.width);
+    const txt2 = gen2_PointsArray(curves);
+    const txt3 = gen3_Current(curves);
+    const txt4 = gen4_Persistent(appCurves);
 
-    return txt;
+    return `${txt1}\n${txt2}\n\n${txt3}\n\n${txt4}\n\n`;
 }
