@@ -1,10 +1,10 @@
 import { AppContext } from "./types";
 import { curveHasPoint } from "./shape-line";
-import { ILine, IPoint } from "./types";
+import { SingleCurve, PointXY } from "./types";
 
 type DraggingLine = {
-    pt?: IPoint;
-    line?: ILine;
+    pt?: PointXY;
+    line?: SingleCurve;
     idx: number;
 };
 
@@ -17,7 +17,7 @@ export function initDrag(appContext: AppContext, draw: (appContext: AppContext) 
 
         // find the nearest point
         for (var i = 0; i < appContext.line.length; i++) {
-            var line: ILine = appContext.line[i];
+            var line: SingleCurve = appContext.line[i];
 
             //line.color === 'hsla(240, 100%, 50%, 0.95)' && console.log('----------', line);
 
@@ -68,7 +68,7 @@ export function initDrag(appContext: AppContext, draw: (appContext: AppContext) 
         return Math.round(v);
     }
 
-    function mousePos(event: MouseEvent): IPoint {
+    function mousePos(event: MouseEvent): PointXY {
         return {
             x: event.pageX - appContext.canvas.offsetLeft,
             y: event.pageY - appContext.canvas.offsetTop,

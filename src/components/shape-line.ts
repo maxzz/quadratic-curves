@@ -1,15 +1,15 @@
 import { GRAPHSTYLE, hue } from "./initials";
-import { CurvePoints, ILine, IPoint, XY } from "./types";
+import { CurvePoints, SingleCurve, PointXY, XY } from "./types";
 import { degToRad } from "../utils/utils-math";
 import Color from "color";
 
-export function createCurve(doQuad: boolean, lineIdx: number): ILine {
-    let defLine: ILine = {
+export function createCurve(doQuad: boolean, lineIdx: number): SingleCurve {
+    let defLine: SingleCurve = {
         points: [[39, 18], [49, 282], [9, 116], [15, 195],],
         color: '',
     };
 
-    let line: ILine = JSON.parse(JSON.stringify(defLine)); // deep copy
+    let line: SingleCurve = JSON.parse(JSON.stringify(defLine)); // deep copy
     doQuad && line.points.pop();
 
     line.points = line.points.map(([x, y]) => [x + lineIdx * 80, y]) as CurvePoints;
@@ -98,7 +98,7 @@ function drawPoint(c: CanvasRenderingContext2D, xy: XY, isControl: boolean, colo
     c.stroke();
 }
 
-export function drawCurve(c: CanvasRenderingContext2D, ln: ILine) {
+export function drawCurve(c: CanvasRenderingContext2D, ln: SingleCurve) {
     const curvePoints: CurvePoints = ln.points;
 
     drawCurveLine(c, curvePoints, ln.color || '');
@@ -108,7 +108,7 @@ export function drawCurve(c: CanvasRenderingContext2D, ln: ILine) {
 
 const hitZone = Math.pow(GRAPHSTYLE.point.radius, 2);
 
-export function curveHasPoint(line: ILine, pos: IPoint): { line: ILine, idx: number; } | undefined {
+export function curveHasPoint(line: SingleCurve, pos: PointXY): { line: SingleCurve, idx: number; } | undefined {
     for (const [idx, pt] of Object.entries(line.points)) {
         let dx = pt[0] - pos.x;
         let dy = pt[1] - pos.y;

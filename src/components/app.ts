@@ -1,4 +1,4 @@
-import { AppContext, ILine } from "./types";
+import { AppContext, SingleCurve } from "./types";
 import { initPersistData } from "./store";
 import { createCurve, drawCurve } from "./shape-line";
 import { initDrag } from "./dragging";
@@ -60,10 +60,10 @@ function initData(appContext: AppContext) {
 
     appContext.lines = initPersistData();
 
-    function generateDefaultLine(): ILine[] {
+    function generateDefaultLine(): SingleCurve[] {
         const nLines: number = 7; // init(appContext, 7, canvas.className == 'quadratic', oldStrings ? oldStrings[0] : undefined);
         const doQuad: boolean = false;
-        const rv: ILine[] = [];
+        const rv: SingleCurve[] = [];
         for (let i = 0; i < nLines; i++) {
             rv.push(createCurve(doQuad, i));
         }
@@ -109,7 +109,7 @@ export function draw(appContext: AppContext) {
     appContext.line.forEach(line => drawCurve(appContext.ctx, line));
 
     // 3. Update generated code
-    appContext.code.innerText = generateCodeText(appContext.line);
+    appContext.code.innerText = generateCodeText(appContext.line, appContext.lines);
 
     // 4. update previews
     appContext.previews.update();
