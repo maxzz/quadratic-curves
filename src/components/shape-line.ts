@@ -46,12 +46,13 @@ function drawCurveLine(c: CanvasRenderingContext2D, curvePoints: CurvePoints, co
 function drawControlPointLines(c: CanvasRenderingContext2D, curvePoints: CurvePoints) {
     const [p1, p2, cp1, cp2] = curvePoints;
 
-    // 2.1. Draw line to control point 1
     c.setLineDash([2, 2]);
     c.lineWidth = GRAPHSTYLE.ctrlLine.width;
     c.strokeStyle = GRAPHSTYLE.ctrlLine.color;
 
     c.beginPath();
+
+    // 2.1. Draw line to control point 1
     c.moveTo(p1[0], p1[1]);
     c.lineTo(cp1[0], cp1[1]);
 
@@ -60,10 +61,10 @@ function drawControlPointLines(c: CanvasRenderingContext2D, curvePoints: CurvePo
         c.moveTo(p2[0], p2[1]);
         c.lineTo(cp2[0], cp2[1]);
     } else {
-        c.lineTo(p2[0], p2[1]);
+        c.lineTo(p2[0], p2[1]); // close quadratic bezier curve
     }
-    c.stroke();
 
+    c.stroke();
     c.setLineDash([]);
 }
 
@@ -74,7 +75,10 @@ const highligts = {
     b2: degToRad(280),
 };
 
-function drawPoint(c: CanvasRenderingContext2D, x: number, y: number, isControl: boolean, color: string) {
+function drawPoint(c: CanvasRenderingContext2D, xy: XY, isControl: boolean, color: string) {
+    if (!xy) { return; }
+    const [x, y] = xy;
+
     let style = isControl ? GRAPHSTYLE.cpoint : GRAPHSTYLE.point;
 
     c.fillStyle = c.fillStyle = isControl ? GRAPHSTYLE.circles.fill : color ? Color(color).alpha(.5).darken(0.5).hexa() : '';
@@ -107,15 +111,8 @@ export function drawCurve(c: CanvasRenderingContext2D, ln: ILine) {
     const curvePoints: CurvePoints = linePtsToCurvePts(ln.points);
 
     drawCurveLine(c, curvePoints, ln.color || '');
-
     drawControlPointLines(c, curvePoints);
-
-    curvePoints.forEach((point, idx) => {
-        if (point) {
-            const isControl = idx > 2;
-            drawPoint(c, point[0], point[1], isControl, ln.color || '');
-        }
-    });
+    curvePoints.forEach((point, idx) => drawPoint(c, point, idx > 2, ln.color || ''));
 }
 
 export function curveHasPoint(line: ILine, pos: IPoint): { line: ILine, member: ILinePosKeys; } | undefined {
