@@ -10,14 +10,15 @@ function gen1_JSCode(curves: SingleCurve[], lineWidth: number) {
         const path = c2
             ? `ctx.bezierCurveTo(${c1[0]}, ${c1[1]}, ${c2[0]}, ${c2[1]}, ${p2[0]}, ${p2[1]});`
             : `ctx.quadraticCurveTo(${c1[0]}, ${c1[1]}, ${p2[0]}, ${p2[1]});`;
-        return `ctx.beginPath();\nctx.moveTo(${p1[0]}, ${p1[1]});\n${path}\nctx.stroke();\n`;
+
+        return `ctx.beginPath();\nctx.moveTo(${p1[0]}, ${p1[1]});\n${path}\nctx.stroke();`;
     }
 
     return (
         "canvas = document.getElementById('canvas');\n" +
         "ctx = canvas.getContext('2d');\n" +
-        `ctx.lineWidth = ${lineWidth};\n\n` +
-        curves.map((line) => `${genLine(line)}`).join('\n')
+        `ctx.lineWidth = ${lineWidth};\n` +
+        curves.map((line) => `\n${genLine(line)}`).join('\n')
     );
 }
 
@@ -47,5 +48,5 @@ export function generateCodeText(curves: SingleCurve[], appCurves: SingleCurve[]
     const txt3 = gen3_Current(curves);
     const txt4 = gen4_Persistent(appCurves);
 
-    return `${txt1}\n${txt2}\n\n${txt3}\n\n${txt4}\n\n`;
+    return `${txt1}\n\n${txt2}\n\n${txt3}\n\n${txt4}\n\n`;
 }
