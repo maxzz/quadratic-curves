@@ -12,6 +12,8 @@ export function initDrag(appContext: AppContext, draw: (appContext: AppContext) 
     let drag: DraggingLine[] = [];
 
     function dragStart(event: MouseEvent) {
+        //appContext.canvas.setPointerCapture(); //TODO: https://developer.mozilla.org/en-US/docs/Web/API/Element/setPointerCapture
+
         drag = [];
         let pt = mousePos(event);
 

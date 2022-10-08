@@ -17,14 +17,22 @@ export function initAppContext(): AppContext | undefined {
     // 2. Init app elements
     const canvas = document.getElementById('canvas') as HTMLCanvasElement;
     const ctx = canvas?.getContext('2d');
+
     const code = document.getElementById('code') as HTMLPreElement;
+    const btnCopy = document.querySelector<HTMLButtonElement>('#btn-copy-persistent')!;
     const checkDragGroup = document.getElementById('drag-group') as HTMLInputElement;
-    if (!ctx || !code || !checkDragGroup) {
+
+    if (!ctx || !code || !btnCopy || !checkDragGroup) {
         console.log('failed to init');
         return;
     }
 
-    // 3. Init app previews and context
+    // 3. Copy source button
+    btnCopy.addEventListener('click', () => {
+        navigator.clipboard.writeText(code.innerText);
+    });
+
+    // 4. Init app previews and context
     const appContent: Omit<AppContext, 'previews'> = { canvas, ctx, code, line: [], lines: [], current: 0, checkDragGroup, };
     (appContent as AppContext).previews = new Previews(appContent as AppContext);
 
@@ -60,7 +68,7 @@ function initData(appContext: AppContext) {
 
     appContext.lines = initPersistData();
 
-    function generateDefaultLine(): SingleCurve[] {
+    function generateDefaultLine(): SingleCurve[] { // TODO: this may go as static text definition, no need code (unless scale but it should be done anyway)
         const nLines: number = 7; // init(appContext, 7, canvas.className == 'quadratic', oldStrings ? oldStrings[0] : undefined);
         const doQuad: boolean = false;
         const rv: SingleCurve[] = [];

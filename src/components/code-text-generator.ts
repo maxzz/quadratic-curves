@@ -34,11 +34,11 @@ export function generateCodeText(curves: SingleCurve[], appCurves: SingleCurve[]
     txt += `\nconst points = [\n${curves.map((line) => `    ${genLineAsArray(line)},`).join('\n')}\n];`;
 
     // 3. Build persistent state
-    txt += `\n\nconst persistent = [\n    '${genAll(curves)}',\n];\n\n`;
+    txt += `\n\nconst current = [\n    '${genAll(curves)}',\n];\n`;
 
     const allCurves = appCurves.map((sceneCurves) => `    '${genAll(sceneCurves)}',`).join('\n');
 
-    txt += `\n\nconst persistent = [\n${allCurves}\n];\n\n`;
+    txt += `\nconst persistent = [\n${allCurves}\n];\n`;
 
     return txt;
 }
