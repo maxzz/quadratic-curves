@@ -72,8 +72,8 @@ function initData(appContext: AppContext) {
         const nLines: number = 7; // init(appContext, 7, canvas.className == 'quadratic', oldStrings ? oldStrings[0] : undefined);
         const doQuad: boolean = false;
         const rv: SingleCurve[] = [];
-        for (let i = 0; i < nLines; i++) {
-            rv.push(createCurve(doQuad, i));
+        for (let idx = 0; idx < nLines; idx++) {
+            rv.push(createCurve(doQuad, idx));
         }
         return rv;
     }
