@@ -27,6 +27,46 @@ export function createCurve(doQuad: boolean, n: number): ILine {
     return line;
 }
 
+function drawCurveLine(c: CanvasRenderingContext2D, curvePoints: CurvePoints, color: string) {
+    const [p1, p2, cp1, cp2] = curvePoints;
+
+    c.lineWidth = GRAPHSTYLE.curve.width;
+    c.strokeStyle = color;
+
+    c.beginPath();
+    c.moveTo(p1[0], p1[1]);
+    if (cp2) {
+        c.bezierCurveTo(cp1[0], cp1[1], cp2[0], cp2[1], p2[0], p2[1]);
+    } else {
+        c.quadraticCurveTo(cp1[0], cp1[1], p2[0], p2[1]);
+    }
+    c.stroke();
+}
+
+function drawControlPointLines(c: CanvasRenderingContext2D, curvePoints: CurvePoints) {
+    const [p1, p2, cp1, cp2] = curvePoints;
+
+    // 2.1. Draw line to control point 1
+    c.setLineDash([2, 2]);
+    c.lineWidth = GRAPHSTYLE.ctrlLine.width;
+    c.strokeStyle = GRAPHSTYLE.ctrlLine.color;
+
+    c.beginPath();
+    c.moveTo(p1[0], p1[1]);
+    c.lineTo(cp1[0], cp1[1]);
+
+    // 2.2. Draw line to control point 2
+    if (cp2) {
+        c.moveTo(p2[0], p2[1]);
+        c.lineTo(cp2[0], cp2[1]);
+    } else {
+        c.lineTo(p2[0], p2[1]);
+    }
+    c.stroke();
+
+    c.setLineDash([]);
+}
+
 const highligts = {
     a1: degToRad(180),
     a2: degToRad(205),
@@ -63,93 +103,12 @@ function drawPoint(c: CanvasRenderingContext2D, x: number, y: number, isControl:
     c.stroke();
 }
 
-function drawCurveLine(c: CanvasRenderingContext2D, curvePoints: CurvePoints) {
-    const [p1, p2, cp1, cp2] = curvePoints;
-    c.beginPath();
-    c.moveTo(p1[0], p1[1]);
-    if (cp2) {
-        c.bezierCurveTo(cp1[0], cp1[1], cp2[0], cp2[1], p2[0], p2[1]);
-    } else {
-        c.quadraticCurveTo(cp1[0], cp1[1], p2[0], p2[1]);
-    }
-    c.stroke();
-}
-
-function drawControlPointLines(c: CanvasRenderingContext2D, curvePoints: CurvePoints) {
-    const [p1, p2, cp1, cp2] = curvePoints;
-
-    // 2.1. Draw line to control point 1
-    c.setLineDash([2, 2]);
-    c.lineWidth = GRAPHSTYLE.ctrlLine.width;
-    c.strokeStyle = GRAPHSTYLE.ctrlLine.color;
-
-    c.beginPath();
-    c.moveTo(p1[0], p1[1]);
-    c.lineTo(cp1[0], cp1[1]);
-
-    // 2.2. Draw line to control point 2
-    if (cp2) {
-        c.moveTo(p2[0], p2[1]);
-        c.lineTo(cp2[0], cp2[1]);
-    } else {
-        c.lineTo(p2[0], p2[1]);
-    }
-    c.stroke();
-
-    c.setLineDash([]);
-}
-
-// function drawCurvePreview(c: CanvasRenderingContext2D, ln: ILine, bigCanvasSize: XY) {
-//     const w = c.canvas.width;
-//     const h = c.canvas.height;
-//     const factor = w / bigCanvasSize[0];
-//     const curvePoints: CurvePoints = linePtsToCurvePts(ln.points);
-//     const points = scaleCurvePts(curvePoints, factor);
-//     drawCurveLine(c, points);
-// }
-
 export function drawCurve(c: CanvasRenderingContext2D, ln: ILine) {
-    const thisPoints = ln.points;
+    const curvePoints: CurvePoints = linePtsToCurvePts(ln.points);
 
-    // 1. Draw curves
-    c.lineWidth = GRAPHSTYLE.curve.width;
-    c.strokeStyle = ln.color || '';
-
-    const curvePoints: CurvePoints = linePtsToCurvePts(thisPoints);
-    drawCurveLine(c, curvePoints);
-    /*
-    c.beginPath();
-    c.moveTo(thisPoints.p1.x, thisPoints.p1.y);
-    if (thisPoints.cp2) {
-        c.bezierCurveTo(thisPoints.cp1.x, thisPoints.cp1.y, thisPoints.cp2.x, thisPoints.cp2.y, thisPoints.p2.x, thisPoints.p2.y);
-    } else {
-        c.quadraticCurveTo(thisPoints.cp1.x, thisPoints.cp1.y, thisPoints.p2.x, thisPoints.p2.y);
-    }
-    c.stroke();
-    */
+    drawCurveLine(c, curvePoints, ln.color || '');
 
     drawControlPointLines(c, curvePoints);
-    // 2.1. Draw line to control point 1
-    /*
-    c.setLineDash([2, 2]);
-    c.lineWidth = GRAPHSTYLE.ctrlLine.width;
-    c.strokeStyle = GRAPHSTYLE.ctrlLine.color;
-
-    c.beginPath();
-    c.moveTo(thisPoints.p1.x, thisPoints.p1.y);
-    c.lineTo(thisPoints.cp1.x, thisPoints.cp1.y);
-
-    // 2.2. Draw line to control point 2
-    if (thisPoints.cp2) {
-        c.moveTo(thisPoints.p2.x, thisPoints.p2.y);
-        c.lineTo(thisPoints.cp2.x, thisPoints.cp2.y);
-    } else {
-        c.lineTo(thisPoints.p2.x, thisPoints.p2.y);
-    }
-    c.stroke();
-
-    c.setLineDash([]);
-    */
 
     curvePoints.forEach((point, idx) => {
         if (point) {
@@ -157,19 +116,7 @@ export function drawCurve(c: CanvasRenderingContext2D, ln: ILine) {
             drawPoint(c, point[0], point[1], isControl, ln.color || '');
         }
     });
-
-
-    // 3. Draw circles
-    /*
-    for (const [key, val] of Object.entries(ln.points)) {
-        let isControl = key === 'cp1' || key === 'cp2';
-
-        if (!val) { continue; }
-        const { x, y } = val;
-        drawPoint(c, x, y, isControl, ln.color || '');
-    }
-    */
-} //drawLine()
+}
 
 export function curveHasPoint(line: ILine, pos: IPoint): { line: ILine, member: ILinePosKeys; } | undefined {
     const hitZone = Math.pow(GRAPHSTYLE.point.radius, 2);
