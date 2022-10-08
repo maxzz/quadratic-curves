@@ -13,7 +13,7 @@ export type LinePoints = {
 }
 
 export interface ILine {
-    points: LinePoints;
+    points: CurvePoints;
     color?: string;
 }
 

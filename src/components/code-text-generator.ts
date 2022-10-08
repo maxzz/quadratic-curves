@@ -1,8 +1,8 @@
 import { GRAPHSTYLE } from "./initials";
-import { ILine, linePtsToCurvePts } from "./types";
+import { ILine } from "./types";
 
 function genLine(line: ILine) {
-    const [p1, p2, c1, c2] = linePtsToCurvePts(line.points);
+    const [p1, p2, c1, c2] = line.points;
     const path = c2
         ? `ctx.bezierCurveTo(${c1[0]}, ${c1[1]}, ${c2[0]}, ${c2[1]}, ${p2[0]}, ${p2[1]});`
         : `ctx.quadraticCurveTo(${c1[0]}, ${c1[1]}, ${p2[0]}, ${p2[1]});`;
@@ -10,7 +10,7 @@ function genLine(line: ILine) {
 }
 
 function genLineAsArray(line: ILine) {
-    const [p1, p2, c1, c2] = linePtsToCurvePts(line.points);
+    const [p1, p2, c1, c2] = line.points;
     const path = c2
         ? `cp1: {x: ${c1[0]}, y: ${c1[1]}}, cp2: {x: ${c2[0]}, y: ${c2[1]}}`
         : `cp1: {x: ${c1[0]}, y: ${c1[1]}}`;

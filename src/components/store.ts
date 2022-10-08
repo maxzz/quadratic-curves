@@ -1,11 +1,11 @@
-import { ILine } from "./types";
+import { CurvePoints, ILine, IPoint, LinePoints } from "./types";
 
 export function initPersistData(): ILine[][] {
     type OldPoint = {
-        p1: { x: number; y: number; };
-        p2: { x: number; y: number; };
-        cp1: { x: number; y: number; };
-        cp2: { x: number; y: number; };
+        p1: IPoint;
+        p2: IPoint;
+        cp1: IPoint;
+        cp2: IPoint;
         color: string; //hsla
     };
 
@@ -20,10 +20,16 @@ export function initPersistData(): ILine[][] {
     ];
     const newLines: ILine[][] = oldStrings.map((str) => {
         const oldLine: OldPoint[] = JSON.parse(str);
+
         const lines: ILine[] = oldLine.map((oldLine) => {
             const { p1, p2, cp1, cp2, color } = oldLine;
-            return { points: { p1, p2, cp1, ...(cp2 && { cp2 }) }, color };
+            const newLine: CurvePoints = [[p1.x, p1.y], [p2.x, p2.y], [cp1.x, cp1.y],];
+            cp2 && newLine.push([cp2.x, cp2.y]);
+            
+            //return { points: { p1, p2, cp1, ...(cp2 && { cp2 }) }, color };
+            return { points: newLine, color };
         });
+
         return lines;
     });
     //console.log('oldLines', newLines);
@@ -35,7 +41,25 @@ export function initPersistData(): ILine[][] {
         '[{"points":{"p1":{"x":119,"y":16},"p2":{"x":270,"y":304},"cp1":{"x":9,"y":116},"cp2":{"x":41,"y":293}},"color":"hsla(0, 100%, 50%, 0.95)"},{"points":{"p1":{"x":119,"y":18},"p2":{"x":271,"y":300},"cp1":{"x":89,"y":116},"cp2":{"x":111,"y":281}},"color":"hsla(40, 100%, 50%, 0.95)"},{"points":{"p1":{"x":199,"y":18},"p2":{"x":264,"y":301},"cp1":{"x":169,"y":116},"cp2":{"x":175,"y":195}},"color":"hsla(80, 100%, 50%, 0.95)"},{"points":{"p1":{"x":266,"y":18},"p2":{"x":269,"y":300},"cp1":{"x":262,"y":118},"cp2":{"x":262,"y":197}},"color":"hsla(120, 100%, 50%, 0.95)"},{"points":{"p1":{"x":359,"y":18},"p2":{"x":278,"y":299},"cp1":{"x":365,"y":125},"cp2":{"x":335,"y":195}},"color":"hsla(160, 100%, 50%, 0.95)"},{"points":{"p1":{"x":439,"y":18},"p2":{"x":275,"y":297},"cp1":{"x":409,"y":116},"cp2":{"x":434,"y":265}},"color":"hsla(200, 100%, 50%, 0.95)"},{"points":{"p1":{"x":438,"y":19},"p2":{"x":271,"y":300},"cp1":{"x":525,"y":112},"cp2":{"x":521,"y":277}},"color":"hsla(240, 100%, 50%, 0.95)"}]',
     ];
 
-    newStrings.forEach((str) => newLines.push(JSON.parse(str)));
+    newStrings.forEach((str) => {
+        type OldLine = {
+            points: LinePoints;
+            color?: string;
+        };
+
+        const oldLines = JSON.parse(str) as OldLine[];
+
+        const newLines2: ILine[] = oldLines.map((oldLine) => {
+            const { points: {p1, p2, cp1, cp2} , color } = oldLine;
+            const newLine: CurvePoints = [[p1.x, p1.y], [p2.x, p2.y], [cp1.x, cp1.y],];
+            cp2 && newLine.push([cp2.x, cp2.y]);
+
+            //return { points: { p1, p2, cp1, ...(cp2 && { cp2 }) }, color };
+            return { points: newLine, color };
+        });
+
+        newLines.push(newLines2);
+    });
 
     return newLines;
 }

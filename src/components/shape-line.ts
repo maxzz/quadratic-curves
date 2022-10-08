@@ -1,26 +1,34 @@
 import { GRAPHSTYLE, hue } from "./initials";
-import { CurvePoints, ILine, ILinePosKeys, IPoint, LinePoints, linePtsToCurvePts, scaleCurvePts, XY } from "./types";
+import { CurvePoints, ILine, IPoint, XY } from "./types";
 import Color from "color";
 import { degToRad } from "../utils/utils-math";
 
 export function createCurve(doQuad: boolean, n: number): ILine {
     let defLine: ILine = {
-        points: {
-            p1: { x: 39, y: 18 },
-            p2: { x: 49, y: 282 },
-            cp1: { x: 9, y: 116 },
-            cp2: { x: 15, y: 195 },
-        },
+        points: [
+            [39, 18],
+            [49, 282],
+            [9, 116],
+            [15, 195],
+        ],
+        // points: {
+        //     p1: { x: 39, y: 18 },
+        //     p2: { x: 49, y: 282 },
+        //     cp1: { x: 9, y: 116 },
+        //     cp2: { x: 15, y: 195 },
+        // },
         color: hue(10),
     };
 
     let line: ILine = JSON.parse(JSON.stringify(defLine)); // deep copy
 
     if (doQuad) {
-        delete line.points.cp2;
+        //delete line.points.cp2;
+        line.points.pop();
     }
 
-    Object.values(line.points).forEach((val) => val.x = val.x + n * 80);
+    //Object.values(line.points).forEach((val) => val.x = val.x + n * 80);
+    line.points = line.points.map(([x,y]) => [x + n * 80, y]) as CurvePoints;
 
     line.color = hue(n * 40);
 
@@ -108,22 +116,31 @@ function drawPoint(c: CanvasRenderingContext2D, xy: XY, isControl: boolean, colo
 }
 
 export function drawCurve(c: CanvasRenderingContext2D, ln: ILine) {
-    const curvePoints: CurvePoints = linePtsToCurvePts(ln.points);
+    const curvePoints: CurvePoints = ln.points;
 
     drawCurveLine(c, curvePoints, ln.color || '');
     drawControlPointLines(c, curvePoints);
     curvePoints.forEach((point, idx) => drawPoint(c, point, idx > 2, ln.color || ''));
 }
 
-export function curveHasPoint(line: ILine, pos: IPoint): { line: ILine, member: ILinePosKeys; } | undefined {
+export function curveHasPoint(line: ILine, pos: IPoint): { line: ILine, idx: number; } | undefined {
     const hitZone = Math.pow(GRAPHSTYLE.point.radius, 2);
 
-    for (const [key, pt] of Object.entries(line.points)) {
-        let dx = pt.x - pos.x;
-        let dy = pt.y - pos.y;
+    for (const [idx, pt] of Object.entries(line.points)) {
+        let dx = pt[0] - pos.x;
+        let dy = pt[1] - pos.y;
 
         if ((dx * dx) + (dy * dy) < hitZone) {
-            return { line, member: key as ILinePosKeys };
+            return { line, idx: +idx };
         }
     }
+
+    // for (const [key, pt] of Object.entries(line.points)) {
+    //     let dx = pt.x - pos.x;
+    //     let dy = pt.y - pos.y;
+
+    //     if ((dx * dx) + (dy * dy) < hitZone) {
+    //         return { line, member: key as ILinePosKeys };
+    //     }
+    // }
 }

@@ -1,8 +1,8 @@
-import { AppContext, ILine, linePtsToCurvePts } from "./types";
+import { AppContext, ILine } from "./types";
 import { draw } from "./app";
 
 function lineToPath(ln: ILine) {
-    const [p1, p2, c1, c2] = linePtsToCurvePts(ln.points);
+    const [p1, p2, c1, c2] = ln.points;
     if (c2) {
         return `<path d="M${p1[0]}, ${p1[1]} C ${c1[0]}, ${c1[1]}, ${c2[0]}, ${c2[1]}, ${p2[0]}, ${p2[1]}" stroke="${ln.color}" />`;
     } else {

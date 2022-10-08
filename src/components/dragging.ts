@@ -5,7 +5,7 @@ import { ILine, ILinePosKeys, IPoint } from "./types";
 type DraggingLine = {
     pt?: IPoint;
     line?: ILine;
-    member: ILinePosKeys | null;
+    idx: number;
 };
 
 export function initDrag(appContext: AppContext, draw: (appContext: AppContext) => void) {
@@ -25,7 +25,7 @@ export function initDrag(appContext: AppContext, draw: (appContext: AppContext) 
             if (res) {
                 drag.push({
                     line: res.line,
-                    member: res.member,
+                    idx: res.idx,
                     pt: pt,
 
                 });
@@ -46,10 +46,10 @@ export function initDrag(appContext: AppContext, draw: (appContext: AppContext) 
         if (drag.length) {
             let pos = mousePos(event);
             drag.forEach((draggingLine: DraggingLine) => {
-                const line = draggingLine.member && draggingLine.line?.points[draggingLine.member];
+                const line = draggingLine.line?.points[draggingLine.idx];
                 if (line && draggingLine.pt) {
-                    line.x += pos.x - draggingLine.pt.x;
-                    line.y += pos.y - draggingLine.pt.y;
+                    line[0] += pos.x - draggingLine.pt.x;
+                    line[1] += pos.y - draggingLine.pt.y;
                     draggingLine.pt = pos;
                 }
             });
