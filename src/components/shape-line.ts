@@ -4,12 +4,9 @@ import { degToRad } from "../utils/utils-math";
 import Color from "color";
 
 export function createCurve(doQuad: boolean, lineIdx: number): SingleCurve {
-    let defLine: SingleCurve = {
-        points: [[39, 18], [49, 282], [9, 116], [15, 195],],
-        color: '',
-    };
-
-    let line: SingleCurve = JSON.parse(JSON.stringify(defLine)); // deep copy
+    const def = '{"points":[[39,18],[49,282],[9,116],[209,115]],"color":"hsla(0, 100%, 50%, 0.95)"}'; // for deep copy
+    
+    let line: SingleCurve = JSON.parse(def);
     doQuad && line.points.pop();
 
     line.points = line.points.map(([x, y]) => [x + lineIdx * 80, y]) as CurvePoints;

@@ -72,10 +72,10 @@ export function initDrag(appContext: AppContext, draw: (appContext: AppContext) 
 
     function mousePos(event: MouseEvent): PointXY {
         return {
-            x: event.pageX - appContext.canvas.offsetLeft,
-            y: event.pageY - appContext.canvas.offsetTop,
-            // x: round(event.pageX - appContext.canvas.offsetLeft),
-            // y: round(event.pageY - appContext.canvas.offsetTop),
+            // x: event.pageX - appContext.canvas.offsetLeft,
+            // y: event.pageY - appContext.canvas.offsetTop,
+            x: round(event.pageX - appContext.canvas.offsetLeft),
+            y: round(event.pageY - appContext.canvas.offsetTop),
         };
     }
 
