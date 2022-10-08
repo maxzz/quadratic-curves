@@ -1,4 +1,4 @@
-import { CurvePoints, ILine, IPoint, LinePoints } from "./types";
+import { CurvePoints, ILine, IPoint } from "./types";
 
 export function initPersistData(): ILine[][] {
     type OldPoint = {
@@ -25,7 +25,7 @@ export function initPersistData(): ILine[][] {
             const { p1, p2, cp1, cp2, color } = oldLine;
             const newLine: CurvePoints = [[p1.x, p1.y], [p2.x, p2.y], [cp1.x, cp1.y],];
             cp2 && newLine.push([cp2.x, cp2.y]);
-            
+
             //return { points: { p1, p2, cp1, ...(cp2 && { cp2 }) }, color };
             return { points: newLine, color };
         });
@@ -47,10 +47,23 @@ export function initPersistData(): ILine[][] {
             color?: string;
         };
 
+        type LinePoints = {
+            p1: IPoint; // starting point
+            p2: IPoint; // end point
+            cp1: IPoint;
+            cp2?: IPoint;   // will be missing in case of quad
+        };
+        
+        function linePtsToCurvePts(pts: LinePoints): CurvePoints {
+            const curvePoints: CurvePoints = [[pts.p1.x, pts.p1.y], [pts.p2.x, pts.p2.y], [pts.cp1.x, pts.cp1.y],];
+            pts.cp2 && curvePoints.push([pts.cp2.x, pts.cp2.y]);
+            return curvePoints;
+        }
+        
         const oldLines = JSON.parse(str) as OldLine[];
 
         const newLines2: ILine[] = oldLines.map((oldLine) => {
-            const { points: {p1, p2, cp1, cp2} , color } = oldLine;
+            const { points: { p1, p2, cp1, cp2 }, color } = oldLine;
             const newLine: CurvePoints = [[p1.x, p1.y], [p2.x, p2.y], [cp1.x, cp1.y],];
             cp2 && newLine.push([cp2.x, cp2.y]);
 

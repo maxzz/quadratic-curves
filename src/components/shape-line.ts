@@ -1,58 +1,41 @@
 import { GRAPHSTYLE, hue } from "./initials";
 import { CurvePoints, ILine, IPoint, XY } from "./types";
-import Color from "color";
 import { degToRad } from "../utils/utils-math";
+import Color from "color";
 
-export function createCurve(doQuad: boolean, n: number): ILine {
+export function createCurve(doQuad: boolean, lineIdx: number): ILine {
     let defLine: ILine = {
-        points: [
-            [39, 18],
-            [49, 282],
-            [9, 116],
-            [15, 195],
-        ],
-        // points: {
-        //     p1: { x: 39, y: 18 },
-        //     p2: { x: 49, y: 282 },
-        //     cp1: { x: 9, y: 116 },
-        //     cp2: { x: 15, y: 195 },
-        // },
-        color: hue(10),
+        points: [[39, 18], [49, 282], [9, 116], [15, 195],],
+        color: '',
     };
 
     let line: ILine = JSON.parse(JSON.stringify(defLine)); // deep copy
+    doQuad && line.points.pop();
 
-    if (doQuad) {
-        //delete line.points.cp2;
-        line.points.pop();
-    }
-
-    //Object.values(line.points).forEach((val) => val.x = val.x + n * 80);
-    line.points = line.points.map(([x,y]) => [x + n * 80, y]) as CurvePoints;
-
-    line.color = hue(n * 40);
+    line.points = line.points.map(([x, y]) => [x + lineIdx * 80, y]) as CurvePoints;
+    line.color = hue(lineIdx * 40);
 
     return line;
 }
 
 function drawCurveLine(c: CanvasRenderingContext2D, curvePoints: CurvePoints, color: string) {
-    const [p1, p2, cp1, cp2] = curvePoints;
+    const [p1, p2, c1, c2] = curvePoints;
 
     c.lineWidth = GRAPHSTYLE.curve.width;
     c.strokeStyle = color;
 
     c.beginPath();
     c.moveTo(p1[0], p1[1]);
-    if (cp2) {
-        c.bezierCurveTo(cp1[0], cp1[1], cp2[0], cp2[1], p2[0], p2[1]);
+    if (c2) {
+        c.bezierCurveTo(c1[0], c1[1], c2[0], c2[1], p2[0], p2[1]);
     } else {
-        c.quadraticCurveTo(cp1[0], cp1[1], p2[0], p2[1]);
+        c.quadraticCurveTo(c1[0], c1[1], p2[0], p2[1]);
     }
     c.stroke();
 }
 
 function drawControlPointLines(c: CanvasRenderingContext2D, curvePoints: CurvePoints) {
-    const [p1, p2, cp1, cp2] = curvePoints;
+    const [p1, p2, c1, c2] = curvePoints;
 
     c.setLineDash([2, 2]);
     c.lineWidth = GRAPHSTYLE.ctrlLine.width;
@@ -62,12 +45,12 @@ function drawControlPointLines(c: CanvasRenderingContext2D, curvePoints: CurvePo
 
     // 2.1. Draw line to control point 1
     c.moveTo(p1[0], p1[1]);
-    c.lineTo(cp1[0], cp1[1]);
+    c.lineTo(c1[0], c1[1]);
 
     // 2.2. Draw line to control point 2
-    if (cp2) {
+    if (c2) {
         c.moveTo(p2[0], p2[1]);
-        c.lineTo(cp2[0], cp2[1]);
+        c.lineTo(c2[0], c2[1]);
     } else {
         c.lineTo(p2[0], p2[1]); // close quadratic bezier curve
     }
@@ -120,12 +103,12 @@ export function drawCurve(c: CanvasRenderingContext2D, ln: ILine) {
 
     drawCurveLine(c, curvePoints, ln.color || '');
     drawControlPointLines(c, curvePoints);
-    curvePoints.forEach((point, idx) => drawPoint(c, point, idx > 2, ln.color || ''));
+    curvePoints.forEach((point, idx) => drawPoint(c, point, idx > 1, ln.color || ''));
 }
 
-export function curveHasPoint(line: ILine, pos: IPoint): { line: ILine, idx: number; } | undefined {
-    const hitZone = Math.pow(GRAPHSTYLE.point.radius, 2);
+const hitZone = Math.pow(GRAPHSTYLE.point.radius, 2);
 
+export function curveHasPoint(line: ILine, pos: IPoint): { line: ILine, idx: number; } | undefined {
     for (const [idx, pt] of Object.entries(line.points)) {
         let dx = pt[0] - pos.x;
         let dy = pt[1] - pos.y;
@@ -134,13 +117,4 @@ export function curveHasPoint(line: ILine, pos: IPoint): { line: ILine, idx: num
             return { line, idx: +idx };
         }
     }
-
-    // for (const [key, pt] of Object.entries(line.points)) {
-    //     let dx = pt.x - pos.x;
-    //     let dy = pt.y - pos.y;
-
-    //     if ((dx * dx) + (dy * dy) < hitZone) {
-    //         return { line, member: key as ILinePosKeys };
-    //     }
-    // }
 }
