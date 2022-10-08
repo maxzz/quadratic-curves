@@ -1,6 +1,29 @@
 import { SingleCurve, XY } from "./types";
 import { GRAPHSTYLE } from "./initials";
 
+function gen1_jsComponents(curves: SingleCurve[], lineWidth: number) {
+    let txt =
+        "canvas = document.getElementById('canvas');\n" +
+        "ctx = canvas.getContext('2d');\n" +
+        `ctx.lineWidth = ${lineWidth};\n\n`;
+
+    txt += curves.map((line) => `${genLine(line)}`).join('\n');
+    return txt;
+}
+
+function gen2_pointsArray(curves: SingleCurve[]) {
+    return `\nconst points = [\n${curves.map((line) => `    ${genLineAsArray(line)},`).join('\n')}\n];`;
+}
+
+function gen3_Current(curves: SingleCurve[]) {
+    return `\n\nconst current = [\n    '${genAll(curves)}',\n];\n`;
+}
+
+function gen4_Persistent(appCurves: SingleCurve[][]) {
+    const allCurves = appCurves.map((sceneCurves) => `    '${genAll(sceneCurves)}',`).join('\n');
+    return `\nconst persistent = [\n${allCurves}\n];\n`;
+}
+
 function genLine(line: SingleCurve) {
     const [p1, p2, c1, c2] = line.points;
     const path = c2
@@ -23,22 +46,19 @@ function genAll(lines: SingleCurve[]) {
 
 export function generateCodeText(curves: SingleCurve[], appCurves: SingleCurve[][]): string {
     // 1. Build components
-    let txt =
-        "canvas = document.getElementById('canvas');\n" +
-        "ctx = canvas.getContext('2d');\n" +
-        `ctx.lineWidth = ${GRAPHSTYLE.curve.width};\n\n`;
-
-    txt += curves.map((line) => `${genLine(line)}`).join('\n');
+    let txt = gen1_jsComponents(curves, GRAPHSTYLE.curve.width);
 
     // 2. Build points array
-    txt += `\nconst points = [\n${curves.map((line) => `    ${genLineAsArray(line)},`).join('\n')}\n];`;
+    txt += gen2_pointsArray(curves);
+    //txt += `\nconst points = [\n${curves.map((line) => `    ${genLineAsArray(line)},`).join('\n')}\n];`;
 
     // 3. Build persistent state
-    txt += `\n\nconst current = [\n    '${genAll(curves)}',\n];\n`;
+    txt += gen3_Current(curves);
+    //txt += `\n\nconst current = [\n    '${genAll(curves)}',\n];\n`;
 
-    const allCurves = appCurves.map((sceneCurves) => `    '${genAll(sceneCurves)}',`).join('\n');
-
-    txt += `\nconst persistent = [\n${allCurves}\n];\n`;
+    txt += gen4_Persistent(appCurves);
+    // const allCurves = appCurves.map((sceneCurves) => `    '${genAll(sceneCurves)}',`).join('\n');
+    // txt += `\nconst persistent = [\n${allCurves}\n];\n`;
 
     return txt;
 }
