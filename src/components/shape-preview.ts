@@ -19,10 +19,10 @@ export class Previews {
         this.container = document.getElementById('previews')!;
     }
 
-    private frame(innerItem: string, idx: number, isCurrent: boolean) {
+    private frame(innerItem: string, idx: number | string, isCurrent: boolean) {
         const title = idx === -1 ? 'Create new scene' : `Line: ${idx}. Click to select this curve for editing`;
         return `
-            <div class="hover:bg-slate-800 border-slate-400 border rounded shadow shadow-slate-700 cursor-pointer active:scale-[.97] grid items-center justify-center preview-box ${isCurrent ? 'ring-1 ring-offset-2 ring-offset-slate-800 ring-sky-500' : ''}"
+            <div class="preview-box relative hover:bg-slate-800 border-slate-400 border rounded shadow shadow-slate-700 cursor-pointer active:scale-[.97] grid items-center justify-center ${isCurrent ? 'ring-1 ring-offset-2 ring-offset-slate-800 ring-sky-500' : ''}"
                 data-idx="${idx}"
                 title="${title}"
             >
@@ -39,7 +39,8 @@ export class Previews {
         return this.frame(svg, idx, isCurrent);
     }
 
-    private frameBtnAdd(idx: number, isCurrent: boolean) {
+    private frameBtnAdd() {
+        const idx: number = -1;
         const { width, height } = this.appContext.ctx.canvas;
         const [w12, h12, l1, l2] = [width / 2, height / 2, 0.3, 0.7];
         const cross = `M${w12} ${height * l1} L${w12} ${height * l2} M${width * l1} ${h12} L ${width * l2} ${h12}`;
@@ -47,18 +48,19 @@ export class Previews {
             <svg class="w-6 h-6 text-slate-500" viewBox="0 0 ${width} ${height}" stroke-width="25" fill="none">
                 <path d="${cross}" stroke="currentColor" />
             </svg>`;
-        return this.frame(svg, idx, isCurrent);
+        return this.frame(svg, idx, false);
     }
 
-    private frameBtnDel(idx: number, isCurrent: boolean) {
+    private frameBtnDel() {
+        const idx: number = -1;
         const { width, height } = this.appContext.ctx.canvas;
-        const [w12, h12, l1, l2] = [width / 2, height / 2, 0.3, 0.7];
+        const [l1, l2] = [0.3, 0.7];
         const cross = `M${width * l1} ${height * l2} L${width * l2} ${height * l1} M${width * l1} ${height * l1} L ${width * l2} ${height * l2}`;
         const svg = `
             <svg class="w-6 h-6 text-slate-500" viewBox="0 0 ${width} ${height}" stroke-width="25" fill="none">
                 <path d="${cross}" stroke="currentColor" />
             </svg>`;
-        return this.frame(svg, idx, isCurrent);
+        return this.frame(svg, idx, false);
     }
 
     private onClickSelectcurve = (event: MouseEvent) => {
@@ -82,7 +84,7 @@ export class Previews {
 
         // generate
         const boxes = this.appContext.lines.map((line, idx) => this.frameSvg(line, idx, idx === this.appContext.current));
-        this.container.innerHTML = boxes.join('\n') + this.frameBtnAdd(-1, false) + this.frameBtnDel(-1, false);
+        this.container.innerHTML = boxes.join('\n') + this.frameBtnAdd() + this.frameBtnDel();
 
         // add new listeners
         boxeEls = [...this.container.querySelectorAll('.preview-box')] as HTMLElement[];
