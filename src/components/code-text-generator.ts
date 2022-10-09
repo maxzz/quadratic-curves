@@ -2,6 +2,7 @@ import { SingleCurve, XY } from "./types";
 import { GRAPHSTYLE } from "./initials";
 
 const allToString = (lines: SingleCurve[]) => JSON.stringify(lines);
+const pt = ([x, y]: XY) => `${x},${y}`;
 const formatPt = ([x, y]: XY) => `${`${x}`.padStart(3, ' ')},${`${y}`.padStart(3, ' ')}`;
 
 function gen1_JSCode(curves: SingleCurve[], lineWidth: number) {
@@ -37,7 +38,7 @@ function gen3_Current(curves: SingleCurve[]) {
 }
 
 function gen4_Persistent(appCurves: SingleCurve[][]) {
-    const allCurves = appCurves.map((sceneCurves) => `    '${allToString(sceneCurves)}',`).join('\n');
+    const allCurves = appCurves.map((sceneCurves, idx) => `   /* ${`${idx + 1}`.padStart(2, ' ')} */ ${allToString(sceneCurves)}',`).join('\n'); // idx 0 for predefined
     return `const persistent = [\n${allCurves}\n];`;
 }
 
@@ -48,5 +49,5 @@ export function generateCodeText(curves: SingleCurve[], appCurves: SingleCurve[]
     const txt3 = gen3_Current(curves);
     const txt4 = gen4_Persistent(appCurves);
 
-    return `${txt1}\n\n${txt2}\n\n${txt3}\n\n${txt4}\n\n`;
+    return `${txt3}\n\n${txt4}\n\n${txt2}\n\n${txt1}\n\n`;
 }
