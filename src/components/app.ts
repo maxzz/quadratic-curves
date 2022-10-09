@@ -1,7 +1,7 @@
 import { AppContext, SingleCurve } from "./types";
 import { initPersistData } from "./store";
 import { createCurve, drawCurve } from "./shape-line";
-import { initDrag } from "./dragging";
+import { initDraggingListeners } from "./dragging";
 import { generateCodeText } from "./code-text-generator";
 import { Accordion } from "./ui-accordion";
 
@@ -37,13 +37,7 @@ export function initAppContext(): AppContext | undefined {
 function initEventHandlers(appContext: AppContext) {
     
     // 1. Drag handlers
-    const { dragStart, dragging, dragDone, } = initDrag(appContext, draw);
-    const events: { name: keyof Pick<HTMLElementEventMap, 'mousedown' | 'mousemove' | 'mouseup' | 'mouseout'>, fn: (event: MouseEvent) => void; }[] = [
-        { name: 'mousedown', fn: dragStart, },
-        { name: 'mousemove', fn: dragging, },
-        { name: 'mouseup', fn: dragDone, }, // { name: 'mouseout', fn: dragDone, },
-    ];
-    events.forEach(({ name, fn }) => appContext.canvas.addEventListener(name, fn));
+    initDraggingListeners(appContext, draw);
 
     // 2. Copy source button
     appContext.btnCopy.addEventListener('click', () => {

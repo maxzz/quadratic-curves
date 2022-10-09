@@ -8,7 +8,7 @@ type DraggingLine = {
     idx: number;
 };
 
-export function initDrag(appContext: AppContext, draw: (appContext: AppContext) => void) {
+function getDragHandlers(appContext: AppContext, draw: (appContext: AppContext) => void) {
     let drag: DraggingLine[] = [];
 
     function dragStart(event: MouseEvent) {
@@ -44,7 +44,7 @@ export function initDrag(appContext: AppContext, draw: (appContext: AppContext) 
         }
     }
 
-    function dragging(event: MouseEvent) {
+    function dragMove(event: MouseEvent) {
         if (drag.length) {
             let pos = mousePos(event);
             drag.forEach((draggingLine: DraggingLine) => {
@@ -79,7 +79,18 @@ export function initDrag(appContext: AppContext, draw: (appContext: AppContext) 
 
     return {
         dragStart,
-        dragging,
+        dragMove,
         dragDone,
     };
+}
+
+export function initDraggingListeners(appContext: AppContext, draw: (appContext: AppContext) => void) {
+    const { dragStart, dragMove: dragging, dragDone, } = getDragHandlers(appContext, draw);
+
+    const events: { name: keyof Pick<HTMLElementEventMap, 'mousedown' | 'mousemove' | 'mouseup' | 'mouseout'>, fn: (event: MouseEvent) => void; }[] = [
+        { name: 'mousedown', fn: dragStart, },
+        { name: 'mousemove', fn: dragging, },
+        { name: 'mouseup', fn: dragDone, }, // { name: 'mouseout', fn: dragDone, },
+    ];
+    events.forEach(({ name, fn }) => appContext.canvas.addEventListener(name, fn));
 }
