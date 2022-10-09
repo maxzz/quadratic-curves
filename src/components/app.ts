@@ -135,3 +135,7 @@ export function draw(appContext: AppContext) {
 
 //TODO: add line preview as render wo/ circles
 //TODO: add button to copy state
+
+//TODO: add move rectangle
+
+//TODO: add blank preview to add default new blank

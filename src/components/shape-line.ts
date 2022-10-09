@@ -69,20 +69,26 @@ function drawPoint(c: CanvasRenderingContext2D, xy: XY, isControl: boolean, colo
 
     let style = isControl ? GRAPHSTYLE.cpoint : GRAPHSTYLE.point;
 
-    c.fillStyle = c.fillStyle = isControl ? GRAPHSTYLE.circles.fill : color ? Color(color).alpha(.5).darken(0.5).hexa() : '';
+    const circleColor = color || ''; //const circleColor = isControl ? GRAPHSTYLE.circles.fill : color || '';
+    const shadowColor = isControl ? GRAPHSTYLE.circles.fill : color ? Color(color).alpha(.5).darken(0.5).hexa() : '';
+
+    // shadow
+    c.fillStyle = shadowColor;
     c.beginPath();
     c.arc(x + 1, y + 1, style.radius + 1, style.startAngle, style.endAngle, true);
     c.fill();
 
+    // main circle
     c.lineWidth = isControl ? 5 : GRAPHSTYLE.circles.width;
     c.strokeStyle = isControl ? '#00000040' : '#00000040'; // GRAPHSTYLE.circles.color
-    c.fillStyle = isControl ? GRAPHSTYLE.circles.fill : color || '';
+    c.fillStyle = circleColor;
 
     c.beginPath();
     c.arc(x, y, style.radius, style.startAngle, style.endAngle, true);
     c.fill();
     c.stroke();
 
+    // highlight
     c.lineWidth = 1;
     c.strokeStyle = '#ffffffc0';
 
