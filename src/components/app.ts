@@ -35,7 +35,7 @@ export function initAppContext(): AppContext | undefined {
 }
 
 function initEventHandlers(appContext: AppContext) {
-    
+
     // 1. Drag handlers
     initDraggingListeners(appContext, draw);
 
@@ -44,8 +44,8 @@ function initEventHandlers(appContext: AppContext) {
         navigator.clipboard.writeText(appContext.code.innerText);
     });
 
-    // 3. Resize
-    function onCanvasSizeChanged(entries: ResizeObserverEntry[]) {
+    // 3. Resize observer
+    new ResizeObserver((entries: ResizeObserverEntry[]) => {
         for (const entry of entries) {
             if (entry.contentBoxSize) {
                 appContext.canvas.width = entry.contentRect.width;
@@ -53,10 +53,7 @@ function initEventHandlers(appContext: AppContext) {
                 draw(appContext);
             }
         }
-    }
-
-    const resizeObserver = new ResizeObserver(onCanvasSizeChanged);
-    resizeObserver.observe(appContext.canvas);
+    }).observe(appContext.canvas);
 
     // 4. Details
     document.querySelectorAll('details').forEach((el) => new Accordion(el));
