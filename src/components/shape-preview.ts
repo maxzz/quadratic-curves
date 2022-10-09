@@ -20,16 +20,16 @@ export class Previews {
     }
 
     private frame(innerItem: string, idx: number, isCurrent: boolean) {
-        const title = idx === -1 ? 'Create new scene': `Line: ${idx}. Click to select this curve for editing`;
+        const title = idx === -1 ? 'Create new scene' : `Line: ${idx}. Click to select this curve for editing`;
         return `
-            <div class="hover:bg-slate-800 border-slate-400 border rounded shadow shadow-slate-700 cursor-pointer active:scale-[.97] grid items-center justify-center preview-box ${isCurrent?'ring-1 ring-offset-2 ring-offset-slate-800 ring-sky-500':''}"
+            <div class="hover:bg-slate-800 border-slate-400 border rounded shadow shadow-slate-700 cursor-pointer active:scale-[.97] grid items-center justify-center preview-box ${isCurrent ? 'ring-1 ring-offset-2 ring-offset-slate-800 ring-sky-500' : ''}"
                 data-idx="${idx}"
                 title="${title}"
             >
                 ${innerItem}
             </div>`;
     }
-    
+
     private frameSvg(lines: SingleCurve[], idx: number, isCurrent: boolean) {
         const { width, height } = this.appContext.ctx.canvas;
         const svg = `
@@ -41,9 +41,11 @@ export class Previews {
 
     private frameBtnAdd(idx: number, isCurrent: boolean) {
         const { width, height } = this.appContext.ctx.canvas;
+        const [w12, h12, l1, l2] = [width / 2, height / 2, 0.3, 0.7];
+        const cross = `M${w12} ${height * l1} L${w12} ${height * l2} M${width * l1} ${h12} L ${width * l2} ${h12}`;
         const svg = `
-            <svg class="w-12 h-12" viewBox="0 0 ${width} ${height}" stroke-width="15" fill="none">
-                <path d="M${width / 2} 0 L ${width / 2} ${height}" stroke="gray" />
+            <svg class="w-12 h-12 text-slate-500" viewBox="0 0 ${width} ${height}" stroke-width="25" fill="none">
+                <path d="${cross}" stroke="currentColor" />
             </svg>`;
         return this.frame(svg, idx, isCurrent);
     }
@@ -51,11 +53,16 @@ export class Previews {
     private onClickSelectcurve = (event: MouseEvent) => {
         const el = event.currentTarget as HTMLElement;
         if (el && el.dataset.idx !== undefined) {
-            this.appContext.current = +el.dataset.idx;
-            this.appContext.line = this.appContext.lines[this.appContext.current];
-            updateApp(this.appContext);
+            const idx = +el.dataset.idx;
+            if (idx === -1) {
+                //TODO:
+            } else {
+                this.appContext.current = idx;
+                this.appContext.line = this.appContext.lines[this.appContext.current];
+                updateApp(this.appContext);
+            }
         }
-    }
+    };
 
     public update() {
         // remove prev listeners
