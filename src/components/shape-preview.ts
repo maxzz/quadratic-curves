@@ -19,18 +19,38 @@ export class Previews {
         this.container = document.getElementById('previews')!;
     }
 
-    private singleBox(lines: SingleCurve[], idx: number, isCurrent: boolean) {
-        const { width, height } = this.appContext.ctx.canvas;
+    private frame(innerItem: string, idx: number, isCurrent: boolean) {
+        const title = idx === -1 ? 'Create new scene': `Line: ${idx}. Click to select this curve for editing`;
         return `
             <div class="hover:bg-slate-800 border-slate-400 border rounded shadow shadow-slate-700 cursor-pointer active:scale-[.97] grid items-center justify-center preview-box ${isCurrent?'ring-1 ring-offset-2 ring-offset-slate-800 ring-sky-500':''}"
                 data-idx="${idx}"
-                title="Line: ${idx}. Click to select this curve for editing"
+                title="${title}"
             >
-                <svg class="w-12 h-12" viewBox="0 0 ${width} ${height}" stroke-width="15" fill="none">
-                    ${lines.map((line) => lineToPath(line)).join('\n')}
-                </svg>
+                ${innerItem}
             </div>`;
     }
+    
+    private frameSvg(lines: SingleCurve[], idx: number, isCurrent: boolean) {
+        const { width, height } = this.appContext.ctx.canvas;
+        const svg = `
+            <svg class="w-12 h-12" viewBox="0 0 ${width} ${height}" stroke-width="15" fill="none">
+                ${lines.map((line) => lineToPath(line)).join('\n')}
+            </svg>`;
+        return this.frame(svg, idx, isCurrent);
+    }
+
+    // private singleBox(lines: SingleCurve[], idx: number, isCurrent: boolean) {
+    //     const { width, height } = this.appContext.ctx.canvas;
+    //     return `
+    //         <div class="hover:bg-slate-800 border-slate-400 border rounded shadow shadow-slate-700 cursor-pointer active:scale-[.97] grid items-center justify-center preview-box ${isCurrent?'ring-1 ring-offset-2 ring-offset-slate-800 ring-sky-500':''}"
+    //             data-idx="${idx}"
+    //             title="Line: ${idx}. Click to select this curve for editing"
+    //         >
+    //             <svg class="w-12 h-12" viewBox="0 0 ${width} ${height}" stroke-width="15" fill="none">
+    //                 ${lines.map((line) => lineToPath(line)).join('\n')}
+    //             </svg>
+    //         </div>`;
+    // }
 
     private onClickSelectcurve = (event: MouseEvent) => {
         const el = event.currentTarget as HTMLElement;
@@ -47,7 +67,7 @@ export class Previews {
         boxeEls.forEach((box) => box.removeEventListener('click', this.onClickSelectcurve));
 
         // generate
-        const boxes = this.appContext.lines.map((line, idx) => this.singleBox(line, idx, idx === this.appContext.current));
+        const boxes = this.appContext.lines.map((line, idx) => this.frameSvg(line, idx, idx === this.appContext.current));
         this.container.innerHTML = boxes.join('\n');
 
         // add new listeners
