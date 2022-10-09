@@ -58,23 +58,11 @@ export class Previews {
         const cross = `M${width * l1} ${height * l2} L${width * l2} ${height * l1} M${width * l1} ${height * l1} L ${width * l2} ${height * l2}`;
         //
         const svg = `
-            <svg class="preview-box hidden group-hover:block absolute right-0.5 top-0.5 w-5 h-5 text-slate-200 bg-red-500 border-red-300 border rounded animate-slide-down" viewBox="0 0 ${width} ${height}" stroke-width="45" data-idx="${idx}" data-op="del">
+            <svg class="preview-box hidden group-hover:block absolute right-0.5 top-0.5 w-5 h-5 text-slate-200 bg-red-500 border-red-300 border rounded animate-fade-in" viewBox="0 0 ${width} ${height}" stroke-width="45" data-idx="${idx}" data-op="del">
                 <path d="${cross}" stroke="currentColor" />
             </svg>`;
         return svg;
     }
-
-    // private frameBtnDelete() {
-    //     const idx: number = -1;
-    //     const { width, height } = this.appContext.ctx.canvas;
-    //     const [l1, l2] = [0.3, 0.7];
-    //     const cross = `M${width * l1} ${height * l2} L${width * l2} ${height * l1} M${width * l1} ${height * l1} L ${width * l2} ${height * l2}`;
-    //     const svg = `
-    //         <svg class="absolute right-0 top-0 w-6 h-6 text-slate-500" viewBox="0 0 ${width} ${height}" stroke-width="25" fill="none">
-    //             <path d="${cross}" stroke="currentColor" />
-    //         </svg>`;
-    //     return this.frame(svg, idx, false);
-    // }
 
     private onClickSelectcurve = (event: MouseEvent) => {
         const el = event.currentTarget as HTMLElement;
