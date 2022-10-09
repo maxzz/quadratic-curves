@@ -1,6 +1,6 @@
-import { AppContext, SingleCurve } from "./types";
+import { AppContext } from "./types";
 import { initPersistData } from "./store";
-import { createCurve, drawCurve } from "./shape-line";
+import { drawCurve, generateDefaultScene } from "./shape-line";
 import { initDraggingListeners } from "./dragging";
 import { generateCodeText } from "./code-text-generator";
 import { Accordion } from "./ui-accordion";
@@ -63,19 +63,9 @@ function initData(appContext: AppContext) {
 
     appContext.lines = initPersistData();
 
-    function generateDefaultLine(): SingleCurve[] { // TODO: this may go as static text definition, no need code (unless scale but it should be done anyway)
-        const nLines: number = 7; // init(appContext, 7, canvas.className == 'quadratic', oldStrings ? oldStrings[0] : undefined);
-        const doQuad: boolean = false;
-        const rv: SingleCurve[] = [];
-        for (let idx = 0; idx < nLines; idx++) {
-            rv.push(createCurve(doQuad, idx));
-        }
-        return rv;
-    }
-
     // init new lines if there is no persist data
-    const dafaultLine = generateDefaultLine();
-    appContext.lines.unshift(dafaultLine); // alway prepend default curves
+    const dafaultScene = generateDefaultScene({nLines: 7, doQuad: false});
+    appContext.lines.unshift(dafaultScene); // alway prepend default curves
     appContext.current = 0;
 
     appContext.line = appContext.lines[appContext.current];
@@ -147,3 +137,5 @@ export function updateApp(appContext: AppContext) {
 //TODO: add move rectangle
 
 //TODO: add blank preview to add default new blank
+
+//TODO: add scale factor

@@ -1,5 +1,6 @@
 import { AppContext, SingleCurve } from "./types";
 import { updateApp } from "./app";
+import { generateDefaultScene } from "./shape-line";
 
 function lineToPath(ln: SingleCurve) {
     const [p1, p2, c1, c2] = ln.points;
@@ -24,7 +25,7 @@ export class Previews {
         return `
             <div class="preview-box relative group hover:bg-slate-800 border-slate-400 border rounded shadow shadow-slate-700 cursor-pointer active:scale-[.97] grid items-center justify-center ${isCurrent ? 'ring-1 ring-offset-2 ring-offset-slate-800 ring-sky-500' : ''}"
                 data-idx="${idx}"
-                ${operation ? `data-op="${operation}"`: ''}
+                ${operation ? `data-op="${operation}"` : ''}
                 title="${title}"
             >
                 ${innerItem}
@@ -70,8 +71,15 @@ export class Previews {
             const idx = +el.dataset.idx;
             const op = el.dataset.op;
             if (op === 'del') {
-                console.log('del', idx);
+                if (idx !== -1) {
+                    console.log('del', idx);
+                }
             } else if (op === 'add') {
+                const newScene = generateDefaultScene({ nLines: 9, doQuad: true });
+                this.appContext.lines.push(newScene);
+                this.appContext.line = newScene;
+                this.appContext.current = this.appContext.lines.length - 1;
+                updateApp(this.appContext);
                 console.log('add');
             } else if (idx !== -1) {
                 this.appContext.current = idx;

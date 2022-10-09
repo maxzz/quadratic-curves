@@ -5,7 +5,7 @@ import Color from "color";
 
 export function createCurve(doQuad: boolean, lineIdx: number): SingleCurve {
     const def = '{"points":[[60,19],[66,279],[23,110],[113,174]],"color":"hsla(0, 100%, 50%, 0.95)"}'; // for deep copy
-    
+
     let line: SingleCurve = JSON.parse(def);
     doQuad && line.points.pop();
 
@@ -13,6 +13,16 @@ export function createCurve(doQuad: boolean, lineIdx: number): SingleCurve {
     line.color = hue(lineIdx * 40);
 
     return line;
+}
+
+export function generateDefaultScene({ nLines, doQuad }: { nLines: number; doQuad: boolean; }): SingleCurve[] { // TODO: this may go as static text definition, no need code (unless scale but it should be done anyway)
+    // const nLines: number = 7; // init(appContext, 7, canvas.className == 'quadratic', oldStrings ? oldStrings[0] : undefined);
+    // const doQuad: boolean = false;
+    const rv: SingleCurve[] = [];
+    for (let idx = 0; idx < nLines; idx++) {
+        rv.push(createCurve(doQuad, idx));
+    }
+    return rv;
 }
 
 function drawCurveLine(c: CanvasRenderingContext2D, curvePoints: CurvePoints, color: string) {
