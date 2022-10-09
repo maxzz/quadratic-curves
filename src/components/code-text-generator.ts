@@ -38,7 +38,7 @@ function gen3_Current(curves: SingleCurve[]) {
 }
 
 function gen4_Persistent(appCurves: SingleCurve[][]) {
-    const allCurves = appCurves.map((sceneCurves, idx) => `   /* ${`${idx + 1}`.padStart(2, ' ')} */ ${allToString(sceneCurves)}',`).join('\n'); // idx 0 for predefined
+    const allCurves = appCurves.map((sceneCurves, idx) => `   /* ${`${idx + 1}`.padStart(2, ' ')} */ '${allToString(sceneCurves)}',`).join('\n'); // idx 0 for predefined
     return `const persistent = [\n${allCurves}\n];`;
 }
 
