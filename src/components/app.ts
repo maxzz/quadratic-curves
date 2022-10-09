@@ -27,19 +27,16 @@ export function initAppContext(): AppContext | undefined {
         return;
     }
 
-    // 3. Copy source button
-    btnCopy.addEventListener('click', () => {
-        navigator.clipboard.writeText(code.innerText);
-    });
-
-    // 4. Init app previews and context
-    const appContent: Omit<AppContext, 'previews'> = { canvas, ctx, code, line: [], lines: [], current: 0, checkDragGroup, };
+    // 3. Init app previews and context
+    const appContent: Omit<AppContext, 'previews'> = { ctx, line: [], lines: [], current: 0, canvas, code, btnCopy, checkDragGroup, };
     (appContent as AppContext).previews = new Previews(appContent as AppContext);
 
     return (appContent as AppContext);
 }
 
 function initEventHandlers(appContext: AppContext) {
+    
+    // 1. Drag handlers
     const { dragStart, dragging, dragDone, } = initDrag(appContext, draw);
     const events: { name: keyof Pick<HTMLElementEventMap, 'mousedown' | 'mousemove' | 'mouseup' | 'mouseout'>, fn: (event: MouseEvent) => void; }[] = [
         { name: 'mousedown', fn: dragStart, },
@@ -48,6 +45,12 @@ function initEventHandlers(appContext: AppContext) {
     ];
     events.forEach(({ name, fn }) => appContext.canvas.addEventListener(name, fn));
 
+    // 2. Copy source button
+    appContext.btnCopy.addEventListener('click', () => {
+        navigator.clipboard.writeText(appContext.code.innerText);
+    });
+
+    // 3. Resize
     function onCanvasSizeChanged(entries: ResizeObserverEntry[]) {
         for (const entry of entries) {
             if (entry.contentBoxSize) {
@@ -61,6 +64,7 @@ function initEventHandlers(appContext: AppContext) {
     const resizeObserver = new ResizeObserver(onCanvasSizeChanged);
     resizeObserver.observe(appContext.canvas);
 
+    // 4. Details
     document.querySelectorAll('details').forEach((el) => new Accordion(el));
 }
 

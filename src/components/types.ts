@@ -15,13 +15,15 @@ export type SingleCurve = {
 };
 
 export type AppContext = {
-    canvas: HTMLCanvasElement;
     ctx: CanvasRenderingContext2D;
-    code: HTMLPreElement;
     line: SingleCurve[];
     lines: SingleCurve[][];
     current: number;    // current line
+  
+    canvas: HTMLCanvasElement;
     previews: Previews;
+    code: HTMLPreElement;
+    btnCopy: HTMLButtonElement;
     checkDragGroup: HTMLInputElement;
 };
 
