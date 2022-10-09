@@ -44,7 +44,18 @@ export class Previews {
         const [w12, h12, l1, l2] = [width / 2, height / 2, 0.3, 0.7];
         const cross = `M${w12} ${height * l1} L${w12} ${height * l2} M${width * l1} ${h12} L ${width * l2} ${h12}`;
         const svg = `
-            <svg class="w-12 h-12 text-slate-500" viewBox="0 0 ${width} ${height}" stroke-width="25" fill="none">
+            <svg class="w-6 h-6 text-slate-500" viewBox="0 0 ${width} ${height}" stroke-width="25" fill="none">
+                <path d="${cross}" stroke="currentColor" />
+            </svg>`;
+        return this.frame(svg, idx, isCurrent);
+    }
+
+    private frameBtnDel(idx: number, isCurrent: boolean) {
+        const { width, height } = this.appContext.ctx.canvas;
+        const [w12, h12, l1, l2] = [width / 2, height / 2, 0.3, 0.7];
+        const cross = `M${width * l1} ${height * l2} L${width * l2} ${height * l1} M${width * l1} ${height * l1} L ${width * l2} ${height * l2}`;
+        const svg = `
+            <svg class="w-6 h-6 text-slate-500" viewBox="0 0 ${width} ${height}" stroke-width="25" fill="none">
                 <path d="${cross}" stroke="currentColor" />
             </svg>`;
         return this.frame(svg, idx, isCurrent);
@@ -71,7 +82,7 @@ export class Previews {
 
         // generate
         const boxes = this.appContext.lines.map((line, idx) => this.frameSvg(line, idx, idx === this.appContext.current));
-        this.container.innerHTML = boxes.join('\n') + this.frameBtnAdd(-1, false);
+        this.container.innerHTML = boxes.join('\n') + this.frameBtnAdd(-1, false) + this.frameBtnDel(-1, false);
 
         // add new listeners
         boxeEls = [...this.container.querySelectorAll('.preview-box')] as HTMLElement[];
