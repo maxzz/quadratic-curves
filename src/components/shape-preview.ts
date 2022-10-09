@@ -1,5 +1,5 @@
 import { AppContext, SingleCurve } from "./types";
-import { draw } from "./app";
+import { updateApp } from "./app";
 
 function lineToPath(ln: SingleCurve) {
     const [p1, p2, c1, c2] = ln.points;
@@ -32,19 +32,19 @@ export class Previews {
             </div>`;
     }
 
-    private onClick = (event: MouseEvent) => {
+    private onClickSelectcurve = (event: MouseEvent) => {
         const el = event.currentTarget as HTMLElement;
         if (el && el.dataset.idx !== undefined) {
             this.appContext.current = +el.dataset.idx;
             this.appContext.line = this.appContext.lines[this.appContext.current];
-            draw(this.appContext);
+            updateApp(this.appContext);
         }
     }
 
     public update() {
         // remove prev listeners
         let boxeEls = [...this.container.querySelectorAll('.preview-box')] as HTMLElement[];
-        boxeEls.forEach((box) => box.removeEventListener('click', this.onClick));
+        boxeEls.forEach((box) => box.removeEventListener('click', this.onClickSelectcurve));
 
         // generate
         const boxes = this.appContext.lines.map((line, idx) => this.singleBox(line, idx, idx === this.appContext.current));
@@ -52,6 +52,6 @@ export class Previews {
 
         // add new listeners
         boxeEls = [...this.container.querySelectorAll('.preview-box')] as HTMLElement[];
-        boxeEls.forEach((box) => box.addEventListener('click', this.onClick));
+        boxeEls.forEach((box) => box.addEventListener('click', this.onClickSelectcurve));
     }
 }

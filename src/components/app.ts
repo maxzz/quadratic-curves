@@ -37,7 +37,7 @@ export function initAppContext(): AppContext | undefined {
 function initEventHandlers(appContext: AppContext) {
 
     // 1. Drag handlers
-    initDraggingListeners(appContext, draw);
+    initDraggingListeners(appContext, updateApp);
 
     // 2. Copy source button
     appContext.btnCopy.addEventListener('click', () => {
@@ -50,7 +50,7 @@ function initEventHandlers(appContext: AppContext) {
             if (entry.contentBoxSize) {
                 appContext.canvas.width = entry.contentRect.width;
                 appContext.canvas.height = entry.contentRect.height;
-                draw(appContext);
+                updateApp(appContext);
             }
         }
     }).observe(appContext.canvas);
@@ -96,17 +96,27 @@ export function initApp(appContext: AppContext) {
     appContext.previews.update();
 }
 
-export function draw(appContext: AppContext) {
-    appContext.ctx.clearRect(0, 0, appContext.canvas.width, appContext.canvas.height);
+export function updateApp(appContext: AppContext) {
 
-    // 1. Draw background gradient
-    let gradient = appContext.ctx.createLinearGradient(0, 0, appContext.canvas.width, appContext.canvas.height);
-    // gradient.addColorStop(0, 'hsla(68, 46%, 50%, .2)');
-    // gradient.addColorStop(1, 'hsla(58, 100%, 50%, .1)');
-    gradient.addColorStop(0, 'tomato');
-    gradient.addColorStop(1, 'purple');
-    appContext.ctx.fillStyle = gradient;
-    appContext.ctx.fillRect(0, 0, appContext.canvas.width, appContext.canvas.height);
+    function drawBackground(ctx: CanvasRenderingContext2D, width: number, height: number) {
+        ctx.clearRect(0, 0, width, height);
+
+        // 1. Draw background gradient
+        let gradient = ctx.createLinearGradient(0, 0, width, height);
+    
+        // gradient.addColorStop(0, 'hsla(68, 46%, 50%, .2)');
+        // gradient.addColorStop(1, 'hsla(58, 100%, 50%, .1)');
+    
+        // gradient.addColorStop(0, '#8000ff90');
+        // gradient.addColorStop(1, '#80105f90');
+    
+        gradient.addColorStop(0, 'tomato');
+        gradient.addColorStop(1, 'purple');
+    
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, width, height);
+    }
+    drawBackground(appContext.ctx, appContext.canvas.width, appContext.canvas.height);
 
     // 2. Draw lines
     appContext.line.forEach(line => drawCurve(appContext.ctx, line));
@@ -119,18 +129,21 @@ export function draw(appContext: AppContext) {
 }
 
 //TODO: points persistence
-//TODO: select one from overlapping points under cursor
-//TODO: copy state points
+
 //TODO: show/hide control points and show/hide points
+//TODO: select one from overlapping points under cursor
 //TODO: when points overlapping set the same pos for them
-//TODO: link to GitHub - Done
+
+//TODO: copy state points
 //TODO: code: js, ts, array, persist JSON
+
+//TODO: link to GitHub - Done
 //TODO: update link and preview on maxzz.github.io
-//TODO: rectangular marque
 
 //TODO: add line preview as render wo/ circles
 //TODO: add button to copy state
 
+//TODO: rectangular marque
 //TODO: add move rectangle
 
 //TODO: add blank preview to add default new blank
