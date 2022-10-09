@@ -24,7 +24,7 @@ export class Previews {
         return `
             <div class="hover:bg-slate-800 border-slate-400 border rounded shadow shadow-slate-700 cursor-pointer active:scale-[.97] grid items-center justify-center preview-box ${isCurrent?'ring-1 ring-offset-2 ring-offset-slate-800 ring-sky-500':''}"
                 data-idx="${idx}"
-                title="Select this curve for editing"
+                title="Line: ${idx}. Click to select this curve for editing"
             >
                 <svg class="w-12 h-12" viewBox="0 0 ${width} ${height}" stroke-width="15" fill="none">
                     ${lines.map((line) => lineToPath(line)).join('\n')}
