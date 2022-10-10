@@ -1,9 +1,9 @@
-import { AppContext } from "./types";
+import { AppContext, XY } from "./types";
 import { curveHasPoint } from "./shape-line";
-import { SingleCurve, PointXY } from "./types";
+import { SingleCurve } from "./types";
 
 type DraggingLine = {
-    pt?: PointXY;
+    pt?: XY;
     line?: SingleCurve;
     idx: number;
 };
@@ -47,8 +47,8 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
             context.forEach((draggingLine: DraggingLine) => {
                 const line = draggingLine.line?.points[draggingLine.idx];
                 if (line && draggingLine.pt) {
-                    line[0] += pos.x - draggingLine.pt.x;
-                    line[1] += pos.y - draggingLine.pt.y;
+                    line[0] += pos[0] - draggingLine.pt[0];
+                    line[1] += pos[1] - draggingLine.pt[1];
                     draggingLine.pt = pos;
                 }
             });
@@ -63,11 +63,11 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
         updateApp(appContext);
     }
 
-    function mousePos(event: MouseEvent): PointXY {
-        return {
-            x: Math.round(event.pageX - appContext.canvas.offsetLeft),
-            y: Math.round(event.pageY - appContext.canvas.offsetTop),
-        };
+    function mousePos(event: MouseEvent): XY {
+        return [
+            Math.round(event.pageX - appContext.canvas.offsetLeft),
+            Math.round(event.pageY - appContext.canvas.offsetTop),
+        ];
     }
 
     return {

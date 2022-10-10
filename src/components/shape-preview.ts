@@ -78,7 +78,7 @@ export class Previews {
                     updateApp(this.appContext);
                 }
             } else if (op === 'add') {
-                const newScene = generateDefaultScene({ nLines: 9, doQuad: true });
+                const newScene = generateDefaultScene({ nLines: 9, doQuad: false });
                 this.appContext.scenes.push(newScene);
                 this.appContext.current = this.appContext.scenes.length - 1;
                 updateApp(this.appContext);

@@ -1,5 +1,5 @@
 import { GRAPHSTYLE, hue } from "./initials";
-import { CurvePoints, SingleCurve, PointXY, XY, Scene } from "./types";
+import { CurvePoints, SingleCurve, XY, Scene } from "./types";
 import { degToRad } from "../utils/utils-math";
 import Color from "color";
 
@@ -121,10 +121,10 @@ export function drawCurve(c: CanvasRenderingContext2D, ln: SingleCurve) {
 
 const hitZone = Math.pow(GRAPHSTYLE.point.radius, 2);
 
-export function curveHasPoint(line: SingleCurve, pos: PointXY): { line: SingleCurve, idx: number; } | undefined {
+export function curveHasPoint(line: SingleCurve, [x, y]: XY): { line: SingleCurve, idx: number; } | undefined {
     for (const [idx, pt] of Object.entries(line.points)) {
-        let dx = pt[0] - pos.x;
-        let dy = pt[1] - pos.y;
+        let dx = pt[0] - x;
+        let dy = pt[1] - y;
 
         if ((dx * dx) + (dy * dy) < hitZone) {
             return { line, idx: +idx };

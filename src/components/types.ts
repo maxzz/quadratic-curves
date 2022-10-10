@@ -1,10 +1,5 @@
 import { Previews } from "./shape-preview";
 
-export type PointXY = {
-    x: number;
-    y: number;
-};
-
 export type XY = [x: number, y: number];
 
 export type CurvePoints = [p1: XY, p2: XY, p3: XY] | [p1: XY, p2: XY, p3: XY, p4: XY];
