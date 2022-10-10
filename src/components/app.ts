@@ -28,7 +28,7 @@ export function initAppContext(): AppContext | undefined {
     }
 
     // 3. Init app previews and context
-    const appContent: Omit<AppContext, 'previews'> = { ctx, lines: [], current: 0, canvas, code, btnCopy, checkDragGroup, };
+    const appContent: Omit<AppContext, 'previews'> = { ctx, scenes: [], current: 0, canvas, code, btnCopy, checkDragGroup, };
     (appContent as AppContext).previews = new Previews(appContent as AppContext);
 
     return (appContent as AppContext);
@@ -61,12 +61,12 @@ function initEventHandlers(appContext: AppContext) {
 
 function initData(appContext: AppContext) {
 
-    appContext.lines = initPersistData();
+    appContext.scenes = initPersistData();
 
     // init new lines if there is no persist data
-    const dafaultScene = generateDefaultScene({nLines: 7, doQuad: false});
-    appContext.lines.unshift(dafaultScene); // alway prepend default curves
-    appContext.current = 0;
+    // const dafaultScene = generateDefaultScene({nLines: 7, doQuad: false});
+    // appContext.scenes.unshift(dafaultScene); // always prepend default curves
+    // appContext.current = 0;
 }
 
 export function initApp(appContext: AppContext) {
@@ -107,10 +107,10 @@ export function updateApp(appContext: AppContext) {
     drawBackground(appContext.ctx, appContext.canvas.width, appContext.canvas.height);
 
     // 2. Draw lines
-    appContext.lines[appContext.current]?.forEach(line => drawCurve(appContext.ctx, line));
+    appContext.scenes[appContext.current]?.forEach(line => drawCurve(appContext.ctx, line));
 
     // 3. Update generated code
-    appContext.code.innerText = generateCodeText(appContext.lines[appContext.current] || [], appContext.lines);
+    appContext.code.innerText = generateCodeText(appContext.scenes[appContext.current] || [], appContext.scenes);
 
     // 4. update previews
     appContext.previews.update();

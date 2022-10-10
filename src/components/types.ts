@@ -14,16 +14,19 @@ export type SingleCurve = {
     color?: string;
 };
 
+export type Scene = SingleCurve[];
+
 export type AppContext = {
-    ctx: CanvasRenderingContext2D;
-    lines: SingleCurve[][];
-    current: number;    // current line
+    scenes: Scene[];
+    current: number;    // current line: -1 if there is none
   
     canvas: HTMLCanvasElement;
     previews: Previews;
     code: HTMLPreElement;
     btnCopy: HTMLButtonElement;
     checkDragGroup: HTMLInputElement;
+
+    ctx: CanvasRenderingContext2D;
 };
 
 export function scaleCurvePts(pts: CurvePoints, factor: number): CurvePoints {

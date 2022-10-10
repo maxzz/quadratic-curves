@@ -1,5 +1,5 @@
 import { GRAPHSTYLE, hue } from "./initials";
-import { CurvePoints, SingleCurve, PointXY, XY } from "./types";
+import { CurvePoints, SingleCurve, PointXY, XY, Scene } from "./types";
 import { degToRad } from "../utils/utils-math";
 import Color from "color";
 
@@ -15,10 +15,10 @@ export function createCurve(doQuad: boolean, lineIdx: number): SingleCurve {
     return line;
 }
 
-export function generateDefaultScene({ nLines, doQuad }: { nLines: number; doQuad: boolean; }): SingleCurve[] { // TODO: this may go as static text definition, no need code (unless scale but it should be done anyway)
+export function generateDefaultScene({ nLines, doQuad }: { nLines: number; doQuad: boolean; }): Scene { // TODO: this may go as static text definition, no need code (unless scale but it should be done anyway)
     // const nLines: number = 7; // init(appContext, 7, canvas.className == 'quadratic', oldStrings ? oldStrings[0] : undefined);
     // const doQuad: boolean = false;
-    const rv: SingleCurve[] = [];
+    const rv: Scene = [];
     for (let idx = 0; idx < nLines; idx++) {
         rv.push(createCurve(doQuad, idx));
     }

@@ -1,4 +1,4 @@
-import { AppContext, SingleCurve } from "./types";
+import { AppContext, Scene, SingleCurve } from "./types";
 import { updateApp } from "./app";
 import { generateDefaultScene } from "./shape-line";
 import { clamp } from "../utils/utils-math";
@@ -33,11 +33,11 @@ export class Previews {
             </div>`;
     }
 
-    private frameSvg(lines: SingleCurve[], idx: number, isCurrent: boolean) {
+    private frameSvg(scene: Scene, idx: number, isCurrent: boolean) {
         const { width, height } = this.appContext.ctx.canvas;
         const svg = `
             <svg class="w-12 h-12" viewBox="0 0 ${width} ${height}" stroke-width="15" fill="none">
-                ${lines.map((line) => lineToPath(line)).join('\n')}
+                ${scene.map((line) => lineToPath(line)).join('\n')}
             </svg>
             ${this.frameBtnDelete(idx)}`;
         return this.frame(svg, idx, isCurrent);
@@ -72,15 +72,15 @@ export class Previews {
             const idx = +el.dataset.idx;
             const op = el.dataset.op;
             if (op === 'del') {
-                if (this.appContext.lines.length > 0 && idx !== -1) {
-                    this.appContext.lines.splice(idx, 1);
-                    this.appContext.current = clamp(0, idx, this.appContext.lines.length - 1);
+                if (this.appContext.scenes.length > 0 && idx !== -1) {
+                    this.appContext.scenes.splice(idx, 1);
+                    this.appContext.current = clamp(0, idx, this.appContext.scenes.length - 1);
                     updateApp(this.appContext);
                 }
             } else if (op === 'add') {
                 const newScene = generateDefaultScene({ nLines: 9, doQuad: true });
-                this.appContext.lines.push(newScene);
-                this.appContext.current = this.appContext.lines.length - 1;
+                this.appContext.scenes.push(newScene);
+                this.appContext.current = this.appContext.scenes.length - 1;
                 updateApp(this.appContext);
             } else if (idx !== -1) {
                 this.appContext.current = idx;
@@ -95,7 +95,7 @@ export class Previews {
         boxeEls.forEach((box) => box.removeEventListener('click', this.onClickSelectcurve));
 
         // generate
-        const boxes = this.appContext.lines.map((line, idx) => this.frameSvg(line, idx, idx === this.appContext.current));
+        const boxes = this.appContext.scenes.map((line, idx) => this.frameSvg(line, idx, idx === this.appContext.current));
         this.container.innerHTML = boxes.join('\n') + this.frameBtnAdd();
 
         // add new listeners

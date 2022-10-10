@@ -17,7 +17,7 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
         context = [];
         let pt = mousePos(event);
 
-        const currentScene = appContext.lines[appContext.current] || [];
+        const currentScene = appContext.scenes[appContext.current] || [];
 
         // find the nearest point
         for (var i = 0; i < currentScene.length; i++) {
