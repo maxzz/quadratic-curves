@@ -3,9 +3,9 @@ import { curveHasPoint } from "./shape-line";
 import { SingleCurve } from "./types";
 
 type DraggingLine = {
-    pt?: XY;
-    curve?: SingleCurve;
-    curvePtIdx: number;
+    downPt?: XY;            // Down point to get move delta
+    curve?: SingleCurve;    // Curve with curvePtIdx
+    curvePtIdx: number;     // Point index inside curve.points[]
 };
 
 function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: AppContext) => void) {
@@ -15,7 +15,7 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
         //appContext.canvas.setPointerCapture(); //TODO: https://developer.mozilla.org/en-US/docs/Web/API/Element/setPointerCapture
 
         context = [];
-        const pt = mousePos(event);
+        const downPt = mousePos(event);
 
         const scene = appContext.scenes[appContext.current] || [];
 
@@ -23,9 +23,9 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
         for (let i = 0; i < scene.length; i++) {
             const curve: SingleCurve = scene[i];
 
-            let res = curveHasPoint(curve, pt);
+            let res = curveHasPoint(curve, downPt);
             if (res) {
-                context.push({ curve: res.line, curvePtIdx: res.idx, pt: pt, }); // So far, it's just one point per curve
+                context.push({ curve: res.curve, curvePtIdx: res.curvePtIdx, downPt, }); // So far, it's just one point per curve
                 if (!appContext.checkDragGroup.checked) {
                     break;
                 }
@@ -44,10 +44,10 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
             let pos = mousePos(event);
             context.forEach((draggingLine: DraggingLine) => {
                 const point = draggingLine.curve?.points[draggingLine.curvePtIdx];
-                if (point && draggingLine.pt) {
-                    point[0] += pos[0] - draggingLine.pt[0];
-                    point[1] += pos[1] - draggingLine.pt[1];
-                    draggingLine.pt = pos;
+                if (point && draggingLine.downPt) {
+                    point[0] += pos[0] - draggingLine.downPt[0];
+                    point[1] += pos[1] - draggingLine.downPt[1];
+                    draggingLine.downPt = pos;
                 }
             });
             updateApp(appContext);

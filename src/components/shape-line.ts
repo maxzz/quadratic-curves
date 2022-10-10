@@ -121,13 +121,13 @@ export function drawCurve(c: CanvasRenderingContext2D, ln: SingleCurve) {
 
 const hitZone = Math.pow(GRAPHSTYLE.point.radius, 2);
 
-export function curveHasPoint(line: SingleCurve, [x, y]: XY): { line: SingleCurve, idx: number; } | undefined {
-    for (const [idx, pt] of Object.entries(line.points)) {
-        let dx = pt[0] - x;
-        let dy = pt[1] - y;
+export function curveHasPoint(curve: SingleCurve, [mouseX, mouseY]: XY): { curve: SingleCurve, curvePtIdx: number; } | undefined {
+    for (const [idx, [x, y]] of Object.entries(curve.points)) {
+        let dx = x - mouseX;
+        let dy = y - mouseY;
 
         if ((dx * dx) + (dy * dy) < hitZone) {
-            return { line, idx: +idx };
+            return { curve, curvePtIdx: +idx };
         }
     }
 }
