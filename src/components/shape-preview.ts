@@ -1,6 +1,7 @@
 import { AppContext, SingleCurve } from "./types";
 import { updateApp } from "./app";
 import { generateDefaultScene } from "./shape-line";
+import { clamp } from "../utils/utils-math";
 
 function lineToPath(ln: SingleCurve) {
     const [p1, p2, c1, c2] = ln.points;
@@ -72,6 +73,18 @@ export class Previews {
             const op = el.dataset.op;
             if (op === 'del') {
                 if (idx !== -1) {
+                    if (this.appContext.lines.length > 0) {
+                        this.appContext.lines.splice(idx, 1);
+                        console.log(`this.appContext.lines.length A: idx=${idx}, len=${this.appContext.lines.length}`, this.appContext.lines);
+
+                        //console.log(`this.appContext.lines.length B: idx=${idx}, len=${this.appContext.lines.length}`);
+                        const newCurrent = clamp(0, idx, this.appContext.lines.length - 1);
+                        this.appContext.line = this.appContext.lines.length ? this.appContext.lines[newCurrent] : [];
+                        this.appContext.current = newCurrent;
+                        updateApp(this.appContext);
+                    } else {
+
+                    }
                     console.log('del', idx);
                 }
             } else if (op === 'add') {
@@ -80,7 +93,6 @@ export class Previews {
                 this.appContext.line = newScene;
                 this.appContext.current = this.appContext.lines.length - 1;
                 updateApp(this.appContext);
-                console.log('add');
             } else if (idx !== -1) {
                 this.appContext.current = idx;
                 this.appContext.line = this.appContext.lines[this.appContext.current];
