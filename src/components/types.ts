@@ -11,7 +11,7 @@ export type CurvePoints = [p1: XY, p2: XY, p3: XY] | [p1: XY, p2: XY, p3: XY, p4
 
 export type SingleCurve = {
     points: CurvePoints;
-    color?: string;
+    color: string;
 };
 
 export type Scene = SingleCurve[];

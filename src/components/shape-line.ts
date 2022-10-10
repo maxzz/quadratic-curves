@@ -114,9 +114,9 @@ function drawPoint(c: CanvasRenderingContext2D, xy: XY, isControl: boolean, colo
 export function drawCurve(c: CanvasRenderingContext2D, ln: SingleCurve) {
     const curvePoints: CurvePoints = ln.points;
 
-    drawCurveLine(c, curvePoints, ln.color || '');
+    drawCurveLine(c, curvePoints, ln.color);
     drawControlPointLines(c, curvePoints);
-    curvePoints.forEach((point, idx) => drawPoint(c, point, idx > 1, ln.color || ''));
+    curvePoints.forEach((point, idx) => drawPoint(c, point, idx > 1, ln.color));
 }
 
 const hitZone = Math.pow(GRAPHSTYLE.point.radius, 2);
