@@ -16,7 +16,6 @@ export type SingleCurve = {
 
 export type AppContext = {
     ctx: CanvasRenderingContext2D;
-    line: SingleCurve[];
     lines: SingleCurve[][];
     current: number;    // current line
   

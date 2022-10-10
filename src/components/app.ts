@@ -28,7 +28,7 @@ export function initAppContext(): AppContext | undefined {
     }
 
     // 3. Init app previews and context
-    const appContent: Omit<AppContext, 'previews'> = { ctx, line: [], lines: [], current: 0, canvas, code, btnCopy, checkDragGroup, };
+    const appContent: Omit<AppContext, 'previews'> = { ctx, lines: [], current: 0, canvas, code, btnCopy, checkDragGroup, };
     (appContent as AppContext).previews = new Previews(appContent as AppContext);
 
     return (appContent as AppContext);
@@ -67,8 +67,6 @@ function initData(appContext: AppContext) {
     const dafaultScene = generateDefaultScene({nLines: 7, doQuad: false});
     appContext.lines.unshift(dafaultScene); // alway prepend default curves
     appContext.current = 0;
-
-    appContext.line = appContext.lines[appContext.current];
 }
 
 export function initApp(appContext: AppContext) {
@@ -109,10 +107,10 @@ export function updateApp(appContext: AppContext) {
     drawBackground(appContext.ctx, appContext.canvas.width, appContext.canvas.height);
 
     // 2. Draw lines
-    appContext.line.forEach(line => drawCurve(appContext.ctx, line));
+    appContext.lines[appContext.current]?.forEach(line => drawCurve(appContext.ctx, line));
 
     // 3. Update generated code
-    appContext.code.innerText = generateCodeText(appContext.line, appContext.lines);
+    appContext.code.innerText = generateCodeText(appContext.lines[appContext.current] || [], appContext.lines);
 
     // 4. update previews
     appContext.previews.update();

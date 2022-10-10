@@ -17,9 +17,11 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
         context = [];
         let pt = mousePos(event);
 
+        const currentScene = appContext.lines[appContext.current];
+
         // find the nearest point
-        for (var i = 0; i < appContext.line.length; i++) {
-            var line: SingleCurve = appContext.line[i];
+        for (var i = 0; i < currentScene.length; i++) {
+            var line: SingleCurve = currentScene[i];
 
             //line.color === 'hsla(240, 100%, 50%, 0.95)' && console.log('----------', line);
 

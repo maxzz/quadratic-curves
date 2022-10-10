@@ -77,9 +77,8 @@ export class Previews {
                         this.appContext.lines.splice(idx, 1);
                         console.log(`this.appContext.lines.length A: idx=${idx}, len=${this.appContext.lines.length}`, this.appContext.lines);
 
-                        //console.log(`this.appContext.lines.length B: idx=${idx}, len=${this.appContext.lines.length}`);
                         const newCurrent = clamp(0, idx, this.appContext.lines.length - 1);
-                        this.appContext.line = this.appContext.lines.length ? this.appContext.lines[newCurrent] : [];
+                        console.log(`this.appContext.lines.length newCurrent: ${newCurrent} B: idx=${idx}, len=${this.appContext.lines.length}`);
                         this.appContext.current = newCurrent;
                         updateApp(this.appContext);
                     } else {
@@ -90,12 +89,10 @@ export class Previews {
             } else if (op === 'add') {
                 const newScene = generateDefaultScene({ nLines: 9, doQuad: true });
                 this.appContext.lines.push(newScene);
-                this.appContext.line = newScene;
                 this.appContext.current = this.appContext.lines.length - 1;
                 updateApp(this.appContext);
             } else if (idx !== -1) {
                 this.appContext.current = idx;
-                this.appContext.line = this.appContext.lines[this.appContext.current];
                 updateApp(this.appContext);
             }
         }
