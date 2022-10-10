@@ -24,7 +24,7 @@ export class Previews {
     private frame(innerItem: string, idx: number, isCurrent: boolean, operation?: string) {
         const title = idx === -1 ? 'Create new scene' : `Line: ${idx}. Click to select this curve for editing`;
         return `
-            <div class="preview-box relative group hover:bg-slate-800 border-slate-400 border rounded shadow shadow-slate-700 cursor-pointer active:scale-[.97] grid items-center justify-center ${isCurrent ? 'ring-1 ring-offset-2 ring-offset-slate-800 ring-sky-500' : ''}"
+            <div class="preview-box relative group hover:bg-slate-800 border-slate-400 shadow-slate-700 border rounded shadow cursor-pointer active:scale-[.97] grid items-center justify-center ${isCurrent ? 'ring-2 ring-offset-[2px] ring-offset-slate-900 ring-sky-500' : ''}"
                 data-idx="${idx}"
                 ${operation ? `data-op="${operation}"` : ''}
                 title="${title}"
@@ -72,19 +72,10 @@ export class Previews {
             const idx = +el.dataset.idx;
             const op = el.dataset.op;
             if (op === 'del') {
-                if (idx !== -1) {
-                    if (this.appContext.lines.length > 0) {
-                        this.appContext.lines.splice(idx, 1);
-                        console.log(`this.appContext.lines.length A: idx=${idx}, len=${this.appContext.lines.length}`, this.appContext.lines);
-
-                        const newCurrent = clamp(0, idx, this.appContext.lines.length - 1);
-                        console.log(`this.appContext.lines.length newCurrent: ${newCurrent} B: idx=${idx}, len=${this.appContext.lines.length}`);
-                        this.appContext.current = newCurrent;
-                        updateApp(this.appContext);
-                    } else {
-
-                    }
-                    console.log('del', idx);
+                if (this.appContext.lines.length > 0 && idx !== -1) {
+                    this.appContext.lines.splice(idx, 1);
+                    this.appContext.current = clamp(0, idx, this.appContext.lines.length - 1);
+                    updateApp(this.appContext);
                 }
             } else if (op === 'add') {
                 const newScene = generateDefaultScene({ nLines: 9, doQuad: true });
