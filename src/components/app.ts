@@ -1,6 +1,6 @@
 import { AppContext } from "./types";
 import { initPersistData } from "./store";
-import { drawCurve, generateDefaultScene } from "./shape-line";
+import { drawCurve } from "./shape-line";
 import { initDraggingListeners } from "./dragging";
 import { generateCodeText } from "./code-text-generator";
 import { Accordion } from "./ui-accordion";
@@ -18,17 +18,18 @@ export function initAppContext(): AppContext | undefined {
     const canvas = document.getElementById('canvas') as HTMLCanvasElement;
     const ctx = canvas?.getContext('2d');
 
+    const checkDragGroup = document.getElementById('chk-drag-group') as HTMLInputElement;
+    const checkShowPoints = document.getElementById('chk-show-pts') as HTMLInputElement;
     const code = document.getElementById('code') as HTMLPreElement;
     const btnCopy = document.querySelector<HTMLButtonElement>('#btn-copy-persistent')!;
-    const checkDragGroup = document.getElementById('drag-group') as HTMLInputElement;
 
-    if (!ctx || !code || !btnCopy || !checkDragGroup) {
+    if (!ctx || !code || !btnCopy || !checkDragGroup || !checkShowPoints) {
         console.log('failed to init');
         return;
     }
 
     // 3. Init app previews and context
-    const appContent: Omit<AppContext, 'previews'> = { ctx, scenes: [], current: 0, canvas, code, btnCopy, checkDragGroup, };
+    const appContent: Omit<AppContext, 'previews'> = { ctx, scenes: [], current: 0, canvas, code, btnCopy, checkDragGroup, checkShowPoints, };
     (appContent as AppContext).previews = new Previews(appContent as AppContext);
 
     return (appContent as AppContext);
@@ -39,9 +40,14 @@ function initEventHandlers(appContext: AppContext) {
     // 1. Drag handlers
     initDraggingListeners(appContext, updateApp);
 
-    // 2. Copy source button
+    // 2.1 Copy source button
     appContext.btnCopy.addEventListener('click', () => {
         navigator.clipboard.writeText(appContext.code.innerText);
+    });
+
+    // 2.2 Checkbox ShowPoints
+    appContext.checkShowPoints.addEventListener('click', () => {
+        updateApp(appContext);
     });
 
     // 3. Resize observer
@@ -73,6 +79,7 @@ export function initApp(appContext: AppContext) {
     initEventHandlers(appContext);
 
     appContext.checkDragGroup.checked = true;
+    appContext.checkShowPoints.checked = false;
 
     // line style
     appContext.ctx.lineCap = 'round';
@@ -91,23 +98,23 @@ export function updateApp(appContext: AppContext) {
 
         // 1. Draw background gradient
         let gradient = ctx.createLinearGradient(0, 0, width, height);
-    
+
         // gradient.addColorStop(0, 'hsla(68, 46%, 50%, .2)');
         // gradient.addColorStop(1, 'hsla(58, 100%, 50%, .1)');
-    
+
         // gradient.addColorStop(0, '#8000ff90');
         // gradient.addColorStop(1, '#80105f90');
-    
+
         gradient.addColorStop(0, 'tomato');
         gradient.addColorStop(1, 'purple');
-    
+
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, width, height);
     }
     drawBackground(appContext.ctx, appContext.canvas.width, appContext.canvas.height);
 
     // 2. Draw lines
-    appContext.scenes[appContext.current]?.forEach(line => drawCurve(appContext.ctx, line));
+    appContext.scenes[appContext.current]?.forEach(curve => drawCurve(appContext.ctx, curve));
 
     // 3. Update generated code
     appContext.code.innerText = generateCodeText(appContext.scenes[appContext.current] || [], appContext.scenes);

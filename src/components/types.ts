@@ -1,6 +1,6 @@
 import { Previews } from "./shape-preview";
 
-export type XY = [x: number, y: number];
+export type XY = [x: number, y: number] | [x: number, y: number, selected?: boolean];
 
 export type CurvePoints = [p1: XY, p2: XY, p3: XY] | [p1: XY, p2: XY, p3: XY, p4: XY];
 
@@ -20,6 +20,7 @@ export type AppContext = {
     code: HTMLPreElement;
     btnCopy: HTMLButtonElement;
     checkDragGroup: HTMLInputElement;
+    checkShowPoints: HTMLInputElement;
 
     ctx: CanvasRenderingContext2D;
 };
