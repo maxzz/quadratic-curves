@@ -1,5 +1,5 @@
 import { GRAPHSTYLE, hue } from "./initials";
-import { CurvePoints, SingleCurve, XY, Scene } from "./types";
+import { CurvePoints, SingleCurve, XY, Scene, AppContext } from "./types";
 import { degToRad } from "../utils/utils-math";
 import Color from "color";
 
@@ -111,12 +111,13 @@ function drawPoint(c: CanvasRenderingContext2D, xy: XY, isControl: boolean, colo
     c.stroke();
 }
 
-export function drawCurve(c: CanvasRenderingContext2D, ln: SingleCurve) {
-    const curvePoints: CurvePoints = ln.points;
-
-    drawCurveLine(c, curvePoints, ln.color);
-    drawControlPointLines(c, curvePoints);
-    curvePoints.forEach((point, idx) => drawPoint(c, point, idx > 1, ln.color));
+export function drawCurve(appContext: AppContext, curve: SingleCurve) {
+    const { ctx: c, checkShowPoints } = appContext;
+    drawCurveLine(c, curve.points, curve.color);
+    if (!checkShowPoints.checked) {
+        drawControlPointLines(c, curve.points);
+        curve.points.forEach((point, idx) => drawPoint(c, point, idx > 1, curve.color));
+    }
 }
 
 const hitZone = Math.pow(GRAPHSTYLE.point.radius, 2);

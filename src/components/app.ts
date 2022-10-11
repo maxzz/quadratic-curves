@@ -114,7 +114,7 @@ export function updateApp(appContext: AppContext) {
     drawBackground(appContext.ctx, appContext.canvas.width, appContext.canvas.height);
 
     // 2. Draw lines
-    appContext.scenes[appContext.current]?.forEach(curve => drawCurve(appContext.ctx, curve));
+    appContext.scenes[appContext.current]?.forEach(curve => drawCurve(appContext, curve));
 
     // 3. Update generated code
     appContext.code.innerText = generateCodeText(appContext.scenes[appContext.current] || [], appContext.scenes);
