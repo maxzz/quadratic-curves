@@ -112,9 +112,9 @@ function drawPoint(c: CanvasRenderingContext2D, xy: XY, isControl: boolean, colo
 }
 
 export function drawCurve(appContext: AppContext, curve: SingleCurve) {
-    const { ctx: c, checkShowPoints } = appContext;
+    const { ctx: c, checkHidePoints } = appContext;
     drawCurveLine(c, curve.points, curve.color);
-    if (!checkShowPoints.checked) {
+    if (!checkHidePoints.checked) {
         drawControlPointLines(c, curve.points);
         curve.points.forEach((point, idx) => drawPoint(c, point, idx > 1, curve.color));
     }

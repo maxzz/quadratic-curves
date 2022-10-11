@@ -20,7 +20,7 @@ export type AppContext = {
     code: HTMLPreElement;
     btnCopy: HTMLButtonElement;
     checkDragGroup: HTMLInputElement;
-    checkShowPoints: HTMLInputElement;
+    checkHidePoints: HTMLInputElement;
 
     ctx: CanvasRenderingContext2D;
 };

@@ -19,17 +19,17 @@ export function initAppContext(): AppContext | undefined {
     const ctx = canvas?.getContext('2d');
 
     const checkDragGroup = document.getElementById('chk-drag-group') as HTMLInputElement;
-    const checkShowPoints = document.getElementById('chk-show-pts') as HTMLInputElement;
+    const checkHidePoints = document.getElementById('chk-hide-pts') as HTMLInputElement;
     const code = document.getElementById('code') as HTMLPreElement;
     const btnCopy = document.querySelector<HTMLButtonElement>('#btn-copy-persistent')!;
 
-    if (!ctx || !code || !btnCopy || !checkDragGroup || !checkShowPoints) {
+    if (!ctx || !code || !btnCopy || !checkDragGroup || !checkHidePoints) {
         console.log('failed to init');
         return;
     }
 
     // 3. Init app previews and context
-    const appContent: Omit<AppContext, 'previews'> = { ctx, scenes: [], current: 0, canvas, code, btnCopy, checkDragGroup, checkShowPoints, };
+    const appContent: Omit<AppContext, 'previews'> = { ctx, scenes: [], current: 0, canvas, code, btnCopy, checkDragGroup, checkHidePoints, };
     (appContent as AppContext).previews = new Previews(appContent as AppContext);
 
     return (appContent as AppContext);
@@ -40,15 +40,9 @@ function initEventHandlers(appContext: AppContext) {
     // 1. Drag handlers
     initDraggingListeners(appContext, updateApp);
 
-    // 2.1 Copy source button
-    appContext.btnCopy.addEventListener('click', () => {
-        navigator.clipboard.writeText(appContext.code.innerText);
-    });
-
-    // 2.2 Checkbox ShowPoints
-    appContext.checkShowPoints.addEventListener('click', () => {
-        updateApp(appContext);
-    });
+    // 2 Copy source button and Hide Points checkbox
+    appContext.btnCopy.addEventListener('click', () => navigator.clipboard.writeText(appContext.code.innerText));
+    appContext.checkHidePoints.addEventListener('click', () => updateApp(appContext));
 
     // 3. Resize observer
     new ResizeObserver((entries: ResizeObserverEntry[]) => {
@@ -79,7 +73,7 @@ export function initApp(appContext: AppContext) {
     initEventHandlers(appContext);
 
     appContext.checkDragGroup.checked = true;
-    appContext.checkShowPoints.checked = false;
+    appContext.checkHidePoints.checked = false;
 
     // line style
     appContext.ctx.lineCap = 'round';
