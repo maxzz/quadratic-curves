@@ -11,9 +11,13 @@ export type SingleCurve = {
 
 export type Scene = SingleCurve[];
 
+export type RectContext = [down?: XY, current?: XY];
+
 export type AppContext = {
     scenes: Scene[];
-    current: number;    // current line: -1 if there is none
+    current: number;                    // current line: -1 if there is none
+
+    rectContext: RectContext;           // scene rectangular selection
   
     canvas: HTMLCanvasElement;
     previews: Previews;

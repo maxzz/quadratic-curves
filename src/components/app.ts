@@ -29,7 +29,7 @@ export function initAppContext(): AppContext | undefined {
     }
 
     // 3. Init app previews and context
-    const appContent: Omit<AppContext, 'previews'> = { ctx, scenes: [], current: 0, canvas, code, btnCopy, checkDragGroup, checkHidePoints, };
+    const appContent: Omit<AppContext, 'previews'> = { ctx, scenes: [], current: 0, rectContext: [], canvas, code, btnCopy, checkDragGroup, checkHidePoints, };
     (appContent as AppContext).previews = new Previews(appContent as AppContext);
 
     return (appContent as AppContext);
