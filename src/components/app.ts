@@ -89,12 +89,12 @@ function drawRectSelection(appContext: AppContext) {
         const { ctx: c } = appContext;
         const { x, y, w, h } = appContext.rect;
 
-        c.fillStyle = '#2080ff80';
+        c.beginPath();
+        c.fillStyle = '#42a5f520';
         c.fillRect(x, y, w, h);
         c.rect(x, y, w, h);
-
-        c.strokeStyle = '#10408080';
-        c.setLineDash([4, 2]);
+        c.lineWidth = 0.5;
+        c.strokeStyle = '#42a5f5';
         c.stroke();
     }
 }
