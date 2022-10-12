@@ -101,17 +101,35 @@ function drawRectSelection(appContext: AppContext) {
     if (isEmpty) {
         return;
     }
+    const { ctx: c, rectContext: r } = appContext;
 
-    //
+    const [p1, p2] = r;
+    let [ax, ay] = p1!;
+    let [bx, by] = p2!;
+
+    if (ax > bx) {
+        [bx, ax] = [ax, bx];
+    }
+    
+    if (ay > by) {
+        [by, ay] = [ay, by];
+    }
+    
+    const w = bx - ax;
+    const h = by - ay;
+
+
+    c.fillStyle = '#2080ffff';
+    c.fillRect(ax, ay, w, h);
 }
 
 export function updateApp(appContext: AppContext) {
 
-    function drawBackground(ctx: CanvasRenderingContext2D, width: number, height: number) {
-        ctx.clearRect(0, 0, width, height);
+    function drawBackground(c: CanvasRenderingContext2D, width: number, height: number) {
+        c.clearRect(0, 0, width, height);
 
         // 1. Draw background gradient
-        let gradient = ctx.createLinearGradient(0, 0, width, height);
+        let gradient = c.createLinearGradient(0, 0, width, height);
 
         // gradient.addColorStop(0, 'hsla(68, 46%, 50%, .2)');
         // gradient.addColorStop(1, 'hsla(58, 100%, 50%, .1)');
@@ -122,10 +140,12 @@ export function updateApp(appContext: AppContext) {
         gradient.addColorStop(0, 'tomato');
         gradient.addColorStop(1, 'purple');
 
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, width, height);
+        c.fillStyle = gradient;
+        c.fillRect(0, 0, width, height);
     }
     drawBackground(appContext.ctx, appContext.canvas.width, appContext.canvas.height);
+
+    drawRectSelection(appContext);
 
     // 2. Draw lines
     appContext.scenes[appContext.current]?.forEach(curve => drawCurve(appContext, curve));

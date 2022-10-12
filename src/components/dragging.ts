@@ -60,6 +60,7 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
         } else if (appContext.rectContext.length) {
             let pos = mousePos(event);
             appContext.rectContext[1] = pos;
+            updateApp(appContext);
         }
     }
 
