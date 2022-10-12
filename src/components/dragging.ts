@@ -8,13 +8,22 @@ type DraggingLine = {
     curvePtIdx: number;     // Point index inside curve.points[]
 };
 
+type RectContext = {
+    downPt: XY | XY[];
+    curPt: XY | XY[];
+};
+
 function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: AppContext) => void) {
-    let context: DraggingLine[] = [];
+    let pointContext: DraggingLine[] = [];
+    let rectContext: RectContext = { downPt: [], curPt: [] };
+
 
     function dragStart(event: MouseEvent) {
         //appContext.canvas.setPointerCapture(); //TODO: https://developer.mozilla.org/en-US/docs/Web/API/Element/setPointerCapture
 
-        context = [];
+        pointContext = [];
+        rectContext.curPt = rectContext.downPt = [];
+
         const downPt = mousePos(event);
 
         const scene = appContext.scenes[appContext.current] || [];
@@ -25,14 +34,18 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
 
             let res = curveHasPoint(curve, downPt);
             if (res) {
-                context.push({ curve: res.curve, curvePtIdx: res.curvePtIdx, downPt, }); // So far, it's just one point per curve
+                pointContext.push({ curve: res.curve, curvePtIdx: res.curvePtIdx, downPt, }); // So far, it's just one point per curve
                 if (!appContext.checkDragGroup.checked) {
                     break;
                 }
             }
         }
 
-        if (context.length) {
+        if (!pointContext.length) {
+            rectContext.curPt = rectContext.downPt = downPt;
+        }
+
+        if (pointContext.length) {
             //canvas.style.cursor = 'move';
             // canvas.classList.add('cursor-move');
             setTimeout(() => appContext.canvas.classList.add('cursor-move'), 0);
@@ -40,9 +53,9 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
     }
 
     function dragMove(event: MouseEvent) {
-        if (context.length) {
+        if (pointContext.length) {
             let pos = mousePos(event);
-            context.forEach((draggingLine: DraggingLine) => {
+            pointContext.forEach((draggingLine: DraggingLine) => {
                 const point = draggingLine.curve?.points[draggingLine.curvePtIdx];
                 if (point && draggingLine.downPt) {
                     point[0] += pos[0] - draggingLine.downPt[0];
@@ -51,11 +64,15 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
                 }
             });
             updateApp(appContext);
+        } else if (rectContext.downPt.length) {
+            let pos = mousePos(event);
+            rectContext.curPt = pos;
         }
     }
 
     function dragDone(event: MouseEvent) {
-        context = [];
+        pointContext = [];
+        rectContext.downPt = [];
         //canvas.style.cursor = 'default';
         appContext.canvas.classList.remove('cursor-move');
         updateApp(appContext);
