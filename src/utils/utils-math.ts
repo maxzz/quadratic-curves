@@ -12,7 +12,7 @@ export function clamp(min: number, val: number, max: number) {
 	return Math.min(Math.max(val, min), max);
 }
 
-export function pointsCollocated(a: XY | undefined, b: XY | undefined) {
+function pointsCollocated(a: XY | undefined, b: XY | undefined) {
     return a?.[0] === b?.[0] && a?.[1] === b?.[1];
 }
 
@@ -49,5 +49,5 @@ export function pointsToRect(rectContext: RectContext): Rect | undefined {
 export function pointInRect(point: XY, rect: Rect): boolean {
     const [px, py] = point;
     const { x, y, w, h } = rect;
-    return x <= px && x <= x + w && y <= py && y <= y + h;
+    return x <= px && px <= x + w && y <= py && py <= y + h;
 }
