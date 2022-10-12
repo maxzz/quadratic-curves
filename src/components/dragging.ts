@@ -8,21 +8,18 @@ type DraggingLine = {
     curvePtIdx: number;     // Point index inside curve.points[]
 };
 
-type RectContext = {
-    downPt: XY | XY[];
-    curPt: XY | XY[];
-};
+type RectContext = [down?: XY, current?: XY];
 
 function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: AppContext) => void) {
     let pointContext: DraggingLine[] = [];
-    let rectContext: RectContext = { downPt: [], curPt: [] };
+    let rectContext: RectContext = [];
 
 
     function dragStart(event: MouseEvent) {
         //appContext.canvas.setPointerCapture(); //TODO: https://developer.mozilla.org/en-US/docs/Web/API/Element/setPointerCapture
 
         pointContext = [];
-        rectContext.curPt = rectContext.downPt = [];
+        rectContext = [];
 
         const downPt = mousePos(event);
 
@@ -42,7 +39,7 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
         }
 
         if (!pointContext.length) {
-            rectContext.curPt = rectContext.downPt = downPt;
+            rectContext = [downPt, downPt];
         }
 
         if (pointContext.length) {
@@ -64,15 +61,15 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
                 }
             });
             updateApp(appContext);
-        } else if (rectContext.downPt.length) {
+        } else if (rectContext.length) {
             let pos = mousePos(event);
-            rectContext.curPt = pos;
+            rectContext[1] = pos;
         }
     }
 
     function dragDone(event: MouseEvent) {
         pointContext = [];
-        rectContext.downPt = [];
+        rectContext = [];
         //canvas.style.cursor = 'default';
         appContext.canvas.classList.remove('cursor-move');
         updateApp(appContext);
