@@ -107,20 +107,19 @@ function drawRectSelection(appContext: AppContext) {
     let [ax, ay] = p1!;
     let [bx, by] = p2!;
 
-    if (ax > bx) {
-        [bx, ax] = [ax, bx];
-    }
-    
-    if (ay > by) {
-        [by, ay] = [ay, by];
-    }
-    
+    (ax > bx) && ([bx, ax] = [ax, bx]);
+    (ay > by) && ([by, ay] = [ay, by]);
+
     const w = bx - ax;
     const h = by - ay;
 
-
-    c.fillStyle = '#2080ffff';
+    c.fillStyle = '#2080ff80';
     c.fillRect(ax, ay, w, h);
+    c.rect(ax, ay, w, h);
+    
+    c.strokeStyle = '#10408080'
+    c.setLineDash([4, 2]);
+    c.stroke();
 }
 
 export function updateApp(appContext: AppContext) {
