@@ -88,14 +88,14 @@ function drawPoint(c: CanvasRenderingContext2D, xy: XY, isControl: boolean, colo
     c.arc(x + 1, y + 1, style.radius + 1, style.startAngle, style.endAngle, true);
     c.fill();
 
-    if (!selected) {
+    if (selected) {
         c.strokeStyle = '#ffffff';
         c.lineWidth = 2;
-        c.setLineDash([2, 4]);
+        //c.setLineDash([3, 3]);
         c.beginPath();
-        c.arc(x, y, style.radius + 4, style.startAngle, style.endAngle, true);
+        c.arc(x, y, style.radius + 2, style.startAngle, style.endAngle, true);
         c.stroke();
-        c.setLineDash([]);
+        //c.setLineDash([]);
     }
 
     // main circle
