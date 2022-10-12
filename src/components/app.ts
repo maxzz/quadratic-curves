@@ -7,6 +7,7 @@ import { Accordion } from "./ui-accordion";
 
 import { Previews } from "./shape-preview";
 import templates from "../templates.html?raw";
+import { pointsToRect } from "../utils/utils-math";
 
 export function initAppContext(): AppContext | undefined {
     // 1. Create HTML content to avoid FOUC
@@ -83,36 +84,6 @@ export function initApp(appContext: AppContext) {
     initData(appContext);
 
     appContext.previews.update();
-}
-
-function arePointsTheSame(rect: RectContext) {
-    if (!rect.length || rect[0] === rect[1]) {
-        return true;
-    }
-    if (!rect[0] || !rect[1]) {
-        return false;
-    }
-    const theSame = rect[0][0] === rect[1][0] && rect[0][1] === rect[1][1];
-    return theSame;
-}
-
-function pointsToRect(rectContext: RectContext): { x: number; y: number; w: number; h: number; } | undefined {
-    const isEmpty = arePointsTheSame(rectContext);
-    if (isEmpty) {
-        return;
-    }
-
-    const [p1, p2] = rectContext;
-    let [ax, ay] = p1!;
-    let [bx, by] = p2!;
-
-    (ax > bx) && ([bx, ax] = [ax, bx]);
-    (ay > by) && ([by, ay] = [ay, by]);
-
-    const w = bx - ax;
-    const h = by - ay;
-
-    return { x: ax, y: ay, w, h };
 }
 
 function drawRectSelection(appContext: AppContext) {
