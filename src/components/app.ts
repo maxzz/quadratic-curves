@@ -1,13 +1,11 @@
-import { AppContext, RectContext } from "./types";
+import { AppContext } from "./types";
 import { initPersistData } from "./store";
 import { drawCurve } from "./shape-line";
 import { initDraggingListeners } from "./dragging";
 import { generateCodeText } from "./code-text-generator";
 import { Accordion } from "./ui-accordion";
-
 import { Previews } from "./shape-preview";
 import templates from "../templates.html?raw";
-import { pointsToRect } from "../utils/utils-math";
 
 export function initAppContext(): AppContext | undefined {
     // 1. Create HTML content to avoid FOUC
@@ -30,7 +28,7 @@ export function initAppContext(): AppContext | undefined {
     }
 
     // 3. Init app previews and context
-    const appContent: Omit<AppContext, 'previews'> = { ctx, scenes: [], current: 0, rectContext: [], canvas, code, btnCopy, checkDragGroup, checkHidePoints, };
+    const appContent: Omit<AppContext, 'previews'> = { ctx, scenes: [], current: 0, canvas, code, btnCopy, checkDragGroup, checkHidePoints, };
     (appContent as AppContext).previews = new Previews(appContent as AppContext);
 
     return (appContent as AppContext);
@@ -87,10 +85,9 @@ export function initApp(appContext: AppContext) {
 }
 
 function drawRectSelection(appContext: AppContext) {
-    const rect = pointsToRect(appContext.rectContext);
-    if (rect) {
+    if (appContext.rect) {
         const { ctx: c } = appContext;
-        const { x, y, w, h } = rect;
+        const { x, y, w, h } = appContext.rect;
 
         c.fillStyle = '#2080ff80';
         c.fillRect(x, y, w, h);

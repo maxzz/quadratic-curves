@@ -1,6 +1,7 @@
 import { AppContext, RectContext, XY } from "./types";
 import { curveHasPoint } from "./shape-line";
 import { SingleCurve } from "./types";
+import { pointsToRect } from "../utils/utils-math";
 
 type DraggingLine = {
     downPt?: XY;            // Down point to get move delta
@@ -10,12 +11,14 @@ type DraggingLine = {
 
 function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: AppContext) => void) {
     let pointContext: DraggingLine[] = [];
+    let rectContext: RectContext = [];
 
     function dragStart(event: MouseEvent) {
         //appContext.canvas.setPointerCapture(); //TODO: https://developer.mozilla.org/en-US/docs/Web/API/Element/setPointerCapture
 
         pointContext = [];
-        appContext.rectContext = [];
+        rectContext = [];
+        appContext.rect = undefined;
 
         const downPt = mousePos(event);
 
@@ -35,7 +38,7 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
         }
 
         if (!pointContext.length) {
-            appContext.rectContext = [downPt, downPt];
+            rectContext = [downPt, downPt];
         }
 
         if (pointContext.length) {
@@ -57,16 +60,18 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
                 }
             });
             updateApp(appContext);
-        } else if (appContext.rectContext.length) {
+        } else if (rectContext.length) {
             let pos = mousePos(event);
-            appContext.rectContext[1] = pos;
+            rectContext[1] = pos;
+            appContext.rect = pointsToRect(rectContext);
             updateApp(appContext);
         }
     }
 
     function dragDone(event: MouseEvent) {
         pointContext = [];
-        appContext.rectContext = [];
+        rectContext = [];
+        appContext.rect = undefined;
         //canvas.style.cursor = 'default';
         appContext.canvas.classList.remove('cursor-move');
         updateApp(appContext);
