@@ -96,14 +96,13 @@ function arePointsTheSame(rect: RectContext) {
     return theSame;
 }
 
-function drawRectSelection(appContext: AppContext) {
-    const isEmpty = arePointsTheSame(appContext.rectContext);
+function pointsToRect(rectContext: RectContext): { x: number; y: number; w: number; h: number; } | undefined {
+    const isEmpty = arePointsTheSame(rectContext);
     if (isEmpty) {
         return;
     }
-    const { ctx: c, rectContext: r } = appContext;
 
-    const [p1, p2] = r;
+    const [p1, p2] = rectContext;
     let [ax, ay] = p1!;
     let [bx, by] = p2!;
 
@@ -113,13 +112,23 @@ function drawRectSelection(appContext: AppContext) {
     const w = bx - ax;
     const h = by - ay;
 
-    c.fillStyle = '#2080ff80';
-    c.fillRect(ax, ay, w, h);
-    c.rect(ax, ay, w, h);
-    
-    c.strokeStyle = '#10408080'
-    c.setLineDash([4, 2]);
-    c.stroke();
+    return { x: ax, y: ay, w, h };
+}
+
+function drawRectSelection(appContext: AppContext) {
+    const rect = pointsToRect(appContext.rectContext);
+    if (rect) {
+        const { ctx: c } = appContext;
+        const { x, y, w, h } = rect;
+
+        c.fillStyle = '#2080ff80';
+        c.fillRect(x, y, w, h);
+        c.rect(x, y, w, h);
+
+        c.strokeStyle = '#10408080';
+        c.setLineDash([4, 2]);
+        c.stroke();
+    }
 }
 
 export function updateApp(appContext: AppContext) {
