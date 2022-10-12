@@ -9,10 +9,23 @@ type DraggingLine = {
     curvePtIdx: number;     // Point index inside curve.points[]
 };
 
-function markPointsInRect(scene: Scene, rect?: Rect | undefined): void {
+function markPointsInRect(scene: Scene, isShift: boolean, isCtrl: boolean, rect?: Rect | undefined): void {
     scene.forEach((curve: SingleCurve) => {
         curve.points.forEach((point) => {
-            point[2] = rect ? pointInRect(point, rect) : false;
+            if (rect) {
+                const inRect = pointInRect(point, rect);
+                if (isShift) {
+                    if (inRect) {
+                        point[2] = inRect; // i.e. don't set false
+                    }
+                } else {
+                    point[2] = inRect;
+                }
+            } else {
+                point[2] = false;
+            }
+
+            //point[2] = rect ? pointInRect(point, rect) : false;
         });
     });
 }
@@ -20,6 +33,8 @@ function markPointsInRect(scene: Scene, rect?: Rect | undefined): void {
 function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: AppContext) => void) {
     let pointContext: DraggingLine[] = [];
     let rectContext: RectContext = [];
+    let isShift = false;
+    let isCtrl = false;
 
     function dragStart(event: MouseEvent) {
         //appContext.canvas.setPointerCapture(); //TODO: https://developer.mozilla.org/en-US/docs/Web/API/Element/setPointerCapture
@@ -29,6 +44,8 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
         appContext.rect = undefined;
 
         const downPt = mousePos(event);
+        isShift = event.shiftKey;
+        isCtrl = event.ctrlKey;
 
         const scene = appContext.scenes[appContext.current] || [];
 
@@ -59,6 +76,7 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
     function dragMove(event: MouseEvent) {
         if (pointContext.length) {
             let pos = mousePos(event);
+
             pointContext.forEach((draggingLine: DraggingLine) => {
                 const point = draggingLine.curve?.points[draggingLine.curvePtIdx];
                 if (point && draggingLine.downPt) {
@@ -69,10 +87,12 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
             });
             updateApp(appContext);
         } else if (rectContext.length) {
+            isCtrl = event.ctrlKey;
             let pos = mousePos(event);
+
             rectContext[1] = pos;
             appContext.rect = pointsToRect(rectContext);
-            markPointsInRect(appContext.scenes[appContext.current], appContext.rect);
+            markPointsInRect(appContext.scenes[appContext.current], isShift, isCtrl, appContext.rect);
             updateApp(appContext);
         }
     }
@@ -80,7 +100,7 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
     function dragDone(event: MouseEvent) {
         const isClickWoMove = rectContext[0] === rectContext[1];
         if (isClickWoMove) {
-            markPointsInRect(appContext.scenes[appContext.current]);
+            markPointsInRect(appContext.scenes[appContext.current], false, false);
         }
 
         pointContext = [];
