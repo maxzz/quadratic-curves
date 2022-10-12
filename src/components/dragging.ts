@@ -1,13 +1,21 @@
-import { AppContext, RectContext, XY } from "./types";
+import { AppContext, Rect, RectContext, Scene, XY } from "./types";
 import { curveHasPoint } from "./shape-line";
 import { SingleCurve } from "./types";
-import { pointsToRect } from "../utils/utils-math";
+import { pointInRect, pointsToRect } from "../utils/utils-math";
 
 type DraggingLine = {
     downPt?: XY;            // Down point to get move delta
     curve?: SingleCurve;    // Curve with curvePtIdx
     curvePtIdx: number;     // Point index inside curve.points[]
 };
+
+function markPointsInRect(scene: Scene, rect?: Rect | undefined): void {
+    scene.forEach((curve: SingleCurve) => {
+        curve.points.forEach((point) => {
+            point[2] = rect ? pointInRect(point, rect) : false;
+        });
+    });
+}
 
 function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: AppContext) => void) {
     let pointContext: DraggingLine[] = [];
@@ -64,6 +72,7 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
             let pos = mousePos(event);
             rectContext[1] = pos;
             appContext.rect = pointsToRect(rectContext);
+            markPointsInRect(appContext.scenes[appContext.current], appContext.rect);
             updateApp(appContext);
         }
     }
@@ -72,6 +81,7 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
         pointContext = [];
         rectContext = [];
         appContext.rect = undefined;
+        markPointsInRect(appContext.scenes[appContext.current]);
         //canvas.style.cursor = 'default';
         appContext.canvas.classList.remove('cursor-move');
         updateApp(appContext);

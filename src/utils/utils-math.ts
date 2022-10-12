@@ -1,4 +1,4 @@
-import { Rect, RectContext } from "../components/types";
+import { Rect, RectContext, XY } from "../components/types";
 
 export function degToRad(degrees: number) {
 	return degrees * Math.PI / 180;
@@ -40,4 +40,10 @@ export function pointsToRect(rectContext: RectContext): Rect | undefined {
     const h = by - ay;
 
     return { x: ax, y: ay, w, h };
+}
+
+export function pointInRect(point: XY, rect: Rect): boolean {
+    const [px, py] = point;
+    const { x, y, w, h } = rect;
+    return x <= px && x <= x + w && y <= py && y <= y + h;
 }
