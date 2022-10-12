@@ -1,7 +1,7 @@
 import { AppContext, Rect, RectContext, Scene, XY } from "./types";
 import { curveHasPoint } from "./shape-line";
 import { SingleCurve } from "./types";
-import { pointInRect, pointsToRect } from "../utils/utils-math";
+import { pointInRect, pointsCollocated, pointsToRect } from "../utils/utils-math";
 
 type DraggingLine = {
     downPt?: XY;            // Down point to get move delta
@@ -78,10 +78,15 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
     }
 
     function dragDone(event: MouseEvent) {
+        console.log('rectContext[0], rectContext[1]',rectContext[0], rectContext[1]);
+        const isClickWoMove = pointsCollocated(rectContext[0], rectContext[1]);
+
         pointContext = [];
         rectContext = [];
         appContext.rect = undefined;
-        markPointsInRect(appContext.scenes[appContext.current]);
+        if (isClickWoMove) {
+            markPointsInRect(appContext.scenes[appContext.current]);
+        }
         //canvas.style.cursor = 'default';
         appContext.canvas.classList.remove('cursor-move');
         updateApp(appContext);

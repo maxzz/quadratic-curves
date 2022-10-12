@@ -84,6 +84,25 @@ export function initApp(appContext: AppContext) {
     appContext.previews.update();
 }
 
+function drawBackground(c: CanvasRenderingContext2D, width: number, height: number) {
+    c.clearRect(0, 0, width, height);
+
+    // 1. Draw background gradient
+    let gradient = c.createLinearGradient(0, 0, width, height);
+
+    // gradient.addColorStop(0, 'hsla(68, 46%, 50%, .2)');
+    // gradient.addColorStop(1, 'hsla(58, 100%, 50%, .1)');
+
+    // gradient.addColorStop(0, '#8000ff90');
+    // gradient.addColorStop(1, '#80105f90');
+
+    gradient.addColorStop(0, 'tomato');
+    gradient.addColorStop(1, 'purple');
+
+    c.fillStyle = gradient;
+    c.fillRect(0, 0, width, height);
+}
+
 function drawRectSelection(appContext: AppContext) {
     if (appContext.rect) {
         const { ctx: c } = appContext;
@@ -100,27 +119,7 @@ function drawRectSelection(appContext: AppContext) {
 }
 
 export function updateApp(appContext: AppContext) {
-
-    function drawBackground(c: CanvasRenderingContext2D, width: number, height: number) {
-        c.clearRect(0, 0, width, height);
-
-        // 1. Draw background gradient
-        let gradient = c.createLinearGradient(0, 0, width, height);
-
-        // gradient.addColorStop(0, 'hsla(68, 46%, 50%, .2)');
-        // gradient.addColorStop(1, 'hsla(58, 100%, 50%, .1)');
-
-        // gradient.addColorStop(0, '#8000ff90');
-        // gradient.addColorStop(1, '#80105f90');
-
-        gradient.addColorStop(0, 'tomato');
-        gradient.addColorStop(1, 'purple');
-
-        c.fillStyle = gradient;
-        c.fillRect(0, 0, width, height);
-    }
     drawBackground(appContext.ctx, appContext.canvas.width, appContext.canvas.height);
-
     drawRectSelection(appContext);
 
     // 2. Draw lines

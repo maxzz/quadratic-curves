@@ -12,6 +12,10 @@ export function clamp(min: number, val: number, max: number) {
 	return Math.min(Math.max(val, min), max);
 }
 
+export function pointsCollocated(a: XY | undefined, b: XY | undefined) {
+    return a?.[0] === b?.[0] && a?.[1] === b?.[1];
+}
+
 function arePointsTheSame(rect: RectContext) {
     if (!rect.length || rect[0] === rect[1]) {
         return true;
