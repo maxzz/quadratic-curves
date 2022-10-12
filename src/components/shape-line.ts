@@ -88,14 +88,14 @@ function drawPoint(c: CanvasRenderingContext2D, xy: XY, isControl: boolean, colo
     c.arc(x + 1, y + 1, style.radius + 1, style.startAngle, style.endAngle, true);
     c.fill();
 
-    if (selected) {
-        c.strokeStyle = '#00000080';
-        c.lineWidth = 6;
-        c.setLineDash([6, 2])
+    if (!selected) {
+        c.strokeStyle = '#ffffff';
+        c.lineWidth = 2;
+        c.setLineDash([2, 4]);
         c.beginPath();
-        c.arc(x, y, style.radius, style.startAngle, style.endAngle, true);
+        c.arc(x, y, style.radius + 4, style.startAngle, style.endAngle, true);
         c.stroke();
-        c.setLineDash([])
+        c.setLineDash([]);
     }
 
     // main circle
@@ -127,18 +127,5 @@ export function drawCurve(appContext: AppContext, curve: SingleCurve) {
     if (!checkHidePoints.checked) {
         drawControlPointLines(c, curve.points);
         curve.points.forEach((point, idx) => drawPoint(c, point, idx > 1, curve.color));
-    }
-}
-
-const hitZone = Math.pow(GRAPHSTYLE.point.radius, 2);
-
-export function curveHasPoint(curve: SingleCurve, [mouseX, mouseY]: XY): { curve: SingleCurve, curvePtIdx: number; } | undefined {
-    for (const [idx, [x, y]] of Object.entries(curve.points)) {
-        let dx = x - mouseX;
-        let dy = y - mouseY;
-
-        if ((dx * dx) + (dy * dy) < hitZone) {
-            return { curve, curvePtIdx: +idx };
-        }
     }
 }
