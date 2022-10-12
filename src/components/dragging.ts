@@ -9,6 +9,9 @@ type DraggingLine = {
 };
 
 function markPointsInRect(scene: Scene, isShift: boolean, isCtrl: boolean, rect?: Rect | undefined): void {
+    //console.log(`markPointsInRect isShift: ${isShift}, isCtrl: ${isCtrl}, rect: ${rect && JSON.stringify(rect)}`);
+    console.log(`markPointsInRect isShift: ${isShift}, isCtrl: ${isCtrl}, rect: ${rect}`);
+
     scene.forEach((curve: SingleCurve) => {
         curve.points.forEach((point) => {
             if (rect) {
@@ -28,7 +31,9 @@ function markPointsInRect(scene: Scene, isShift: boolean, isCtrl: boolean, rect?
                     }
                 }
             } else {
-                point[2] = false;
+                if (!isShift) {
+                    point[2] = false;
+                }
             }
 
             //point[2] = rect ? pointInRect(point, rect) : false;
@@ -95,18 +100,41 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
         } else if (rectContext) {
             isCtrl = event.ctrlKey;
             let pos = mousePos(event);
+            //console.log('shift,ctrl', isShift, isCtrl);
 
             rectContext[1] = pos;
             appContext.rect = pointsToRect(rectContext);
-            markPointsInRect(appContext.scenes[appContext.current], isShift, isCtrl, appContext.rect);
+
+            if (appContext.rect) {
+                markPointsInRect(appContext.scenes[appContext.current], isShift, isCtrl, appContext.rect);
+            }
+
             updateApp(appContext);
         }
     }
 
     function dragDone(event: MouseEvent) {
-        //const isClickWoMove = rectContext[0] === rectContext[1];
-        const isClickWoMove =  rectContext && nearbyPoints(rectContext[0], rectContext[1], 20);
+        const isMoved = rectContext && rectContext[0] !== rectContext[1];
+        // const isClickWoMove = !isShift;
+        // const isClickWoMove = !isShift || (rectContext && rectContext[0] === rectContext[1]);
+
+        //const isClickWoMove = !isShift || (!isShift && !isMoved);
+        //console.log('isShift', isShift, 'isMoved', isMoved, 'isClickWoMove', isClickWoMove);
+
+        // const isClickWoMove = !isShift && !rectContext;
+        // const isClickWoMove = !isShift && (!rectContext || rectContext[0] === rectContext[1]);
+        // const isClickWoMove = rectContext && nearbyPoints(rectContext[0], rectContext[1], 5);
+        // console.log('isClickWoMove', isClickWoMove);
+
+
+        let isClickWoMove = !isShift;
         if (isClickWoMove) {
+            isClickWoMove = !isMoved;
+        }
+        //console.log('isShift', isShift, 'isMoved', isMoved, 'isClickWoMove =', isClickWoMove, 'rectContext[0][1] =', rectContext?.[0], rectContext?.[1]);
+
+        if (isClickWoMove) {
+            console.log('clear');
             markPointsInRect(appContext.scenes[appContext.current], false, false);
         }
 
