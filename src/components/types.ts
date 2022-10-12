@@ -11,7 +11,7 @@ export type SingleCurve = {
 
 export type Scene = SingleCurve[];
 
-export type RectContext = [down?: XY, current?: XY];
+export type RectContext = [down: XY, current: XY];
 export type Rect = { x: number; y: number; w: number; h: number; };
 
 export type AppContext = {
