@@ -75,7 +75,7 @@ const highligts = {
 
 function drawPoint(c: CanvasRenderingContext2D, xy: XY, isControl: boolean, color: string) {
     if (!xy) { return; }
-    const [x, y] = xy;
+    const [x, y, selected] = xy;
 
     let style = isControl ? GRAPHSTYLE.cpoint : GRAPHSTYLE.point;
 
@@ -87,6 +87,16 @@ function drawPoint(c: CanvasRenderingContext2D, xy: XY, isControl: boolean, colo
     c.beginPath();
     c.arc(x + 1, y + 1, style.radius + 1, style.startAngle, style.endAngle, true);
     c.fill();
+
+    if (selected) {
+        c.strokeStyle = '#00000080';
+        c.lineWidth = 6;
+        c.setLineDash([6, 2])
+        c.beginPath();
+        c.arc(x, y, style.radius, style.startAngle, style.endAngle, true);
+        c.stroke();
+        c.setLineDash([])
+    }
 
     // main circle
     c.lineWidth = isControl ? 5 : GRAPHSTYLE.circles.width;
