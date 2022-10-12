@@ -1,4 +1,4 @@
-import { AppContext } from "./types";
+import { AppContext, RectContext } from "./types";
 import { initPersistData } from "./store";
 import { drawCurve } from "./shape-line";
 import { initDraggingListeners } from "./dragging";
@@ -83,6 +83,26 @@ export function initApp(appContext: AppContext) {
     initData(appContext);
 
     appContext.previews.update();
+}
+
+function arePointsTheSame(rect: RectContext) {
+    if (!rect.length || rect[0] === rect[1]) {
+        return true;
+    }
+    if (!rect[0] || !rect[1]) {
+        return false;
+    }
+    const theSame = rect[0][0] === rect[1][0] && rect[0][1] === rect[1][1];
+    return theSame;
+}
+
+function drawRectSelection(appContext: AppContext) {
+    const isEmpty = arePointsTheSame(appContext.rectContext);
+    if (isEmpty) {
+        return;
+    }
+
+    //
 }
 
 export function updateApp(appContext: AppContext) {
