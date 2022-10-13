@@ -3,14 +3,12 @@ import { SingleCurve } from "./types";
 import { curveHasPoint, nearbyPoints, pointInRect, pointsToRect } from "../utils/utils-math";
 
 type DraggingLine = {
-    // curve: SingleCurve;     // Curve with curvePtIdx
-    // curvePtIdx: number;     // Point index inside curve.points[]
     pt: XY;
 };
 
 function markPointsInRect(scene: Scene, isShift: boolean, isCtrl: boolean, rect?: Rect | undefined): void {
     //console.log(`markPointsInRect isShift: ${isShift}, isCtrl: ${isCtrl}, rect: ${rect && JSON.stringify(rect)}`);
-    
+
     //console.log(`markPointsInRect isShift: ${isShift}, isCtrl: ${isCtrl}, rect: ${rect}`);
 
     scene.forEach((curve: SingleCurve) => {
@@ -36,9 +34,9 @@ function markPointsInRect(scene: Scene, isShift: boolean, isCtrl: boolean, rect?
 }
 
 function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: AppContext) => void) {
-    let pointContext: DraggingLine[] = [];
+    let pointContext: XY[] = [];
     let rectContext: RectContext | null = null;
-    let downPt: XY = [0,0]; // Down point to get move delta
+    let downPt: XY = [0, 0]; // Down point to get move delta
     let isShift = false;
     let isCtrl = false;
 
@@ -61,8 +59,7 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
 
             let res = curveHasPoint(curve, downPt);
             if (res) {
-                //pointContext.push({ curve: res.curve, curvePtIdx: res.curvePtIdx }); // So far, it's just one point per curve
-                pointContext.push({ pt: res.curve.points[res.curvePtIdx] }); // So far, it's just one point per curve
+                pointContext.push(res.curve.points[res.curvePtIdx]); // So far, it's just one point per curve
                 if (!appContext.checkDragGroup.checked) {
                     break;
                 }
@@ -73,24 +70,21 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
             rectContext = [downPt, downPt];
         }
 
-        if (pointContext.length) {
-            //canvas.style.cursor = 'move';
-            // canvas.classList.add('cursor-move');
-            setTimeout(() => appContext.canvas.classList.add('cursor-move'), 0);
-        }
+        // if (pointContext.length) {
+        //     //canvas.style.cursor = 'move';
+        //     // canvas.classList.add('cursor-move');
+        //     setTimeout(() => appContext.canvas.classList.add('cursor-move'), 0);
+        // }
     }
 
     function dragMove(event: MouseEvent) {
         if (pointContext.length) {
             let mouse = mousePos(event);
+            const [dx, dy] = [mouse[0] - downPt[0], mouse[1] - downPt[1]];
 
-            pointContext.forEach((draggingLine: DraggingLine) => {
-                const point = draggingLine.pt;
-                //const point = draggingLine.curve.points[draggingLine.curvePtIdx];
-                if (point) {
-                    point[0] += mouse[0] - downPt[0];
-                    point[1] += mouse[1] - downPt[1];
-                }
+            pointContext.forEach((pt: XY) => {
+                pt[0] += dx;
+                pt[1] += dy;
             });
 
             downPt = mouse;
@@ -130,7 +124,8 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
         appContext.rect = undefined;
 
         //canvas.style.cursor = 'default';
-        appContext.canvas.classList.remove('cursor-move');
+        // appContext.canvas.classList.remove('cursor-move');
+        
         updateApp(appContext);
     }
 
