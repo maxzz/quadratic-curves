@@ -1,16 +1,16 @@
 import { GRAPHSTYLE } from "../components/initials";
-import { CurvePoints, Rect, RectPoints, SingleCurve, XY } from "../components/types";
+import { CurvePoints, Rect, RectPoints, Scene, SingleCurve, XY } from "../components/types";
 
 export function degToRad(degrees: number) {
-	return degrees * Math.PI / 180;
+    return degrees * Math.PI / 180;
 }
 
 export function radToDeg(radians: number) {
-	return radians * 180 / Math.PI;
+    return radians * 180 / Math.PI;
 }
 
 export function clamp(min: number, val: number, max: number) {
-	return Math.min(Math.max(val, min), max);
+    return Math.min(Math.max(val, min), max);
 }
 
 function pointsCollocated(a: XY | undefined, b: XY | undefined) {
@@ -53,15 +53,15 @@ export function pointInRect(point: XY, rect: Rect): boolean {
     return x <= px && px <= x + w && y <= py && py <= y + h;
 }
 
-export function nearbyPoints([ax, ay]: XY, [bx, by]: XY, zoneA: number) {
+export function nearbyPoints([ax, ay]: XY, [bx, by]: XY, radiusA: number) {
     let dx = ax - bx;
     let dy = ay - by;
-    return (dx * dx) + (dy * dy) < Math.pow(zoneA, 2);
+    return (dx * dx) + (dy * dy) < Math.pow(radiusA, 2);
 }
 
 const hitZone = Math.pow(GRAPHSTYLE.point.radius, 2);
 
-export function curveHasPoint(points: CurvePoints, [mouseX, mouseY]: XY): XY[] {
+export function impactedPoints(points: CurvePoints, [mouseX, mouseY]: XY): XY[] {
     return points.reduce((acc, cur) => {
         let dx = cur[0] - mouseX;
         let dy = cur[1] - mouseY;
@@ -70,4 +70,10 @@ export function curveHasPoint(points: CurvePoints, [mouseX, mouseY]: XY): XY[] {
         }
         return acc;
     }, [] as XY[]);
+}
+
+export function getSelected(scene: Scene): XY[] {
+    return scene.map((curve) => {
+        return curve.points.filter((point) => point[2]);
+    }).filter(Boolean).flat();
 }

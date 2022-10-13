@@ -1,6 +1,6 @@
 import { AppContext, Rect, RectPoints, Scene, XY } from "./types";
 import { SingleCurve } from "./types";
-import { curveHasPoint, pointInRect, rectFromPoints } from "../utils/utils-math";
+import { getSelected, impactedPoints, pointInRect, rectFromPoints } from "../utils/utils-math";
 
 function markPointsInRect(scene: Scene, isShift: boolean, isCtrl: boolean, rect?: Rect | undefined): void {
     //console.log(`markPointsInRect isShift: ${isShift}, isCtrl: ${isCtrl}, rect: ${rect && JSON.stringify(rect)}`);
@@ -30,16 +30,18 @@ function markPointsInRect(scene: Scene, isShift: boolean, isCtrl: boolean, rect?
 }
 
 function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: AppContext) => void) {
-    let pointContext: XY[] = [];
+    let hitContext: XY[] = [];  // Points from mouse down position
+    let selContent: XY[] = [];  // Selected points for group move operation.
     let rectContext: RectPoints | null = null;
-    let downPt: XY = [0, 0]; // Down point to get move delta
+    let downPt: XY = [0, 0];    // Mouse down/move point to get move delta
     let isShift = false;
     let isCtrl = false;
 
     function dragStart(event: MouseEvent) {
         //appContext.canvas.setPointerCapture(); //TODO: https://developer.mozilla.org/en-US/docs/Web/API/Element/setPointerCapture
 
-        pointContext = [];
+        hitContext = [];
+        selContent = [];
         rectContext = null;
         appContext.rect = undefined;
 
@@ -52,18 +54,20 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
 
         // Find the nearest point to mouse hit
         for (let curveIdx = 0; curveIdx < scene.length; curveIdx++) {
-            let res = curveHasPoint(scene[curveIdx].points, downPt);
+            let res = impactedPoints(scene[curveIdx].points, downPt);
             if (res.length) {
                 if (workWithGroup) {
-                    pointContext.push(...res);
+                    hitContext.push(...res);
                 } else {
-                    pointContext.push(res[0]);
+                    hitContext.push(res[0]);
                     break;
                 }
             }
+            selContent = getSelected(scene);
+            console.log('selContent', selContent);
         }
 
-        if (!pointContext.length) {
+        if (!hitContext.length) {
             rectContext = [downPt, downPt];
         }
 
@@ -75,11 +79,11 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
     }
 
     function dragMove(event: MouseEvent) {
-        if (pointContext.length) {
+        if (hitContext.length) {
             let mouse = mousePos(event);
             const [dx, dy] = [mouse[0] - downPt[0], mouse[1] - downPt[1]];
 
-            pointContext.forEach((pt: XY) => {
+            hitContext.forEach((pt: XY) => {
                 pt[0] += dx;
                 pt[1] += dy;
             });
@@ -116,13 +120,14 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
             markPointsInRect(appContext.scenes[appContext.current], false, false);
         }
 
-        pointContext = [];
+        hitContext = [];
+        selContent = [];
         rectContext = null;
         appContext.rect = undefined;
 
         //canvas.style.cursor = 'default';
         // appContext.canvas.classList.remove('cursor-move');
-        
+
         updateApp(appContext);
     }
 
