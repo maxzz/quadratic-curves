@@ -3,28 +3,21 @@ import { SingleCurve } from "./types";
 import { curveHasPoint, nearbyPoints, pointInRect, pointsToRect } from "../utils/utils-math";
 
 type DraggingLine = {
-    downPt?: XY;            // Down point to get move delta
     curve?: SingleCurve;    // Curve with curvePtIdx
     curvePtIdx: number;     // Point index inside curve.points[]
 };
 
 function markPointsInRect(scene: Scene, isShift: boolean, isCtrl: boolean, rect?: Rect | undefined): void {
     //console.log(`markPointsInRect isShift: ${isShift}, isCtrl: ${isCtrl}, rect: ${rect && JSON.stringify(rect)}`);
-    console.log(`markPointsInRect isShift: ${isShift}, isCtrl: ${isCtrl}, rect: ${rect}`);
+    
+    //console.log(`markPointsInRect isShift: ${isShift}, isCtrl: ${isCtrl}, rect: ${rect}`);
 
     scene.forEach((curve: SingleCurve) => {
         curve.points.forEach((point) => {
             if (rect) {
                 const inRect = pointInRect(point, rect);
                 if (inRect) {
-                    // if (isShift) {
-                    //     if (inRect) {
-                    //         point[2] = inRect; // i.e. don't set false
-                    //     }
-                    // } else {
-                    //     point[2] = inRect;
-                    // }
-                    point[2] = inRect;
+                    point[2] = true;
                 } else {
                     if (!isShift) {
                         point[2] = false;
@@ -44,6 +37,7 @@ function markPointsInRect(scene: Scene, isShift: boolean, isCtrl: boolean, rect?
 function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: AppContext) => void) {
     let pointContext: DraggingLine[] = [];
     let rectContext: RectContext | null = null;
+    let downPt: XY = [0,0]; // Down point to get move delta
     let isShift = false;
     let isCtrl = false;
 
@@ -54,19 +48,19 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
         rectContext = null;
         appContext.rect = undefined;
 
-        const downPt = mousePos(event);
+        downPt = mousePos(event);
         isShift = event.shiftKey;
         isCtrl = event.ctrlKey;
 
         const scene = appContext.scenes[appContext.current] || [];
 
-        // Find the nearest point
+        // Find the nearest point to mouse hit
         for (let i = 0; i < scene.length; i++) {
             const curve: SingleCurve = scene[i];
 
             let res = curveHasPoint(curve, downPt);
             if (res) {
-                pointContext.push({ curve: res.curve, curvePtIdx: res.curvePtIdx, downPt, }); // So far, it's just one point per curve
+                pointContext.push({ curve: res.curve, curvePtIdx: res.curvePtIdx }); // So far, it's just one point per curve
                 if (!appContext.checkDragGroup.checked) {
                     break;
                 }
@@ -86,16 +80,17 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
 
     function dragMove(event: MouseEvent) {
         if (pointContext.length) {
-            let pos = mousePos(event);
+            let mouse = mousePos(event);
 
             pointContext.forEach((draggingLine: DraggingLine) => {
                 const point = draggingLine.curve?.points[draggingLine.curvePtIdx];
-                if (point && draggingLine.downPt) {
-                    point[0] += pos[0] - draggingLine.downPt[0];
-                    point[1] += pos[1] - draggingLine.downPt[1];
-                    draggingLine.downPt = pos;
+                if (point) {
+                    point[0] += mouse[0] - downPt[0];
+                    point[1] += mouse[1] - downPt[1];
                 }
             });
+            
+            downPt = mouse;
             updateApp(appContext);
         } else if (rectContext) {
             isCtrl = event.ctrlKey;
@@ -115,17 +110,6 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
 
     function dragDone(event: MouseEvent) {
         const isMoved = rectContext && rectContext[0] !== rectContext[1];
-        // const isClickWoMove = !isShift;
-        // const isClickWoMove = !isShift || (rectContext && rectContext[0] === rectContext[1]);
-
-        //const isClickWoMove = !isShift || (!isShift && !isMoved);
-        //console.log('isShift', isShift, 'isMoved', isMoved, 'isClickWoMove', isClickWoMove);
-
-        // const isClickWoMove = !isShift && !rectContext;
-        // const isClickWoMove = !isShift && (!rectContext || rectContext[0] === rectContext[1]);
-        // const isClickWoMove = rectContext && nearbyPoints(rectContext[0], rectContext[1], 5);
-        // console.log('isClickWoMove', isClickWoMove);
-
 
         let isClickWoMove = !isShift;
         if (isClickWoMove) {
@@ -134,7 +118,7 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
         //console.log('isShift', isShift, 'isMoved', isMoved, 'isClickWoMove =', isClickWoMove, 'rectContext[0][1] =', rectContext?.[0], rectContext?.[1]);
 
         if (isClickWoMove) {
-            console.log('clear');
+            //console.log('clear');
             markPointsInRect(appContext.scenes[appContext.current], false, false);
         }
 
