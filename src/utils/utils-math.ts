@@ -62,8 +62,7 @@ export function nearbyPoints([ax, ay]: XY, [bx, by]: XY, zoneA: number) {
 const hitZone = Math.pow(GRAPHSTYLE.point.radius, 2);
 
 export function curveHasPoint(points: CurvePoints, [mouseX, mouseY]: XY): XY[] {
-    
-    const impacted = points.reduce((acc, cur) => {
+    return points.reduce((acc, cur) => {
         let dx = cur[0] - mouseX;
         let dy = cur[1] - mouseY;
         if ((dx * dx) + (dy * dy) < hitZone) {
@@ -71,16 +70,4 @@ export function curveHasPoint(points: CurvePoints, [mouseX, mouseY]: XY): XY[] {
         }
         return acc;
     }, [] as XY[]);
-
-    return impacted;
 }
-// export function curveHasPoint(curve: SingleCurve, [mouseX, mouseY]: XY): { curve: SingleCurve, curvePtIdx: number; } | undefined {
-//     for (const [idx, [x, y]] of Object.entries(curve.points)) {
-//         let dx = x - mouseX;
-//         let dy = y - mouseY;
-
-//         if ((dx * dx) + (dy * dy) < hitZone) {
-//             return { curve, curvePtIdx: +idx };
-//         }
-//     }
-// }
