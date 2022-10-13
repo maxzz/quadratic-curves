@@ -3,8 +3,9 @@ import { SingleCurve } from "./types";
 import { curveHasPoint, nearbyPoints, pointInRect, pointsToRect } from "../utils/utils-math";
 
 type DraggingLine = {
-    curve?: SingleCurve;    // Curve with curvePtIdx
-    curvePtIdx: number;     // Point index inside curve.points[]
+    // curve: SingleCurve;     // Curve with curvePtIdx
+    // curvePtIdx: number;     // Point index inside curve.points[]
+    pt: XY;
 };
 
 function markPointsInRect(scene: Scene, isShift: boolean, isCtrl: boolean, rect?: Rect | undefined): void {
@@ -60,7 +61,8 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
 
             let res = curveHasPoint(curve, downPt);
             if (res) {
-                pointContext.push({ curve: res.curve, curvePtIdx: res.curvePtIdx }); // So far, it's just one point per curve
+                //pointContext.push({ curve: res.curve, curvePtIdx: res.curvePtIdx }); // So far, it's just one point per curve
+                pointContext.push({ pt: res.curve.points[res.curvePtIdx] }); // So far, it's just one point per curve
                 if (!appContext.checkDragGroup.checked) {
                     break;
                 }
@@ -83,13 +85,14 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
             let mouse = mousePos(event);
 
             pointContext.forEach((draggingLine: DraggingLine) => {
-                const point = draggingLine.curve?.points[draggingLine.curvePtIdx];
+                const point = draggingLine.pt;
+                //const point = draggingLine.curve.points[draggingLine.curvePtIdx];
                 if (point) {
                     point[0] += mouse[0] - downPt[0];
                     point[1] += mouse[1] - downPt[1];
                 }
             });
-            
+
             downPt = mouse;
             updateApp(appContext);
         } else if (rectContext) {
