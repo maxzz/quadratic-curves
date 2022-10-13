@@ -41,7 +41,7 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
         //appContext.canvas.setPointerCapture(); //TODO: https://developer.mozilla.org/en-US/docs/Web/API/Element/setPointerCapture
 
         hitContext = [];
-        selContext = [];
+        //selContext = [];
         rectPoints = null;
         appContext.rect = undefined;
 
@@ -63,7 +63,10 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
                     break;
                 }
             }
-            selContext = getSelected(scene);
+            hitContext.push(...getSelected(scene));
+            const uniContext = new Set(hitContext);
+            hitContext = [...uniContext.values()];
+
             console.log('selContent', selContext);
         }
 
@@ -84,7 +87,7 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
             const [dx, dy] = [mouse[0] - downPt[0], mouse[1] - downPt[1]];
 
             hitContext.forEach((pt: XY) => { pt[0] += dx; pt[1] += dy; });
-            selContext.forEach((pt: XY) => { pt[0] += dx; pt[1] += dy; });
+            //selContext.forEach((pt: XY) => { pt[0] += dx; pt[1] += dy; });
 
             downPt = mouse;
             updateApp(appContext);
@@ -119,7 +122,7 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
         }
 
         hitContext = [];
-        selContext = [];
+        //selContext = [];
         rectPoints = null;
         appContext.rect = undefined;
 
