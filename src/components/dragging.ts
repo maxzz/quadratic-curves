@@ -1,10 +1,6 @@
-import { AppContext, Rect, RectContext, Scene, XY } from "./types";
+import { AppContext, Rect, RectPoints, Scene, XY } from "./types";
 import { SingleCurve } from "./types";
-import { curveHasPoint, nearbyPoints, pointInRect, pointsToRect } from "../utils/utils-math";
-
-type DraggingLine = {
-    pt: XY;
-};
+import { curveHasPoint, pointInRect, rectFromPoints } from "../utils/utils-math";
 
 function markPointsInRect(scene: Scene, isShift: boolean, isCtrl: boolean, rect?: Rect | undefined): void {
     //console.log(`markPointsInRect isShift: ${isShift}, isCtrl: ${isCtrl}, rect: ${rect && JSON.stringify(rect)}`);
@@ -35,7 +31,7 @@ function markPointsInRect(scene: Scene, isShift: boolean, isCtrl: boolean, rect?
 
 function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: AppContext) => void) {
     let pointContext: XY[] = [];
-    let rectContext: RectContext | null = null;
+    let rectContext: RectPoints | null = null;
     let downPt: XY = [0, 0]; // Down point to get move delta
     let isShift = false;
     let isCtrl = false;
@@ -95,7 +91,7 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
             //console.log('shift,ctrl', isShift, isCtrl);
 
             rectContext[1] = pos;
-            appContext.rect = pointsToRect(rectContext);
+            appContext.rect = rectFromPoints(rectContext);
 
             if (appContext.rect) {
                 markPointsInRect(appContext.scenes[appContext.current], isShift, isCtrl, appContext.rect);
