@@ -31,8 +31,8 @@ function markPointsInRect(scene: Scene, isShift: boolean, isCtrl: boolean, rect?
 
 function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: AppContext) => void) {
     let hitContext: XY[] = [];  // Points from mouse down position
-    let selContent: XY[] = [];  // Selected points for group move operation.
-    let rectContext: RectPoints | null = null;
+    let selContext: XY[] = [];  // Selected points for group move operation.
+    let rectPoints: RectPoints | null = null;
     let downPt: XY = [0, 0];    // Mouse down/move point to get move delta
     let isShift = false;
     let isCtrl = false;
@@ -41,8 +41,8 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
         //appContext.canvas.setPointerCapture(); //TODO: https://developer.mozilla.org/en-US/docs/Web/API/Element/setPointerCapture
 
         hitContext = [];
-        selContent = [];
-        rectContext = null;
+        selContext = [];
+        rectPoints = null;
         appContext.rect = undefined;
 
         downPt = mousePos(event);
@@ -63,12 +63,12 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
                     break;
                 }
             }
-            selContent = getSelected(scene);
-            console.log('selContent', selContent);
+            selContext = getSelected(scene);
+            console.log('selContent', selContext);
         }
 
         if (!hitContext.length) {
-            rectContext = [downPt, downPt];
+            rectPoints = [downPt, downPt];
         }
 
         // if (pointContext.length) {
@@ -83,20 +83,18 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
             let mouse = mousePos(event);
             const [dx, dy] = [mouse[0] - downPt[0], mouse[1] - downPt[1]];
 
-            hitContext.forEach((pt: XY) => {
-                pt[0] += dx;
-                pt[1] += dy;
-            });
+            hitContext.forEach((pt: XY) => { pt[0] += dx; pt[1] += dy; });
+            selContext.forEach((pt: XY) => { pt[0] += dx; pt[1] += dy; });
 
             downPt = mouse;
             updateApp(appContext);
-        } else if (rectContext) {
+        } else if (rectPoints) {
             isCtrl = event.ctrlKey;
             let pos = mousePos(event);
             //console.log('shift,ctrl', isShift, isCtrl);
 
-            rectContext[1] = pos;
-            appContext.rect = rectFromPoints(rectContext);
+            rectPoints[1] = pos;
+            appContext.rect = rectFromPoints(rectPoints);
 
             if (appContext.rect) {
                 markPointsInRect(appContext.scenes[appContext.current], isShift, isCtrl, appContext.rect);
@@ -107,7 +105,7 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
     }
 
     function dragDone(event: MouseEvent) {
-        const isMoved = rectContext && rectContext[0] !== rectContext[1];
+        const isMoved = rectPoints && rectPoints[0] !== rectPoints[1];
 
         let isClickWoMove = !isShift;
         if (isClickWoMove) {
@@ -121,8 +119,8 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
         }
 
         hitContext = [];
-        selContent = [];
-        rectContext = null;
+        selContext = [];
+        rectPoints = null;
         appContext.rect = undefined;
 
         //canvas.style.cursor = 'default';
