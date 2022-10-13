@@ -63,16 +63,17 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
                     break;
                 }
             }
+        }
+
+        if (hitContext.length) {
             hitContext.push(...getSelected(scene));
             const uniContext = new Set(hitContext);
             hitContext = [...uniContext.values()];
-
-            console.log('selContent', hitContext);
-        }
-
-        if (!hitContext.length) {
+        } else {
             rectPoints = [downPt, downPt];
         }
+
+        console.log('hitContext', hitContext);
 
         // if (pointContext.length) {
         //     //canvas.style.cursor = 'move';
