@@ -1,4 +1,5 @@
-import { Rect, RectContext, XY } from "../components/types";
+import { GRAPHSTYLE } from "../components/initials";
+import { CurvePoints, Rect, RectPoints, SingleCurve, XY } from "../components/types";
 
 export function degToRad(degrees: number) {
 	return degrees * Math.PI / 180;
@@ -16,7 +17,7 @@ function pointsCollocated(a: XY | undefined, b: XY | undefined) {
     return a?.[0] === b?.[0] && a?.[1] === b?.[1];
 }
 
-function arePointsTheSame(rect: RectContext) {
+function arePointsTheSame(rect: RectPoints) {
     if (!rect.length || rect[0] === rect[1]) {
         return true;
     }
@@ -27,7 +28,7 @@ function arePointsTheSame(rect: RectContext) {
     return theSame;
 }
 
-export function pointsToRect(rectContext: RectContext): Rect | undefined {
+export function rectFromPoints(rectContext: RectPoints): Rect | undefined {
     const isEmpty = arePointsTheSame(rectContext);
     if (isEmpty) {
         return;
@@ -51,3 +52,35 @@ export function pointInRect(point: XY, rect: Rect): boolean {
     const { x, y, w, h } = rect;
     return x <= px && px <= x + w && y <= py && py <= y + h;
 }
+
+export function nearbyPoints([ax, ay]: XY, [bx, by]: XY, zoneA: number) {
+    let dx = ax - bx;
+    let dy = ay - by;
+    return (dx * dx) + (dy * dy) < Math.pow(zoneA, 2);
+}
+
+const hitZone = Math.pow(GRAPHSTYLE.point.radius, 2);
+
+export function curveHasPoint(points: CurvePoints, [mouseX, mouseY]: XY): XY[] {
+    
+    const impacted = points.reduce((acc, cur) => {
+        let dx = cur[0] - mouseX;
+        let dy = cur[1] - mouseY;
+        if ((dx * dx) + (dy * dy) < hitZone) {
+            acc.push(cur);
+        }
+        return acc;
+    }, [] as XY[]);
+
+    return impacted;
+}
+// export function curveHasPoint(curve: SingleCurve, [mouseX, mouseY]: XY): { curve: SingleCurve, curvePtIdx: number; } | undefined {
+//     for (const [idx, [x, y]] of Object.entries(curve.points)) {
+//         let dx = x - mouseX;
+//         let dy = y - mouseY;
+
+//         if ((dx * dx) + (dy * dy) < hitZone) {
+//             return { curve, curvePtIdx: +idx };
+//         }
+//     }
+// }

@@ -50,13 +50,14 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
         const scene = appContext.scenes[appContext.current] || [];
 
         // Find the nearest point to mouse hit
+        const workWithGroup = appContext.checkDragGroup.checked;
         for (let i = 0; i < scene.length; i++) {
             const curve: SingleCurve = scene[i];
 
-            let res = curveHasPoint(curve, downPt);
-            if (res) {
-                pointContext.push(res.curve.points[res.curvePtIdx]); // So far, it's just one point per curve
-                if (!appContext.checkDragGroup.checked) {
+            let res = curveHasPoint(curve.points, downPt);
+            if (res.length) {
+                pointContext.push(...res); // So far, it's just one point per curve
+                if (!workWithGroup) {
                     break;
                 }
             }
