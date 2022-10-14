@@ -153,3 +153,7 @@ export function updateApp(appContext: AppContext) {
 //TODO: add blank preview to add default new blank
 
 //TODO: add scale factor
+
+//TODO: show grid; snap to grid
+//TODO: add point to selection by click
+//TODO: undo/redo

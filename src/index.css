@@ -38,3 +38,8 @@
 .smallscroll::-webkit-scrollbar-thumb {
     background-color: #666b7a
 }
+
+/* CRT effect: https://css-live.ru/tricks/border-image-gradients-sorcery.html */
+/* .crt-frame {
+    border-image: radial-gradient(#333, #000 10%,#666 10.5% 12%,#0000 12.5%) 45.5% fill / 150px / 150px;
+} */

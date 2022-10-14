@@ -30,12 +30,13 @@ function markPointsInRect(scene: Scene, isShift: boolean, isCtrl: boolean, rect?
 }
 
 function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: AppContext) => void) {
-    let hitContext: XY[] = [];  // Points from mouse down position
+    let hitContext: XY[] = [];                  // Points from mouse down position
     let rectPoints: RectPoints | null = null;
-    let downPt: XY = [0, 0];    // Mouse down/move point to get move delta
-    let moved: boolean;         // true when mouse moved after down
+    let downPt: XY = [0, 0];                    // Mouse down/move point to get move delta
+    let moved: boolean;                         // true when mouse moved after down
     let isShift = false;
     let isCtrl = false;
+    let downHasSceneSelection = false;          //
 
     function dragStart(event: MouseEvent) {
         //appContext.canvas.setPointerCapture(); //TODO: https://developer.mozilla.org/en-US/docs/Web/API/Element/setPointerCapture
@@ -48,6 +49,7 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
         moved = false;
         isShift = event.shiftKey;
         isCtrl = event.ctrlKey;
+        downHasSceneSelection = false;
 
         const scene = appContext.scenes[appContext.current] || [];
         const workWithGroup = appContext.checkDragGroup.checked;
@@ -67,8 +69,10 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
 
         if (hitContext.length) {
             const areSelectedInHit = hasSelected(hitContext);
-            if (areSelectedInHit) {
-                hitContext.push(...getSceneSelected(scene));
+            if (areSelectedInHit || isShift) {
+                const downSelection = getSceneSelected(scene);
+                downHasSceneSelection = !!downSelection.length;
+                hitContext.push(...downSelection);
                 const uniContext = new Set(hitContext);
                 hitContext = [...uniContext.values()];
             } else {
@@ -115,6 +119,10 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
 
     function dragDone(event: MouseEvent) {
         const isMoved = moved || (rectPoints && rectPoints[0] !== rectPoints[1]);
+
+        if (isShift && !isMoved && hitContext.length) {
+            hitContext.forEach((pt) => pt[2] = !pt[2]);
+        }
 
         let isClickWoMove = !isShift;
         if (isClickWoMove) {
