@@ -119,22 +119,17 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
     }
 
     function dragDone(event: MouseEvent) {
-        const isMoved = moved || (rectPoints && rectPoints[0] !== rectPoints[1]);
+        let clearSelection = !isShift && !moved;
 
-        let isClickWoMove = !isShift;
-        if (isClickWoMove) {
-            isClickWoMove = !isMoved;
-        }
-
-        if (isShift && !isMoved && hitOnly.length) {
+        if (isShift && !moved && hitOnly.length) {
             hitOnly.forEach((pt) => pt[2] = !pt[2]);
-            isClickWoMove = false;
+            clearSelection = false;
         }
 
         //console.log('isShift', isShift, 'isMoved', isMoved, 'isClickWoMove =', isClickWoMove, 'rectContext[0][1] =', rectContext?.[0], rectContext?.[1]);
 
-        if (isClickWoMove) {
-            console.log('clear');
+        if (clearSelection) {
+            //console.log('clear');
             markPointsInRect(appContext.scenes[appContext.current], false, false);
         }
 
