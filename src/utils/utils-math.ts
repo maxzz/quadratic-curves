@@ -81,3 +81,12 @@ export function getSceneSelected(scene: Scene): XY[] {
         return curve.points.filter((point) => point[2]);
     }).flat().filter((pt) => pt.length);
 }
+
+export function hitTest(scene: Scene, mousePt: XY): boolean | undefined {
+    for (let curveIdx = 0; curveIdx < scene.length; curveIdx++) {
+        let res = impactedPoints(scene[curveIdx].points, mousePt);
+        if (res.length) {
+            return true;
+        }
+    }
+}
