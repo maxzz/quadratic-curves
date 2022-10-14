@@ -84,7 +84,7 @@ export function getSceneSelected(scene: Scene): XY[] {
 
 export function hitTest(scene: Scene, mousePt: XY): boolean | undefined {
     for (let curveIdx = 0; curveIdx < scene.length; curveIdx++) {
-        let res = impactedPoints(scene[curveIdx].points, mousePt);
+        let res = impactedPoints(scene[curveIdx].points, mousePt); //TODO: we don't need to check all curve points; we can break as soon as we found one
         if (res.length) {
             return true;
         }

@@ -95,20 +95,19 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
     function dragMove(event: MouseEvent) {
         moved = true;
 
-        let mouse = mousePos(event);
-        const scene = appContext.scenes[appContext.current] || [];
-        appContext.canvas.style.cursor = hitTest(scene, mouse) ? 'move' : '';
-
+        let mousePt = mousePos(event);
+        const scene = appContext.scenes[appContext.current] || []; //TODO: this is unless we don't capture mouse
+        //appContext.canvas.style.cursor = hitTest(scene, mousePt) ? 'move' : '';
+        appContext.canvas.classList[hitTest(scene, mousePt) ? 'add' : 'remove']('cursor-tm-move');
 
         if (hitContext.length) {
-            let mouse = mousePos(event);
-            const [dx, dy] = [mouse[0] - downPt[0], mouse[1] - downPt[1]];
+            const [dx, dy] = [mousePt[0] - downPt[0], mousePt[1] - downPt[1]];
             hitContext.forEach((pt: XY) => { pt[0] += dx; pt[1] += dy; });
-            downPt = mouse;
+            downPt = mousePt;
             updateApp(appContext);
         } else if (rectPoints) {
             isCtrl = event.ctrlKey;
-            rectPoints[1] = mousePos(event);
+            rectPoints[1] = mousePt;
             appContext.rect = rectFromPoints(rectPoints);
             appContext.rect && markPointsInRect(appContext.scenes[appContext.current], isShift, isCtrl, appContext.rect);
             updateApp(appContext);
@@ -156,8 +155,6 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
 
 export function initDraggingListeners(appContext: AppContext, updateApp: (appContext: AppContext) => void) {
     const { dragStart, dragMove, dragDone, } = getDragHandlersContext(appContext, updateApp);
-
-    appContext.canvas.style.cursor = 'move';
 
     const events: { name: keyof Pick<HTMLElementEventMap, 'mousedown' | 'mousemove' | 'mouseup' | 'mouseout'>, fn: (event: MouseEvent) => void; }[] = [
         { name: 'mousedown', fn: dragStart, },
