@@ -88,16 +88,6 @@ function drawPoint(c: CanvasRenderingContext2D, xy: XY, isControl: boolean, colo
     c.arc(x + 1, y + 1, style.radius + 1, style.startAngle, style.endAngle, true);
     c.fill();
 
-    if (selected) {
-        c.strokeStyle = '#ffffff';
-        c.lineWidth = 2;
-        //c.setLineDash([3, 3]);
-        c.beginPath();
-        c.arc(x, y, style.radius + 2, style.startAngle, style.endAngle, true);
-        c.stroke();
-        //c.setLineDash([]);
-    }
-
     // main circle
     c.lineWidth = isControl ? 5 : GRAPHSTYLE.circles.width;
     c.strokeStyle = isControl ? '#00000040' : '#00000040'; // GRAPHSTYLE.circles.color
@@ -119,6 +109,17 @@ function drawPoint(c: CanvasRenderingContext2D, xy: XY, isControl: boolean, colo
     c.beginPath();
     c.arc(x, y, style.radius - 4, highligts.b1, highligts.b2, false);
     c.stroke();
+
+    // point selection
+    if (selected) {
+        c.strokeStyle = '#ffffff';
+        c.lineWidth = 2;
+        //c.setLineDash([3, 3]);
+        c.beginPath();
+        c.arc(x, y, style.radius + 2, style.startAngle, style.endAngle, true);
+        c.stroke();
+        //c.setLineDash([]);
+    }
 }
 
 export function drawCurve(appContext: AppContext, curve: SingleCurve) {
