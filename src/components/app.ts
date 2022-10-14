@@ -1,6 +1,6 @@
 import { AppContext } from "./types";
 import { initPersistData } from "./store";
-import { drawCurve } from "./shape-line";
+import { drawCurve, drawCurves } from "./shape-line";
 import { initDraggingListeners } from "./dragging";
 import { generateCodeText } from "./code-text-generator";
 import { Accordion } from "./ui-accordion";
@@ -123,7 +123,7 @@ export function updateApp(appContext: AppContext) {
     drawRectSelection(appContext);
 
     // 2. Draw lines
-    appContext.scenes[appContext.current]?.forEach(curve => drawCurve(appContext, curve));
+    drawCurves(appContext);
 
     // 3. Update generated code
     appContext.code.innerText = generateCodeText(appContext.scenes[appContext.current] || [], appContext.scenes);
