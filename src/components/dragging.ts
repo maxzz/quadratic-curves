@@ -1,6 +1,6 @@
 import { AppContext, Rect, RectPoints, Scene, XY } from "./types";
 import { SingleCurve } from "./types";
-import { getSceneSelected, getSelected, impactedPoints, pointInRect, rectFromPoints } from "../utils/utils-math";
+import { getSceneSelected, hasSelected, impactedPoints, pointInRect, rectFromPoints } from "../utils/utils-math";
 
 function markPointsInRect(scene: Scene, isShift: boolean, isCtrl: boolean, rect?: Rect | undefined): void {
     //console.log(`markPointsInRect isShift: ${isShift}, isCtrl: ${isCtrl}, rect: ${rect && JSON.stringify(rect)}`);
@@ -66,11 +66,14 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
         }
 
         if (hitContext.length) {
-            const areSelectedInHit = !!getSelected(hitContext).length;
-
-            hitContext.push(...getSceneSelected(scene));
-            const uniContext = new Set(hitContext);
-            hitContext = [...uniContext.values()];
+            const areSelectedInHit = hasSelected(hitContext);
+            if (areSelectedInHit) {
+                hitContext.push(...getSceneSelected(scene));
+                const uniContext = new Set(hitContext);
+                hitContext = [...uniContext.values()];
+            } else {
+                markPointsInRect(appContext.scenes[appContext.current], false, false);
+            }
         } else {
             rectPoints = [downPt, downPt];
         }

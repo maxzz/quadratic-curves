@@ -72,7 +72,11 @@ export function impactedPoints(points: CurvePoints, [mouseX, mouseY]: XY): XY[] 
     }, [] as XY[]);
 }
 
-export function getSelected(scene: Scene): XY[] {
+export function hasSelected(points: XY[]): boolean {
+    return points.some((point) => point[2]);
+}
+
+export function getSceneSelected(scene: Scene): XY[] {
     return scene.map((curve) => {
         return curve.points.filter((point) => point[2]);
     }).flat().filter((pt) => pt.length);
