@@ -75,5 +75,5 @@ export function impactedPoints(points: CurvePoints, [mouseX, mouseY]: XY): XY[] 
 export function getSelected(scene: Scene): XY[] {
     return scene.map((curve) => {
         return curve.points.filter((point) => point[2]);
-    }).filter(Boolean).flat();
+    }).flat().filter((pt) => pt.length);
 }
