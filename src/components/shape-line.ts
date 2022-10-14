@@ -122,18 +122,17 @@ function drawPoint(c: CanvasRenderingContext2D, xy: XY, isControl: boolean, colo
     }
 }
 
-export function drawCurve(c: CanvasRenderingContext2D, checkHidePoints: boolean, curve: SingleCurve) {
-    drawCurveLine(c, curve.points, curve.color);
-    if (!checkHidePoints) {
+export function drawCurves(appContext: AppContext) {
+    const { ctx: c, checkHidePoints } = appContext;
+    const showPoints = !checkHidePoints.checked;
+    const scene = appContext.scenes[appContext.current] || [];
+
+    scene.forEach((curve) => {
+        drawCurveLine(c, curve.points, curve.color);
+    });
+
+    showPoints && scene.forEach((curve) => {
         drawControlPointLines(c, curve.points);
         curve.points.forEach((point, idx) => drawPoint(c, point, idx > 1, curve.color));
-    }
-}
-
-export function drawCurves(appContext: AppContext) {
-    const { ctx, checkHidePoints } = appContext;
-
-    appContext.scenes[appContext.current]?.forEach((curve) => {
-        drawCurve(ctx, checkHidePoints.checked, curve);
     });
 }

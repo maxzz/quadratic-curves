@@ -1,6 +1,6 @@
 import { AppContext } from "./types";
 import { initPersistData } from "./store";
-import { drawCurve, drawCurves } from "./shape-line";
+import { drawCurves } from "./shape-line";
 import { initDraggingListeners } from "./dragging";
 import { generateCodeText } from "./code-text-generator";
 import { Accordion } from "./ui-accordion";
