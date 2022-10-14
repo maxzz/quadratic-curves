@@ -4,7 +4,6 @@ import { getSceneSelected, hasSelected, hitTest, impactedPoints, pointInRect, re
 
 function markPointsInRect(scene: Scene, isShift: boolean, isCtrl: boolean, rect?: Rect | undefined): void {
     //console.log(`markPointsInRect isShift: ${isShift}, isCtrl: ${isCtrl}, rect: ${rect && JSON.stringify(rect)}`);
-
     //console.log(`markPointsInRect isShift: ${isShift}, isCtrl: ${isCtrl}, rect: ${rect}`);
 
     scene.forEach((curve: SingleCurve) => {
@@ -23,8 +22,6 @@ function markPointsInRect(scene: Scene, isShift: boolean, isCtrl: boolean, rect?
                     point[2] = false;
                 }
             }
-
-            //point[2] = rect ? pointInRect(point, rect) : false;
         });
     });
 }
@@ -82,14 +79,6 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
         } else {
             rectPoints = [downPt, downPt];
         }
-
-        console.log('hitContext', hitContext);
-
-        // if (pointContext.length) {
-        //     //canvas.style.cursor = 'move';
-        //     // canvas.classList.add('cursor-move');
-        //     setTimeout(() => appContext.canvas.classList.add('cursor-move'), 0);
-        // }
     }
 
     function dragMove(event: MouseEvent) {
@@ -97,7 +86,6 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
 
         let mousePt = mousePos(event);
         const scene = appContext.scenes[appContext.current] || []; //TODO: this is unless we don't capture mouse
-        //appContext.canvas.style.cursor = hitTest(scene, mousePt) ? 'move' : '';
         appContext.canvas.classList[hitTest(scene, mousePt) ? 'add' : 'remove']('cursor-tm-move');
 
         if (hitContext.length) {
@@ -132,9 +120,6 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
         hitContext = [];
         rectPoints = null;
         appContext.rect = undefined;
-
-        //canvas.style.cursor = 'default';
-        // appContext.canvas.classList.remove('cursor-move');
 
         updateApp(appContext);
     }

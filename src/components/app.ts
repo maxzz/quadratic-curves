@@ -26,6 +26,8 @@ export function initAppContext(): AppContext | undefined {
         console.log('failed to init');
         return;
     }
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
 
     // 3. Init app previews and context
     const appContent: Omit<AppContext, 'previews'> = { ctx, scenes: [], current: 0, canvas, code, btnCopy, checkDragGroup, checkHidePoints, };
@@ -35,7 +37,6 @@ export function initAppContext(): AppContext | undefined {
 }
 
 function initEventHandlers(appContext: AppContext) {
-
     // 1. Drag handlers
     initDraggingListeners(appContext, updateApp);
 
@@ -58,28 +59,13 @@ function initEventHandlers(appContext: AppContext) {
     document.querySelectorAll('details').forEach((el) => new Accordion(el));
 }
 
-function initData(appContext: AppContext) {
-
-    appContext.scenes = initPersistData();
-
-    // init new lines if there is no persist data
-    // const dafaultScene = generateDefaultScene({nLines: 7, doQuad: false});
-    // appContext.scenes.unshift(dafaultScene); // always prepend default curves
-    // appContext.current = 0;
-}
-
 export function initApp(appContext: AppContext) {
     initEventHandlers(appContext);
 
     appContext.checkDragGroup.checked = true;
     appContext.checkHidePoints.checked = false;
 
-    // line style
-    appContext.ctx.lineCap = 'round';
-    appContext.ctx.lineJoin = 'round';
-    //appContext.canvas.style.cursor = 'move';
-
-    initData(appContext);
+    appContext.scenes = initPersistData();
 
     appContext.previews.update();
 }

@@ -1,6 +1,11 @@
 import { Scene } from "./types";
 
 export function initPersistData(): Scene[] {
+    // init new lines if there is no persist data
+    // const dafaultScene = generateDefaultScene({nLines: 7, doQuad: false});
+    // appContext.scenes.unshift(dafaultScene); // always prepend default curves
+    // appContext.current = 0;
+
     // const persistent = [
     //     /*7 bezier   */ '[{"points":[[39,18],[49,282],[9,116],[15,195]],"color":"hsla(0, 100%, 50%, 0.95)"},{"points":[[119,18],[129,282],[89,116],[95,195]],"color":"hsla(40, 100%, 50%, 0.95)"},{"points":[[199,18],[209,282],[169,116],[175,195]],"color":"hsla(80, 100%, 50%, 0.95)"},{"points":[[279,18],[289,282],[249,116],[255,195]],"color":"hsla(120, 100%, 50%, 0.95)"},{"points":[[359,18],[369,282],[329,116],[335,195]],"color":"hsla(160, 100%, 50%, 0.95)"},{"points":[[439,18],[449,282],[409,116],[415,195]],"color":"hsla(200, 100%, 50%, 0.95)"},{"points":[[519,18],[529,282],[489,116],[495,195]],"color":"hsla(240, 100%, 50%, 0.95)"}]',
     //     /*3 bezier   */ '[{"points":[[126,174],[121,429],[55,246],[80,324]],"color":"hsla(0, 100%, 50%, 0.95)"},{"points":[[177,244],[122,429],[136,287],[125,329]],"color":"hsla(40, 100%, 50%, 0.95)"},{"points":[[127,174],[179,243],[155,183],[167,209]],"color":"hsla(80, 100%, 50%, 0.95)"},{"points":[[164,138],[223,229],[195,145],[216,177]],"color":"hsla(120, 100%, 50%, 0.95)"},{"points":[[166,136],[261,82],[191,98],[230,91]],"color":"hsla(160, 100%, 50%, 0.95)"},{"points":[[318,174],[225,230],[293,196],[266,215]],"color":"hsla(200, 100%, 50%, 0.95)"},{"points":[[262,83],[319,175],[312,98],[320,143]],"color":"hsla(240, 100%, 50%, 0.95)"}]',
