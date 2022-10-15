@@ -2,7 +2,7 @@ import { AppContext } from "./types";
 import { initPersistData } from "./store";
 import { drawCurves } from "./shape-line";
 import { initDraggingListeners } from "./dragging";
-import { generateCodeText } from "./code-text-generator";
+import { generateCodeText } from "./text-generator";
 import { Accordion } from "./ui-accordion";
 import { Previews } from "./shape-preview";
 import templates from "../templates.html?raw";
