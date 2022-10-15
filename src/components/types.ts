@@ -17,9 +17,8 @@ export type Rect = { x: number; y: number; w: number; h: number; };
 export type AppContext = {
     scenes: Scene[];
     current: number;                    // current line: -1 if there is none
-
-    //rectContext: RectContext;           // scene rectangular selection
     rect?: Rect | undefined;            // scene rectangular selection rectangle
+    codeType: number;                   // Generated code type
   
     canvas: HTMLCanvasElement;
     previews: Previews;

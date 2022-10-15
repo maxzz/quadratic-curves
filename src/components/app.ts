@@ -2,7 +2,7 @@ import { AppContext } from "./types";
 import { initPersistData } from "./store";
 import { drawCurves } from "./shape-line";
 import { initDraggingListeners } from "./dragging";
-import { generateCodeText } from "./text-generator";
+import { generateCodeText, initCodeGeneratorEvents } from "./text-generator";
 import { Accordion } from "./ui-accordion";
 import { Previews } from "./shape-preview";
 import templates from "../templates.html?raw";
@@ -31,7 +31,7 @@ export function initAppContext(): AppContext | undefined {
     ctx.lineJoin = 'round';
 
     // 3. Init app previews and context
-    const appContent: Omit<AppContext, 'previews'> = { ctx, scenes: [], current: 0, canvas, code, btnCopy, checkDragGroup, checkHidePoints, checkShowGrid, };
+    const appContent: Omit<AppContext, 'previews'> = { ctx, scenes: [], current: 0, canvas, codeType: 0, code, btnCopy, checkDragGroup, checkHidePoints, checkShowGrid, };
     (appContent as AppContext).previews = new Previews(appContent as AppContext);
 
     return (appContent as AppContext);
@@ -41,10 +41,13 @@ function initEventHandlers(appContext: AppContext) {
     // 1. Drag handlers
     initDraggingListeners(appContext, updateApp);
 
-    // 2 Copy source button and Hide Points checkbox
-    appContext.btnCopy.addEventListener('click', () => navigator.clipboard.writeText(appContext.code.innerText));
+    // 2.1. Hide Points and show grid checkboxes
     appContext.checkHidePoints.addEventListener('click', () => updateApp(appContext));
     appContext.checkShowGrid.addEventListener('click', () => updateApp(appContext));
+
+    // 2.2. Code flavour checkbox and copy source button 
+    appContext.btnCopy.addEventListener('click', () => navigator.clipboard.writeText(appContext.code.innerText));
+    initCodeGeneratorEvents(appContext);
 
     // 3. Resize observer
     new ResizeObserver((entries: ResizeObserverEntry[]) => {

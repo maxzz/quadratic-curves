@@ -1,4 +1,4 @@
-import { Scene, SingleCurve, XY } from "./types";
+import { AppContext, Scene, SingleCurve, XY } from "./types";
 import { GRAPHSTYLE } from "./initials";
 
 const allToString = (scene: Scene) => JSON.stringify(scene);
@@ -50,4 +50,20 @@ export function generateCodeText(scene: Scene, scenes: Scene[]): string {
     const txt4 = gen4_Persistent(scenes);
 
     return `${txt3}\n\n${txt4}\n\n${txt2}\n\n${txt1}\n\n`;
+}
+
+export function initCodeGeneratorEvents(appContext: AppContext) {
+    const btns = ['#btn-code0', '#btn-code1', '#btn-code2', '#btn-code3'].map((selector) => document.querySelector(selector) as HTMLButtonElement).filter(Boolean);
+    if (btns.length !== 4) {
+        console.error('cannot init code buttons');
+        return;
+    }
+
+    btns.forEach((btn) => {
+        btn.addEventListener('click', (event) => {
+            const id = (event.currentTarget as HTMLElement).dataset.code;
+            appContext.codeType = +(id || 0);
+            btns.forEach((thisBtn) => thisBtn.dataset.state = thisBtn.dataset.code === id ? 'checked' : 'unchecked');
+        });
+    });
 }
