@@ -106,7 +106,7 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
         let clearSelection = !isShift && !moved;
 
         if (isShift && !moved && hitOnly.length) {
-            if (isCtrl) {
+            if (event.altKey) {
                 const scene = appContext.scenes[appContext.current] || [];
                 const connectedPoints = findAllConnectedPoints(scene, hitOnly);
                 connectedPoints && connectedPoints.forEach((pt) => pt[2] = !pt[2]);
