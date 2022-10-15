@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 
 const SVG = require('mini-svg-data-uri');
+const twColors = require('tailwindcss/colors');
 
 const cursorMove = `url("${SVG(`
 <svg id="Layer_4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -16,6 +17,9 @@ module.exports = {
     //darkMode: false, // or 'media' or 'class'
     theme: {
         extend: {
+            colors: {
+                primary: twColors.slate,
+            },
             keyframes: {
                 'slide-down': {
                     '0%': { opacity: 0, transform: 'translateY(-10px)' },
@@ -40,6 +44,12 @@ module.exports = {
         extend: {},
     },
     plugins: [
+        require('./tailwind/tailwind-plugin-data-state'),
+        require('./tailwind/tailwind-plugin-colors-bridge')({ prefix: '--tm-', groupName: 'primary' }),
+        require('./tailwind/tailwind-plugin-range'),
+        require('./tailwind/tailwind-plugin-overflow-overlay'),
+        require('./tailwind/tailwnid-plugin-debug-styles'),
+        require('./tailwind/tailwind-plugin-debug-screens'),
         require('@tailwindcss/forms')({ strategy: 'class' }),
     ],
 };

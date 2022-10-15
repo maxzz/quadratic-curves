@@ -2,7 +2,7 @@
     <div class="flex-1 w-full max-w-3xl flex flex-col">
         <div class="uppercase text-[.55rem] tracking-wider text-slate-500 select-none">Cubic and quadratic bézier curves</div>
 
-        <div class="w-full self-center">
+        <div class="w-full self-center max-w-[300px]"> <!--max-w-xl -->
             <canvas class="w-full h-full aspect-square" id='canvas'></canvas>
         </div>
 
@@ -26,11 +26,17 @@
         </div>
 
         <div class="overflow-hidden">
-            <details class="h-full">
+            <details class="h-full" open>
                 <summary class="cursor-pointer select-none">Code</summary>
                 <div class="relative">
-                    <div class="absolute right-6 top-2">
+                    <div class="absolute right-6 top-2 flex items-center space-x-2">
                         <!-- TODO: generated code style selector -->
+                        <div class="p-0.5 bg-slate-900 border-slate-600 shadow-slate-600 border rounded shadow  flex items-center">
+                            <button class="px-2 pb-0.5 h-8 bg-slate-900 border-slate-600 border rounded shadow active:scale-[.97]" id="btn-code1">Current curve points</button>
+                            <button class="px-2 pb-0.5 h-8 bg-slate-900 border-slate-600        rounded shadow active:scale-[.97]" id="btn-code2">All curves</button>
+                            <button class="px-2 pb-0.5 h-8 bg-slate-900 border-slate-600        rounded shadow active:scale-[.97]" id="btn-code3">Generated code</button>
+                        </div>
+
                         <button class="px-2 pb-0.5 h-8 bg-slate-900 border-slate-600 shadow-slate-600 border rounded shadow active:scale-[.97]" id="btn-copy-persistent">Copy</button>
                     </div>
                     <div class="h-60 content text-[.65rem] overflow-auto smallscroll">
@@ -42,6 +48,7 @@
     </div>
 
     <footer>
-        <a class="text-xs text-slate-500 hover:underline select-none" href="https://github.com/maxzz/quadratic-curves" target="_blank">Created by Max Zakharzhevskiy. Source code on Github.</a>
+        <a class="text-xs text-slate-500 hover:underline select-none" href="https://github.com/maxzz/quadratic-curves" target="_blank">Created by Max Zakharzhevskiy. Source code on
+            Github.</a>
     </footer>
 </div>
