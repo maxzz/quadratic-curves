@@ -60,7 +60,7 @@ export class Previews {
         const cross = `M${width * l1} ${height * l2} L${width * l2} ${height * l1} M${width * l1} ${height * l1} L ${width * l2} ${height * l2}`;
         //
         const svg = `
-            <svg class="preview-box hidden group-hover:block absolute right-0.5 -top-4 w-5 h-5 text-slate-200 bg-red-500 border-red-300 border rounded animate-fade-in" viewBox="0 0 ${width} ${height}" stroke-width="45" data-idx="${idx}" data-op="del">
+            <svg class="preview-box hidden group-hover:block absolute right-0.5 -top-4 w-5 h-5 text-slate-200 bg-red-500 border-red-300 border rounded" viewBox="0 0 ${width} ${height}" stroke-width="45" data-idx="${idx}" data-op="del">
                 <path d="${cross}" stroke="currentColor" />
             </svg>`;
         return svg;

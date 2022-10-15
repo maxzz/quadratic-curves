@@ -28,7 +28,8 @@ module.exports = {
             },
             animation: {
                 'slide-down': 'slide-down 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
-                'fade-in': 'fade-in 0.7s cubic-bezier(0.73, 0, 0.36, 0)',
+                'fade-in-slow': 'fade-in 0.7s cubic-bezier(0.73, 0, 0.36, 0)',
+                'fade-in': 'fade-in 0.15s cubic-bezier(0.73, 0, 0.36, 0)',
             },
             cursor: {
                 'tm-move': cursorMove,
