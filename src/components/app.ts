@@ -154,26 +154,31 @@ export function updateApp(appContext: AppContext) {
 
 //TODO: points persistence
 
-//TODO: show/hide control points and show/hide points
-//TODO: select one from overlapping points under cursor
-//TODO: when points overlapping set the same pos for them
+//TODO: [ ] when points overlapping set the same pos for them
+//TODO: [ ] select one from overlapping points under cursor
 
-//TODO: copy state points
-//TODO: code: js, ts, array, persist JSON
+//TODO: [ ] copy state points
+//TODO: [ ] code: js, ts, array, persist JSON
+//TODO: [ ] add button to copy state
 
-//TODO: link to GitHub - Done
-//TODO: update link and preview on maxzz.github.io
+//TODO: [x] link to GitHub
+//TODO: [x] update link and preview on maxzz.github.io
+//TODO: [ ] show app version
 
-//TODO: add line preview as render wo/ circles
-//TODO: add button to copy state
+//TODO: [ ] show/hide control points and show/hide points
+//TODO: [x] add line preview as render wo/ circles
 
-//TODO: rectangular marque
-//TODO: add move rectangle
+//TODO: [x] rectangular marque
+//TODO: [x] add move rectangle
 
-//TODO: add blank preview to add default new blank
+//TODO: [ ] add blank preview to add default new blank
 
-//TODO: add scale factor
+//TODO: [ ] add scale factor
 
-//TODO: show grid; snap to grid
-//TODO: add point to selection by click
-//TODO: undo/redo
+//TODO: [x] add point to selection by click
+//TODO: [ ] undo/redo
+
+//TODO: [x] show grid
+//TODO: [x] snap to grid
+//TODO: [ ] add grid step
+//TODO: [ ] point selection info
