@@ -106,10 +106,11 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
         let clearSelection = !isShift && !moved;
 
         if (isShift && !moved && hitOnly.length) {
-            if (event.altKey) {
+            if (event.altKey || event.ctrlKey) {
                 const scene = appContext.scenes[appContext.current] || [];
                 const connectedPoints = findAllConnectedPoints(scene, hitOnly);
-                connectedPoints && connectedPoints.forEach((pt) => pt[2] = !pt[2]);
+                const fn = event.ctrlKey ? (pt: XY) => pt[2] = !pt[2] : (pt: XY) => pt[2] = true; // ctrl - toggle selection, alt - add to selection
+                connectedPoints && connectedPoints.forEach(fn);
             } else {
                 hitOnly.forEach((pt) => pt[2] = !pt[2]);
             }
