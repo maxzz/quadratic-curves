@@ -37,6 +37,10 @@ export function initAppContext(): AppContext | undefined {
     return (appContent as AppContext);
 }
 
+function updateGenCodeType(appContext: AppContext) {
+
+}
+
 function initEventHandlers(appContext: AppContext) {
     // 1. Drag handlers
     initDraggingListeners(appContext, updateApp);
@@ -47,7 +51,7 @@ function initEventHandlers(appContext: AppContext) {
 
     // 2.2. Code flavour checkbox and copy source button 
     appContext.btnCopy.addEventListener('click', () => navigator.clipboard.writeText(appContext.code.innerText));
-    initCodeGeneratorEvents(appContext);
+    initCodeGeneratorEvents(appContext, updateGenCodeType);
 
     // 3. Resize observer
     new ResizeObserver((entries: ResizeObserverEntry[]) => {

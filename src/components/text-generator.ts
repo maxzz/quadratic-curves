@@ -52,7 +52,7 @@ export function generateCodeText(scene: Scene, scenes: Scene[]): string {
     return `${txt3}\n\n${txt4}\n\n${txt2}\n\n${txt1}\n\n`;
 }
 
-export function initCodeGeneratorEvents(appContext: AppContext) {
+export function initCodeGeneratorEvents(appContext: AppContext, updateGenCodeType: (appContext: AppContext) => void) {
     const btns = ['#btn-code0', '#btn-code1', '#btn-code2', '#btn-code3'].map((selector) => document.querySelector(selector) as HTMLButtonElement).filter(Boolean);
     if (btns.length !== 4) {
         console.error('cannot init code buttons');
@@ -62,8 +62,9 @@ export function initCodeGeneratorEvents(appContext: AppContext) {
     btns.forEach((btn) => {
         btn.addEventListener('click', (event) => {
             const id = (event.currentTarget as HTMLElement).dataset.code;
-            appContext.codeType = +(id || 0);
             btns.forEach((thisBtn) => thisBtn.dataset.state = thisBtn.dataset.code === id ? 'checked' : 'unchecked');
+            appContext.codeType = +(id || 0);
+            updateGenCodeType(appContext);
         });
     });
 }
