@@ -1,6 +1,6 @@
 import { AppContext, Rect, RectPoints, Scene, XY } from "./types";
 import { SingleCurve } from "./types";
-import { getSceneSelected, hasSelected, hitTest, impactedPoints, pointInRect, rectFromPoints } from "../utils/utils-math";
+import { findAllConnectedPoints, getSceneSelected, hasSelected, hitTest, impactedPoints, pointInRect, rectFromPoints } from "../utils/utils-math";
 
 function markPointsInRect(scene: Scene, isShift: boolean, isCtrl: boolean, rect?: Rect | undefined): void {
     //console.log(`markPointsInRect isShift: ${isShift}, isCtrl: ${isCtrl}, rect: ${rect && JSON.stringify(rect)}`);
@@ -84,7 +84,7 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
     function dragMove(event: MouseEvent) {
         moved = true;
 
-        let mousePt = mousePos(event);
+        const mousePt = mousePos(event);
         const scene = appContext.scenes[appContext.current] || []; //TODO: this is unless we don't capture mouse
         appContext.canvas.classList[hitTest(scene, mousePt) ? 'add' : 'remove']('cursor-tm-move');
 
@@ -106,7 +106,14 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
         let clearSelection = !isShift && !moved;
 
         if (isShift && !moved && hitOnly.length) {
-            hitOnly.forEach((pt) => pt[2] = !pt[2]);
+            if (isCtrl) {
+                const scene = appContext.scenes[appContext.current] || [];
+                const connectedPoints = findAllConnectedPoints(scene, hitOnly);
+                connectedPoints && connectedPoints.forEach((pt) => pt[2] = !pt[2]);
+            } else {
+                hitOnly.forEach((pt) => pt[2] = !pt[2]);
+            }
+
             clearSelection = false;
         }
 

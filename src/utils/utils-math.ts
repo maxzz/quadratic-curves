@@ -90,3 +90,24 @@ export function hitTest(scene: Scene, mousePt: XY): boolean | undefined {
         }
     }
 }
+
+function findCurve(scene: Scene, pt: XY): CurvePoints | undefined {
+    for (let curveIdx = 0; curveIdx < scene.length; curveIdx++) {
+        const currentScene = scene[curveIdx];
+        let res = currentScene.points.includes(pt); //TODO: we don't need to check all curve points; we can break as soon as we found one
+        if (res) {
+            return currentScene.points;
+        }
+    }
+}
+
+export function findAllConnectedPoints(scene: Scene, points: XY[]): XY[] | undefined {
+    const all: XY[][] = [];
+    points.forEach((pt) => {
+        const curvePoints = findCurve(scene, pt);
+        curvePoints && all.push(curvePoints);
+    });
+    const uniqueSet = new Set(all.flat());
+    const rv = [...uniqueSet.values()];
+    return rv.length ? rv : undefined;
+}
