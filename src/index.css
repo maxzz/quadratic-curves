@@ -2,15 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-#code {
-    color: #00ff00;
-    background: #000033;
-}
-
-.cursor-move {
-    cursor: move;
-}
-
 /* scrollbars */
 
 .overflow-y-overlay {

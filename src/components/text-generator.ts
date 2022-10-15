@@ -68,3 +68,7 @@ export function initCodeGeneratorEvents(appContext: AppContext, updateGenCodeTyp
         });
     });
 }
+
+export function updateGenCode(appContext: AppContext) {
+    appContext.code.innerText = generateCodeText(appContext.scenes[appContext.current] || [], appContext.scenes);
+}

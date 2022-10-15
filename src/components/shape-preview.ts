@@ -1,5 +1,5 @@
 import { AppContext, Scene, SingleCurve } from "./types";
-import { updateApp } from "./app";
+import { updateApp } from "./app-draw";
 import { generateDefaultScene } from "./shape-line";
 import { clamp } from "../utils/utils-math";
 
