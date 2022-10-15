@@ -19,10 +19,11 @@ export function initAppContext(): AppContext | undefined {
 
     const checkDragGroup = document.getElementById('chk-drag-group') as HTMLInputElement;
     const checkHidePoints = document.getElementById('chk-hide-pts') as HTMLInputElement;
+    const checkShowGrid = document.getElementById('chk-show-grid') as HTMLInputElement;
     const code = document.getElementById('code') as HTMLPreElement;
     const btnCopy = document.querySelector<HTMLButtonElement>('#btn-copy-persistent')!;
 
-    if (!ctx || !code || !btnCopy || !checkDragGroup || !checkHidePoints) {
+    if (!ctx || !code || !btnCopy || !checkDragGroup || !checkHidePoints || !checkShowGrid) {
         console.log('failed to init');
         return;
     }
@@ -30,7 +31,7 @@ export function initAppContext(): AppContext | undefined {
     ctx.lineJoin = 'round';
 
     // 3. Init app previews and context
-    const appContent: Omit<AppContext, 'previews'> = { ctx, scenes: [], current: 0, canvas, code, btnCopy, checkDragGroup, checkHidePoints, };
+    const appContent: Omit<AppContext, 'previews'> = { ctx, scenes: [], current: 0, canvas, code, btnCopy, checkDragGroup, checkHidePoints, checkShowGrid, };
     (appContent as AppContext).previews = new Previews(appContent as AppContext);
 
     return (appContent as AppContext);
@@ -43,6 +44,7 @@ function initEventHandlers(appContext: AppContext) {
     // 2 Copy source button and Hide Points checkbox
     appContext.btnCopy.addEventListener('click', () => navigator.clipboard.writeText(appContext.code.innerText));
     appContext.checkHidePoints.addEventListener('click', () => updateApp(appContext));
+    appContext.checkShowGrid.addEventListener('click', () => updateApp(appContext));
 
     // 3. Resize observer
     new ResizeObserver((entries: ResizeObserverEntry[]) => {
@@ -64,6 +66,7 @@ export function initApp(appContext: AppContext) {
 
     appContext.checkDragGroup.checked = true;
     appContext.checkHidePoints.checked = false;
+    appContext.checkShowGrid.checked = true;
 
     appContext.scenes = initPersistData();
 
@@ -104,8 +107,39 @@ function drawRectSelection(appContext: AppContext) {
     }
 }
 
+function drawGrid(appContext: AppContext) {
+    if (appContext.checkShowGrid.checked) {
+        const { ctx: c } = appContext;
+        const { width: w, height: h } = c.canvas;
+        const [dx, dy] = [w / 20, h / 20];
+
+        c.lineWidth = .5;
+        c.setLineDash([2, 4]);
+        c.strokeStyle = '#480613';
+
+        // vertical
+        for (let x = 0; x < w; x += dx) {
+            c.beginPath();
+            c.moveTo(x, 0);
+            c.lineTo(x, w);
+            c.stroke();
+        }
+
+        // horizontal
+        for (let y = 0; y < w; y += dy) {
+            c.beginPath();
+            c.moveTo(0, y);
+            c.lineTo(h, y);
+            c.stroke();
+        }
+
+        c.setLineDash([]);
+    }
+}
+
 export function updateApp(appContext: AppContext) {
     drawBackground(appContext.ctx, appContext.canvas.width, appContext.canvas.height);
+    drawGrid(appContext);
     drawRectSelection(appContext);
 
     // 2. Draw lines

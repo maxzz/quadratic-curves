@@ -27,6 +27,7 @@ export type AppContext = {
     btnCopy: HTMLButtonElement;
     checkDragGroup: HTMLInputElement;
     checkHidePoints: HTMLInputElement;
+    checkShowGrid: HTMLInputElement;
 
     ctx: CanvasRenderingContext2D;
 };
