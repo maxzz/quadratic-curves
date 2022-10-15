@@ -41,8 +41,10 @@ function drawCurveLine(c: CanvasRenderingContext2D, curvePoints: CurvePoints, co
     c.stroke();
 }
 
-function drawControlPointLines(c: CanvasRenderingContext2D, curvePoints: CurvePoints) {
+function drawLineToControlPoints(c: CanvasRenderingContext2D, curvePoints: CurvePoints, color: string) {
     const [p1, p2, c1, c2] = curvePoints;
+
+    c.strokeStyle = color;
 
     c.setLineDash([2, 2]);
     c.lineWidth = GRAPHSTYLE.ctrlLine.width;
@@ -79,7 +81,7 @@ function drawPoint(c: CanvasRenderingContext2D, xy: XY, isControl: boolean, colo
 
     let style = isControl ? GRAPHSTYLE.cpoint : GRAPHSTYLE.point;
 
-    const circleColor = color || ''; //const circleColor = isControl ? GRAPHSTYLE.circles.fill : color || '';
+    const circleColor = color; //const circleColor = isControl ? GRAPHSTYLE.circles.fill : color || '';
     const shadowColor = isControl ? GRAPHSTYLE.circles.fill : color ? Color(color).alpha(.5).darken(0.5).hexa() : '';
 
     // shadow
@@ -132,7 +134,7 @@ export function drawCurves(appContext: AppContext) {
     });
 
     showPoints && scene.forEach((curve) => {
-        drawControlPointLines(c, curve.points);
+        drawLineToControlPoints(c, curve.points, curve.color);
         curve.points.forEach((point, idx) => drawPoint(c, point, idx > 1, curve.color));
     });
 }
