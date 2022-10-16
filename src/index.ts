@@ -12,33 +12,38 @@ function main() {
 
 main();
 
-//TODO: points persistence
-
-//TODO: [ ] when points overlapping set the same pos for them
-//TODO: [ ] select one from overlapping points under cursor
-
-//TODO: [ ] copy state points
-//TODO: [ ] code: js, ts, array, persist JSON
-//TODO: [ ] add button to copy state
+//TODO: [x] code: js, ts, array, persist JSON
+//TODO: [x] copy state points
+//TODO: [x] add button to copy state
 
 //TODO: [x] link to GitHub
-//TODO: [x] update link and preview on maxzz.github.io
+//TODO: [ ] update link and preview on maxzz.github.io
 //TODO: [ ] show app version
 
-//TODO: [ ] show/hide control points and show/hide points
+//TODO: [x] show/hide all control points
 //TODO: [x] add line preview as render wo/ circles
 
 //TODO: [x] rectangular marque
 //TODO: [x] add move rectangle
 
-//TODO: [ ] add blank preview to add default new blank
-
-//TODO: [ ] add scale factor
+//TODO: [x] add blank preview to add default new blank
 
 //TODO: [x] add point to selection by click
-//TODO: [ ] undo/redo
+//TODO: [x] point selection info
 
 //TODO: [x] show grid
-//TODO: [x] snap to grid
+//TODO: [ ] snap to grid
 //TODO: [ ] add grid step
-//TODO: [ ] point selection info
+//TODO: [ ] add scale factor
+//TODO: [ ] solid scene background wo/ gradient
+
+//TODO: [ ] when points overlapping set the same pos for them
+//TODO: [ ] select one from overlapping points under cursor
+
+//TODO: [ ] switch cubic/quadratic
+//TODO: [ ] add/remove points to curve
+//TODO: [ ] merge/split curves
+//TODO: [ ] switch to pointer events instead of mouse events, and capture mouse
+
+//TODO: [ ] points persistence, i.e. local storage
+//TODO: [ ] undo/redo

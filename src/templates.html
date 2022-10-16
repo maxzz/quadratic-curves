@@ -1,6 +1,21 @@
 <div class="min-h-screen p-4 text-xs bg-slate-900 text-slate-400 flex flex-col items-center overflow-hidden">
     <div class="flex-1 w-full max-w-3xl flex flex-col">
-        <div class="uppercase text-[.55rem] tracking-wider text-slate-500 select-none">Cubic and quadratic bézier curves</div>
+        <div class="flex items-center justify-between">
+            <div class="uppercase text-[.55rem] tracking-wider text-slate-500 select-none">Cubic and quadratic bézier curves</div>
+            <div class="relative">
+                <div class="peer mb-2 w-6 h-6 text-[.55rem] border-slate-700 hover:bg-slate-800 border rounded-full cursor-default grid place-items-center">?</div>
+                <div class="hidden peer-hover:block absolute top-full right-0 p-2 w-max text-slate-900 bg-slate-50 rounded shadow">
+                    <div class="font-semibold">Mouse selection:</div>
+                    <div class="mt-1 grid grid-cols-[auto_auto] gap-1">
+                        <div>Click and drag</div><div>- Rectangular selection</div>
+                        <div>Single click</div><div>- Clear selection</div>
+                        <div>Shift+point click</div><div>- Toggle point selection</div>
+                        <div>Shift+Atl+point click</div><div>- Select connected points</div>
+                        <div>Shift+Ctrl+point click</div><div>- Toggle connected points selection</div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="w-full self-center"> <!--max-w-[300px] -->
             <canvas class="w-full h-full aspect-square" id='canvas'></canvas>
@@ -12,12 +27,12 @@
                 <div>Drag overlapping points as a group</div>
             </label>
             <label class="flex items-center space-x-1">
-                <input class="form-checkbox text-slate-800 bg-slate-800 focus:ring-1 focus:ring-slate-500 focus:ring-offset-slate-800 rounded" type="checkbox" id="chk-hide-pts">
-                <div>Hide points</div>
-            </label>
-            <label class="flex items-center space-x-1">
                 <input class="form-checkbox text-slate-800 bg-slate-800 focus:ring-1 focus:ring-slate-500 focus:ring-offset-slate-800 rounded" type="checkbox" id="chk-show-grid">
                 <div>Show grid</div>
+            </label>
+            <label class="flex items-center space-x-1">
+                <input class="form-checkbox text-slate-800 bg-slate-800 focus:ring-1 focus:ring-slate-500 focus:ring-offset-slate-800 rounded" type="checkbox" id="chk-hide-pts">
+                <div>Hide points</div>
             </label>
         </div>
 
@@ -26,12 +41,12 @@
         </div>
 
         <div class="mb-4 overflow-hidden">
-            <details class="h-full" open>
+            <details class="h-full">
                 <summary class="cursor-pointer select-none">Code</summary>
 
                 <div>
                     <div class="mt-2 h-60 content text-[.65rem] bg-[#000033] overflow-auto smallscroll border-slate-800/50 border">
-                        <div class="px-2 py-1 font-mono whitespace-pre text-[#00ff00] overflow-x-hidden" id="code">code</div>
+                        <div class="px-2 py-1 font-mono whitespace-pre text-[#00ff00] " id="code">code</div>
                     </div>
 
                     <div class="pt-1 flex justify-end select-none">
