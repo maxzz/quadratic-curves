@@ -1,9 +1,19 @@
-import { AppContext, Scene, SingleCurve, XY } from "./types";
+import { AppContext, CurvePoints, Scene, SingleCurve, XY } from "./types";
 import { GRAPHSTYLE } from "./initials";
 
 const pt = ([x, y]: XY) => `${x},${y}`;
 const formatPt = ([x, y]: XY) => `${`${x}`.padStart(3, ' ')},${`${y}`.padStart(3, ' ')}`;
-const allToString = (scene: Scene) => JSON.stringify(scene);
+
+const allToString = (scene: Scene) => {
+    const newPoints = scene.map((curve) => {
+        const newCurve: SingleCurve = {
+            points: curve.points.map(([x, y]) => [x, y]) as CurvePoints, // filter point selection state
+            color: curve.color,
+        };
+        return newCurve;
+    });
+    return JSON.stringify(newPoints);
+};
 
 function gen1_JSCode(scene: Scene, lineWidth: number) {
     function genLine(line: SingleCurve) {
@@ -38,8 +48,8 @@ function gen3_Current(scene: Scene) {
 }
 
 function gen4_Persistent(scene: Scene[]) {
-    const allCurves = scene.map((sceneCurves, idx) => `   /* ${`${idx + 1}`.padStart(2, ' ')} */ '${allToString(sceneCurves)}',`).join('\n'); // idx 0 for predefined
-    return `const persistent = [\n${allCurves}\n];`;
+    const allCurves = scene.map((sceneCurves, idx) => `   /* ${`${idx}`.padStart(2, ' ')} N=${`${sceneCurves.length}`.padEnd(2, ' ')} */ '${allToString(sceneCurves)}',`).join('\n'); // idx 0 for predefined
+    return `const persistent = [\n${allCurves}\n];\n`;
 }
 
 // function generateCodeText(scene: Scene, scenes: Scene[]): string {
