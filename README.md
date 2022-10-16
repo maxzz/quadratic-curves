@@ -2,7 +2,7 @@
 
 Quadratic curves experiments.
 
-![](src/assets/2022-10-02_18-31-36.png)
+![](src/assets/2022-10-16_02-46-46.jpg)
 
 <!-- https://jsfiddle.net/jaredwilli/pHzBV/ -->
 

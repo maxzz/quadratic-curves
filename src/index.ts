@@ -35,6 +35,8 @@ main();
 //TODO: [ ] snap to grid
 //TODO: [ ] add grid step
 //TODO: [ ] add scale factor
+//TODO: [ ] draw selection boundary to allow scale
+//TODO: [ ] slide point to duplicate: need to know points on path
 //TODO: [ ] solid scene background wo/ gradient
 
 //TODO: [ ] when points overlapping set the same pos for them
