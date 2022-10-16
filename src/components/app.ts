@@ -45,8 +45,7 @@ function initEventHandlers(appContext: AppContext) {
     appContext.checkHidePoints.addEventListener('click', () => updateApp(appContext));
     appContext.checkShowGrid.addEventListener('click', () => updateApp(appContext));
 
-    // 2.2. Code flavour checkbox and copy source button 
-    appContext.btnCopy.addEventListener('click', () => navigator.clipboard.writeText(appContext.code.innerText));
+    // 2.2. Code flavour checkbox and source code copy button
     initCodeGeneratorEvents(appContext, updateGenCode);
 
     // 3. Resize observer

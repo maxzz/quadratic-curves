@@ -34,7 +34,7 @@ function gen2_PointsArray(scene: Scene) {
 }
 
 function gen3_Current(scene: Scene) {
-    return `const current = [\n    '${allToString(scene)}',\n];`;
+    return `'${allToString(scene)}',`; // return `const current = [\n    '${allToString(scene)}',\n];`;
 }
 
 function gen4_Persistent(scene: Scene[]) {
@@ -42,15 +42,13 @@ function gen4_Persistent(scene: Scene[]) {
     return `const persistent = [\n${allCurves}\n];`;
 }
 
-export function generateCodeText(scene: Scene, scenes: Scene[]): string {
-
-    const txt1 = gen1_JSCode(scene, GRAPHSTYLE.curve.width);
-    const txt2 = gen2_PointsArray(scene);
-    const txt3 = gen3_Current(scene);
-    const txt4 = gen4_Persistent(scenes);
-
-    return `${txt3}\n\n${txt4}\n\n${txt2}\n\n${txt1}\n\n`;
-}
+// function generateCodeText(scene: Scene, scenes: Scene[]): string {
+//     const txt1 = gen1_JSCode(scene, GRAPHSTYLE.curve.width);
+//     const txt2 = gen2_PointsArray(scene);
+//     const txt3 = gen3_Current(scene);
+//     const txt4 = gen4_Persistent(scenes);
+//     return `${txt3}\n\n${txt4}\n\n${txt2}\n\n${txt1}\n\n`;
+// }
 
 export function initCodeGeneratorEvents(appContext: AppContext, updateGenCodeType: (appContext: AppContext) => void) {
     const btns = ['#btn-code0', '#btn-code1', '#btn-code2', '#btn-code3'].map((selector) => document.querySelector(selector) as HTMLButtonElement).filter(Boolean);
@@ -59,16 +57,32 @@ export function initCodeGeneratorEvents(appContext: AppContext, updateGenCodeTyp
         return;
     }
 
+    function setActive(id: number) {
+        appContext.codeType = id;
+        btns.forEach((thisBtn) => thisBtn.dataset.state = +(thisBtn.dataset.code || 0) === id ? 'checked' : 'unchecked');
+    }
+
     btns.forEach((btn) => {
         btn.addEventListener('click', (event) => {
-            const id = (event.currentTarget as HTMLElement).dataset.code;
-            btns.forEach((thisBtn) => thisBtn.dataset.state = thisBtn.dataset.code === id ? 'checked' : 'unchecked');
-            appContext.codeType = +(id || 0);
+            const id = +((event.currentTarget as HTMLElement).dataset.code || 0);
+            setActive(id);
             updateGenCodeType(appContext);
         });
     });
+
+    appContext.btnCopy.addEventListener('click', () => navigator.clipboard.writeText(appContext.code.innerText));
 }
 
 export function updateGenCode(appContext: AppContext) {
-    appContext.code.innerText = generateCodeText(appContext.scenes[appContext.current] || [], appContext.scenes);
+    const scene = appContext.scenes[appContext.current] || [];
+    let txt = ''; //generateCodeText(scene, appContext.scenes)
+
+    switch (appContext.codeType) {
+        case 0: { txt = gen3_Current(scene); break; }
+        case 1: { txt = gen2_PointsArray(scene); break; }
+        case 2: { txt = gen4_Persistent(appContext.scenes); break; }
+        case 3: { txt = gen1_JSCode(scene, GRAPHSTYLE.curve.width); break; }
+    }
+
+    appContext.code.innerText = txt;
 }
