@@ -22,7 +22,7 @@ export class Previews {
     }
 
     private frame(innerItem: string, idx: number, isCurrent: boolean, operation?: string) {
-        const title = idx === -1 ? 'Create new scene' : `Line: ${idx}. Click to select this curve for editing`;
+        const title = idx === -1 ? 'Create new scene' : `Scene: ${idx}. Click to select this curve for editing`;
         return `
             <div class="preview-box relative group hover:bg-slate-800 border-slate-400 shadow-slate-700 border rounded shadow cursor-pointer active:scale-[.97] grid items-center justify-center ${isCurrent ? 'ring-2 ring-offset-[2px] ring-offset-slate-900 ring-sky-500' : ''}"
                 data-idx="${idx}"

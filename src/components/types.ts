@@ -29,6 +29,8 @@ export type AppContext = {
     checkShowGrid: HTMLInputElement;
 
     ctx: CanvasRenderingContext2D;
+
+    setActiveCodeGenerator: (id: number) => void;
 };
 
 export function scaleCurvePts(pts: CurvePoints, factor: number): CurvePoints {

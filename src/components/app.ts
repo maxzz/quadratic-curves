@@ -1,7 +1,7 @@
 import { AppContext } from "./types";
 import { initPersistData } from "./store";
 import { initDraggingListeners } from "./dragging";
-import { initCodeGeneratorEvents, updateGenCode } from "./text-generator";
+import { initCodeGeneratorEvents } from "./text-generator";
 import { Accordion } from "./ui-accordion";
 import { Previews } from "./shape-preview";
 import { updateApp } from "./app-draw";
@@ -31,7 +31,7 @@ export function initAppContext(): AppContext | undefined {
     ctx.lineJoin = 'round';
 
     // 3. Init app previews and context
-    const appContent: Omit<AppContext, 'previews'> = { ctx, scenes: [], current: 0, canvas, codeType: 0, code, btnCopy, checkDragGroup, checkHidePoints, checkShowGrid, };
+    const appContent: Omit<AppContext, 'previews'> = { ctx, scenes: [], current: 0, canvas, codeType: 0, code, btnCopy, checkDragGroup, checkHidePoints, checkShowGrid, setActiveCodeGenerator: () => {} };
     (appContent as AppContext).previews = new Previews(appContent as AppContext);
 
     return (appContent as AppContext);
@@ -46,7 +46,7 @@ function initEventHandlers(appContext: AppContext) {
     appContext.checkShowGrid.addEventListener('click', () => updateApp(appContext));
 
     // 2.2. Code flavour checkbox and source code copy button
-    initCodeGeneratorEvents(appContext, updateGenCode);
+    initCodeGeneratorEvents(appContext);
 
     // 3. Resize observer
     new ResizeObserver((entries: ResizeObserverEntry[]) => {
@@ -69,6 +69,7 @@ export function initApp(appContext: AppContext) {
     appContext.checkDragGroup.checked = true;
     appContext.checkHidePoints.checked = false;
     appContext.checkShowGrid.checked = true;
+    appContext.setActiveCodeGenerator(1);
 
     appContext.scenes = initPersistData();
 

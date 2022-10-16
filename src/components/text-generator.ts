@@ -1,9 +1,9 @@
 import { AppContext, Scene, SingleCurve, XY } from "./types";
 import { GRAPHSTYLE } from "./initials";
 
-const allToString = (scene: Scene) => JSON.stringify(scene);
 const pt = ([x, y]: XY) => `${x},${y}`;
 const formatPt = ([x, y]: XY) => `${`${x}`.padStart(3, ' ')},${`${y}`.padStart(3, ' ')}`;
+const allToString = (scene: Scene) => JSON.stringify(scene);
 
 function gen1_JSCode(scene: Scene, lineWidth: number) {
     function genLine(line: SingleCurve) {
@@ -50,7 +50,7 @@ function gen4_Persistent(scene: Scene[]) {
 //     return `${txt3}\n\n${txt4}\n\n${txt2}\n\n${txt1}\n\n`;
 // }
 
-export function initCodeGeneratorEvents(appContext: AppContext, updateGenCodeType: (appContext: AppContext) => void) {
+export function initCodeGeneratorEvents(appContext: AppContext) {
     const btns = ['#btn-code0', '#btn-code1', '#btn-code2', '#btn-code3'].map((selector) => document.querySelector(selector) as HTMLButtonElement).filter(Boolean);
     if (btns.length !== 4) {
         console.error('cannot init code buttons');
@@ -61,12 +61,13 @@ export function initCodeGeneratorEvents(appContext: AppContext, updateGenCodeTyp
         appContext.codeType = id;
         btns.forEach((thisBtn) => thisBtn.dataset.state = +(thisBtn.dataset.code || 0) === id ? 'checked' : 'unchecked');
     }
+    appContext.setActiveCodeGenerator = setActive;
 
     btns.forEach((btn) => {
         btn.addEventListener('click', (event) => {
             const id = +((event.currentTarget as HTMLElement).dataset.code || 0);
             setActive(id);
-            updateGenCodeType(appContext);
+            updateGenCode(appContext);
         });
     });
 
@@ -80,8 +81,8 @@ export function updateGenCode(appContext: AppContext) {
     switch (appContext.codeType) {
         case 0: { txt = gen3_Current(scene); break; }
         case 1: { txt = gen2_PointsArray(scene); break; }
-        case 2: { txt = gen4_Persistent(appContext.scenes); break; }
-        case 3: { txt = gen1_JSCode(scene, GRAPHSTYLE.curve.width); break; }
+        case 2: { txt = gen1_JSCode(scene, GRAPHSTYLE.curve.width); break; }
+        case 3: { txt = gen4_Persistent(appContext.scenes); break; }
     }
 
     appContext.code.innerText = txt;
