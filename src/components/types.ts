@@ -19,7 +19,9 @@ export type AppContext = {
     current: number;                    // current line: -1 if there is none
     rect?: Rect | undefined;            // scene rectangular selection rectangle
     codeType: number;                   // Generated code type
-  
+
+    editMode: number;                   // Editor mode: 0 - move; 1 - modify
+
     canvas: HTMLCanvasElement;
     previews: Previews;
     code: HTMLPreElement;

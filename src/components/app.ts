@@ -31,7 +31,10 @@ export function initAppContext(): AppContext | undefined {
     ctx.lineJoin = 'round';
 
     // 3. Init app previews and context
-    const appContent: Omit<AppContext, 'previews'> = { ctx, scenes: [], current: 0, canvas, codeType: 0, code, btnCopy, checkDragGroup, checkHidePoints, checkShowGrid, setActiveCodeGenerator: () => {} };
+    const appContent: Omit<AppContext, 'previews'> = {
+        ctx, scenes: [], current: 0, canvas, codeType: 0, editMode: 0,
+        code, btnCopy, checkDragGroup, checkHidePoints, checkShowGrid, setActiveCodeGenerator: () => { }
+    };
     (appContent as AppContext).previews = new Previews(appContent as AppContext);
 
     return (appContent as AppContext);
@@ -58,6 +61,24 @@ function initEventHandlers(appContext: AppContext) {
             }
         }
     }).observe(appContext.canvas);
+
+
+
+    function setActive(id: number) {
+        appContext.editMode = id;
+        btns.forEach((thisBtn) => thisBtn.dataset.state = +(thisBtn.dataset.mode || 0) === id ? 'checked' : 'unchecked');
+    }
+    
+    const btns = ['#btn-edit-0', '#btn-edit-1'].map((selector) => document.querySelector(selector) as HTMLButtonElement).filter(Boolean);
+    btns.forEach((btn) => {
+        btn.addEventListener('click', (event) => {
+            const id = +((event.currentTarget as HTMLElement).dataset.mode || 0);
+            setActive(id);
+        });
+    });
+    //TODO: set initial mode, and remove from html
+
+    
 
     // 4. Details
     document.querySelectorAll('details').forEach((el) => new Accordion(el));
