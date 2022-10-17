@@ -40,6 +40,22 @@ export function initAppContext(): AppContext | undefined {
     return (appContent as AppContext);
 }
 
+function initTopMenuControls(appContext: AppContext) {
+    function setActive(id: number) {
+        appContext.editMode = id;
+        btns.forEach((thisBtn) => thisBtn.dataset.state = +(thisBtn.dataset.mode || 0) === id ? 'checked' : 'unchecked');
+    }
+    
+    const btns = ['#btn-edit-0', '#btn-edit-1'].map((selector) => document.querySelector(selector) as HTMLButtonElement).filter(Boolean);
+    btns.forEach((btn) => {
+        btn.addEventListener('click', (event) => {
+            const id = +((event.currentTarget as HTMLElement).dataset.mode || 0);
+            setActive(id);
+        });
+    });
+    //TODO: set initial mode, and remove from html
+}
+
 function initEventHandlers(appContext: AppContext) {
     // 1. Drag handlers
     initDraggingListeners(appContext, updateApp);
@@ -62,25 +78,10 @@ function initEventHandlers(appContext: AppContext) {
         }
     }).observe(appContext.canvas);
 
+    // 4. Top menu
+    initTopMenuControls(appContext);
 
-
-    function setActive(id: number) {
-        appContext.editMode = id;
-        btns.forEach((thisBtn) => thisBtn.dataset.state = +(thisBtn.dataset.mode || 0) === id ? 'checked' : 'unchecked');
-    }
-    
-    const btns = ['#btn-edit-0', '#btn-edit-1'].map((selector) => document.querySelector(selector) as HTMLButtonElement).filter(Boolean);
-    btns.forEach((btn) => {
-        btn.addEventListener('click', (event) => {
-            const id = +((event.currentTarget as HTMLElement).dataset.mode || 0);
-            setActive(id);
-        });
-    });
-    //TODO: set initial mode, and remove from html
-
-    
-
-    // 4. Details
+    // 5. Details
     document.querySelectorAll('details').forEach((el) => new Accordion(el));
 }
 
