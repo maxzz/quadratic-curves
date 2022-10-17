@@ -86,7 +86,16 @@ function getDragHandlersContext(appContext: AppContext, updateApp: (appContext: 
 
         const mousePt = mousePos(event);
         const scene = appContext.scenes[appContext.current] || []; //TODO: this is unless we don't capture mouse
-        appContext.canvas.classList[hitTest(scene, mousePt) ? 'add' : 'remove']('cursor-tm-move');
+        const overPt = hitTest(scene, mousePt);
+
+        if (appContext.editMode === 0) {
+            appContext.canvas.classList[overPt ? 'add' : 'remove']('cursor-tm-move');
+            appContext.canvas.classList.remove('cursor-tm-pen');
+        } else if (appContext.editMode === 1) {
+            //TODO: check what to do: add or remove point
+            appContext.canvas.classList[overPt ? 'add' : 'remove']('cursor-tm-pen');
+            appContext.canvas.classList.remove('cursor-tm-move');
+        }
 
         if (hitContext.length) {
             const [dx, dy] = [mousePt[0] - downPt[0], mousePt[1] - downPt[1]];
