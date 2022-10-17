@@ -17,7 +17,7 @@ main();
 //TODO: [x] add button to copy state
 
 //TODO: [x] link to GitHub
-//TODO: [ ] update link and preview on maxzz.github.io
+//TODO: [x] update link and preview on maxzz.github.io
 //TODO: [ ] show app version
 
 //TODO: [x] show/hide all control points
