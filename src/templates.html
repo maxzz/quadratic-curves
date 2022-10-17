@@ -2,19 +2,30 @@
     <div class="flex-1 w-full max-w-3xl flex flex-col">
         <div class="flex items-center justify-between">
             <div class="uppercase text-[.55rem] tracking-wider text-slate-500 select-none">Cubic and quadratic bézier curves</div>
-            <div class="relative">
-                <div class="peer mb-2 w-6 h-6 text-[.55rem] border-slate-700 hover:bg-slate-800 border rounded-full cursor-default grid place-items-center">?</div>
-                <div class="hidden peer-hover:block absolute top-full right-0 p-2 w-max text-slate-900 bg-slate-50 rounded shadow">
-                    <div class="font-semibold">Mouse selection:</div>
-                    <div class="mt-1 grid grid-cols-[auto_auto] gap-1">
-                        <div>Click and drag</div><div>- Rectangular selection</div>
-                        <div>Single click</div><div>- Clear selection</div>
-                        <div>Shift+point click</div><div>- Toggle point selection</div>
-                        <div>Shift+Atl+point click</div><div>- Select connected points</div>
-                        <div>Shift+Ctrl+point click</div><div>- Toggle connected points selection</div>
+            <div class="mb-2 flex items-center space-x-4">
+                <div class="flex items-center space-x-1">
+                    <div class="px-2 h-6 leading-5 border-slate-600 border rounded">
+                        select
+                    </div>
+                    <div class="px-2 h-6 leading-5 border-slate-600 border rounded">
+                        add/del
+                    </div>
+                </div>
+                <div class="relative">
+                    <div class="peer w-6 h-6 text-[.55rem] border-slate-700 hover:bg-slate-800 border rounded-full cursor-default grid place-items-center">?</div>
+                    <div class="hidden peer-hover:block absolute top-full right-0 p-2 w-max text-slate-900 bg-slate-50 rounded shadow">
+                        <div class="font-semibold">Mouse selection:</div>
+                        <div class="mt-1 grid grid-cols-[auto_auto] gap-1">
+                            <div>Click and drag</div><div>- Rectangular selection</div>
+                            <div>Single click</div><div>- Clear selection</div>
+                            <div>Shift+point click</div><div>- Toggle point selection</div>
+                            <div>Shift+Atl+point click</div><div>- Select connected points</div>
+                            <div>Shift+Ctrl+point click</div><div>- Toggle connected points selection</div>
+                        </div>
                     </div>
                 </div>
             </div>
+
         </div>
 
         <div class="w-full self-center"> <!--max-w-[300px] -->
